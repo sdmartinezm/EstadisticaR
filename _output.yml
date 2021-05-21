@@ -1,0 +1,13 @@
+bookdown::gitbook:
+  css: style.css
+  config:
+    sharing:
+        facebook: false
+        twitter: false
+    toc:
+      before: |
+        <li><a href="./">Estadística aplicada con R</a></li>
+      after: |
+        <li><a href="https://github.com/daviddalpiaz/appliedstats" target="blank">&copy; 2020 Adapatado de David Dalpiaz</a></li>
+    download: null    
+    

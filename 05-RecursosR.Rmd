@@ -1,0 +1,50 @@
+# Recursos `R`
+
+Hasta ahora, hemos visto una gran cantidad de `R` y rápidamente. Nuevamente, los capítulos anteriores no pretendían ser de ninguna manera una referencia completa para el lenguaje `R`, sino más bien una introducción a muchos de los conceptos que necesitaremos en este texto. Los siguientes recursos no son necesarios para el resto de este texto, pero pueden resultarle útiles si desea una comprensión más profunda de `R`:
+
+## Referencias y tutoriales para principiantes
+
+- [Try `R`](http://tryr.codeschool.com/){target="_blank"} from Code School.
+    - Una introducción interactiva a los conceptos básicos de `R`. Útil para ponerse al día con la sintaxis de `R`.
+- [Quick-R](http://www.statmethods.net/){target="_blank"} by Robert Kabacoff.
+    - Una buena referencia para los conceptos básicos de `R`.
+- [`R` Tutorial](http://www.r-tutor.com/){target="_blank"} by Chi Yau.
+    - Una combinación de referencia y tutorial para los conceptos básicos de `R`.
+- [`R` Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/){target="_blank"} by Roger Peng
+    - Un gran texto para principiantes en programación con `R`. Muestra `R` desde cero, destacando detalles de programación que quizás no discutimos.
+
+## Referencias intermedias
+
+- [`R` for Data Science](http://r4ds.had.co.nz/){target="_blank"} by Hadley Wickham and Garrett Grolemund.
+    - Similar a la `R` avanzado, pero se enfoca más en el análisis de datos, al mismo tiempo que introduce conceptos de programación. Especialmente útil para trabajar en [tidyverse](http://tidyverse.org/){target="_blank"}. 
+- [The Art of `R` Programming](https://www.nostarch.com/artofr.htm){target="_blank"} by Norman Matloff.
+    - Suave introducción al lado de la programación de `R`. (Mientras que nos centraremos más en el análisis de datos). una [versión electrónica gratuita](https://vufind.carli.illinois.edu/vf-uiu/Record/uiu_8490009){target="_blank"} está disponible a través de la biblioteca de Illinois.
+
+## Referencias avanzadas
+
+- [Advanced `R`](http://adv-r.had.co.nz/){target="_blank"} by Hadley Wickham.
+    - Del autor de varios paquetes `R` extremadamente populares. Buen seguimiento de El arte de la programación `R`. (Y material más actualizado).
+- [The `R` Inferno](http://www.burns-stat.com/documents/books/the-r-inferno/){target="_blank"} by Patrick Burns.
+    - Se compara el aprendizaje de los trucos de `R` con descender a través de los niveles del infierno. Material muy avanzado, pero puede ser importante si `R` se convierte en parte de su caja de herramientas diaria.
+- [Efficient `R` Programming](https://csgillespie.github.io/efficientR/){target="_blank"} by Colin Gillespie and Robin Lovelace
+    - Analiza los programas eficientes de `R`, así como la programación en` R` de manera eficiente.
+
+## Comparaciones rápidas con otros lenguajes
+
+Aquellos que estén familiarizados con otros idiomas pueden encontrar útiles las siguientes "hojas de trucos" para realizar la transición a la `R`.
+
+- [MATLAB, NumPy, Julia](http://hyperpolyglot.org/numerical-analysis2#polynomials){target="_blank"}
+- [Stata](http://dss.princeton.edu/training/RStata.pdf){target="_blank"}
+
+## Vídeos de RStudio y RMarkdown
+
+Las siguientes listas de reproducción de videos se crearon como una introducción a `R`, RStudio y RMarkdown.
+
+- [`R` and RStudio](https://www.youtube.com/playlist?list=PLBgxzZMu3GpMjYhX7jLm5B9gEV7AOOJ5w){target="_blank"}
+- [Data in `R`](https://www.youtube.com/playlist?list=PLBgxzZMu3GpPojVSoriMTWQCUno_3hjNi){target="_blank"}
+- [RMarkdown](https://www.youtube.com/playlist?list=PLBgxzZMu3GpNgd07DwmS-2odHtMO6MWGH){target="_blank"}
+
+Tenga en cuenta que RStudio y RMarkdown reciben constantemente un excelente soporte y actualizaciones, por lo que estos videos pueden contener información desactualizada.
+
+[RStudio](http://rmarkdown.rstudio.com/){target="_blank"} proporciona su propio [tutorial para RMarkdown](http://rmarkdown.rstudio.com/lesson-1.html){target="_blank"}. Ellos tambien tienen una excelente [Hojas de trucos de RStudio](https://www.rstudio.com/wp-content/uploads/2016/01/rstudio-IDE-cheatsheet.pdf){target="_blank"} que identifica visualmente muchas de las funciones disponibles en el IDE.
+

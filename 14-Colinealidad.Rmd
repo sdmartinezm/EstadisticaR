@@ -1,0 +1,400 @@
+# Colinealidad
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(cache = TRUE, autodep = TRUE, fig.align = "center")
+```
+
+> "Si me veo confundido es porque estoy pensando."
+>
+> --- **Samuel Goldwyn**
+
+Después de leer este capítulo, podrá:
+
+- Identificar colinealidad en regresión.
+- Comprender el efecto de la colinealidad en modelos de regresión.
+
+## Colinealidad exacta
+
+Creamos un conjunto de datos donde uno de los predictores, $x_3$, sea una combinación lineal de los otros predictores.
+
+```{r}
+gen_exact_collin_data = function(num_samples = 100) {
+  x1 = rnorm(n = num_samples, mean = 80, sd = 10)
+  x2 = rnorm(n = num_samples, mean = 70, sd = 5)
+  x3 = 2 * x1 + 4 * x2 + 3
+  y = 3 + x1 + x2 + rnorm(n = num_samples, mean = 0, sd = 1)
+  data.frame(y, x1, x2, x3)
+}
+```
+
+Observe que la forma en que estamos generando estos datos, la respuesta $y$ solo depende realmente de $x_1$ y $x_2$.
+
+```{r}
+set.seed(42)
+exact_collin_data = gen_exact_collin_data()
+head(exact_collin_data)
+```
+
+¿Qué sucede cuando intentamos ajustar un modelo de regresión en `R` usando todos los predictores?
+
+```{r}
+exact_collin_fit = lm(y ~ x1 + x2 + x3, data = exact_collin_data)
+summary(exact_collin_fit)
+```
+
+Vemos que `R` simplemente decide excluir una variable. ¿Por qué está pasando esto?
+
+```{r, eval = FALSE}
+X = cbind(1, as.matrix(exact_collin_data[,-1]))
+solve(t(X) %*% X)
+```
+
+Si intentamos encontrar $\boldsymbol{\hat{\beta}}$ usando $\left(  \boldsymbol{X}^T \boldsymbol{X}  \right)^{-1}$, vemos que no es posible, debido al hecho de que las columnas de $\boldsymbol{X}$ son linealmente dependientes. Las líneas de código anteriores no se ejecutaron, ¡porque producen un error!
+
+Cuando esto sucede, decimos que hay **colinealidad exacta** en el conjunto de datos.
+
+Como resultado de este problema, `R` esencialmente eligió ajustarse al modelo `y ~ x1 + x2`. Sin embargo, observe que otros dos modelos lograrán exactamente el mismo ajuste.
+
+```{r}
+fit1 = lm(y ~ x1 + x2, data = exact_collin_data)
+fit2 = lm(y ~ x1 + x3, data = exact_collin_data)
+fit3 = lm(y ~ x2 + x3, data = exact_collin_data)
+```
+
+Vemos que los valores ajustados para cada uno de los tres modelos son exactamente los mismos. Este es el resultado de $x_3$ que contiene toda la información de $x_1$ y $x_2$. Siempre que se incluya uno de $x_1$ o $x_2$ en el modelo, se puede usar $x_3$ para recuperar la información de la variable no incluida.
+
+```{r}
+all.equal(fitted(fit1), fitted(fit2))
+all.equal(fitted(fit2), fitted(fit3))
+```
+
+Si bien sus valores ajustados son todos iguales, sus coeficientes estimados son muy diferentes. ¡El signo de $x_2$ se cambia en dos de los modelos! Así que solo `fit1` explica *correctamente* la relación entre las variables,`fit2` y `fit3` aún *predicen* así como` fit1`, a pesar de que los coeficientes tienen poco o ningún significado, un concepto al que volveremos más adelante.
+
+```{r}
+coef(fit1)
+coef(fit2)
+coef(fit3)
+```
+
+## Colinealidad
+
+La colinealidad exacta es un ejemplo extremo de **colinealidad**, que ocurre en regresiones múltiples cuando las variables predictoras están altamente correlacionadas. La colinealidad a menudo se denomina *multicolinealidad*, ya que es un fenómeno que realmente solo ocurre durante la regresión múltiple.
+
+En el conjunto de datos `seatpos` del paquete `faraway`, veremos un ejemplo de este concepto. Los predictores en este conjunto de datos son varios atributos de los conductores de automóviles, como su altura, peso y edad. La variable respuesta `hipcenter` mide la "distancia horizontal del punto medio de las caderas desde una ubicación fija en el automóvil en mm". Básicamente, mide la posición del asiento de un conductor determinado. Esta es información potencialmente útil para los fabricantes de automóviles que consideran la comodidad y la seguridad al diseñar vehículos.
+
+Intentaremos ajustar un modelo que prediga `hipcenter`. Dos variables predictoras son interesantes para nosotros: `HtShoes` y `Ht`. Ciertamente, esperamos que la altura de una persona esté altamente correlacionada con su altura cuando usa zapatos. Prestaremos especial atención a estas dos variables al ajustar modelos.
+
+```{r, fig.height=8, fig.width=8}
+library(faraway)
+pairs(seatpos, col = "dodgerblue")
+round(cor(seatpos), 2)
+```
+
+Después de cargar el paquete `faraway`, realizamos algunas comprobaciones rápidas de correlación entre los predictores. Visualmente, podemos hacer esto con la función `pairs()`, que traza todos los diagramas de dispersión posibles entre pares de variables en el conjunto de datos.
+
+También podemos hacer esto numéricamente con la función `cor()`, que cuando se aplica a un conjunto de datos, devuelve todas las correlaciones por pares. Observe que esta es una matriz simétrica. Recuerde que la correlación mide la fuerza y la dirección de la relación lineal entre las variables. La correlación entre `Ht` y `HtShoes` es extremadamente alta. Tan alta, que redondeado a dos cifras decimales, ¡parece ser 1!
+
+A diferencia de la colinealidad exacta, aquí todavía podemos ajustar un modelo con todos los predictores, pero ¿qué efecto tiene esto?
+
+```{r}
+hip_model = lm(hipcenter ~ ., data = seatpos)
+summary(hip_model)
+```
+
+Una de las primeras cosas que debemos notar es que la prueba $F$ para la regresión nos dice que la regresión es significativa, sin embargo, cada predictor individual no lo es. Otro resultado interesante son los signos opuestos de los coeficientes para `Ht` y `HtShoes`. Esto debería parecer bastante contrario a la intuición. ¿Aumentar `Ht` aumenta `hipcenter`, pero aumentar `HtShoes` disminuye` hipcenter`?
+
+Esto sucede como resultado de que los predictores están altamente correlacionados. Por ejemplo, la variable `HtShoes` explica gran parte de la variación en `Ht`. Cuando ambos están en el modelo, sus efectos sobre la respuesta disminuyen individualmente, pero juntos todavía explican una gran parte de la variación de `hipcenter`.
+
+Definimos $R_j^2$ como la proporción de variación observada en el predictor $j$-ésimo explicada por los otros predictores. En otras palabras, $R_j^2$ es el R-Cuadrado múltiple para la regresión de $x_j$ en cada uno de los otros predictores.
+
+```{r}
+ht_shoes_model = lm(HtShoes ~ . - hipcenter, data = seatpos)
+summary(ht_shoes_model)$r.squared
+```
+
+Aquí vemos que los otros predictores explican $99,67\% $ de la variación en `HtShoe`. Al ajustar este modelo, eliminamos `hipcenter` ya que no es un predictor.
+
+### Factor de inflación de la varianza.
+
+Ahora tenga en cuenta que la varianza de $\hat{\beta_j}$ se puede escribir como
+
+$$
+\text{Var}(\hat{\beta_j}) = \sigma^2 C_{jj} = \sigma^2 \left( \frac{1}{1 - R_j^2}  \right) \frac{1}{S_{x_j x_j}}
+$$
+
+donde 
+
+$$
+S_{x_j x_j} = \sum(x_{ij}-\bar{x}_j)^2.
+$$
+
+Esto nos da una forma de comprender cómo afecta la colinealidad a nuestras estimaciones de regresión.
+
+llamaremos,
+
+$$
+\frac{1}{1 - R_j^2}
+$$
+
+el **factor de inflación de la varianza.** El factor de inflación de la varianza cuantifica el efecto de la colinealidad sobre la varianza de nuestras estimaciones de regresión. Cuando $R_j^2$ es grande, es cercano a 1, $x_j$ está bien explicado por los otros predictores. Con un $R_j^2$ grande, el factor de inflación de la varianza se vuelve grande. Esto nos dice que cuando $x_j$ está altamente correlacionado con otros predictores, nuestra estimación de $\beta_j$ es muy variable.
+
+La función `vif` del paquete `faraway` calcula los VIF para cada uno de los predictores de un modelo.
+
+```{r}
+vif(hip_model)
+```
+
+En la práctica, es común decir que cualquier VIF superior a $5$ es motivo de preocupación. Entonces, en este ejemplo, vemos que hay un gran problema de multicolinealidad, ya que muchos de los predictores tienen un VIF mayor a 5.
+
+Investiguemos más a fondo cómo la presencia de colinealidad afecta realmente a un modelo. Si agregamos una cantidad moderada de ruido a los datos, vemos que las estimaciones de los coeficientes cambian drásticamente. Este es un efecto bastante indeseable. Agregar ruido aleatorio no debería afectar los coeficientes de un modelo.
+
+```{r}
+set.seed(1337)
+noise = rnorm(n = nrow(seatpos), mean = 0, sd = 5)
+hip_model_noise = lm(hipcenter + noise ~ ., data = seatpos)
+```
+
+La adición del ruido tuvo un efecto tan grande que el signo del coeficiente de `Ht` ha cambiado.
+
+```{r}
+coef(hip_model)
+coef(hip_model_noise)
+```
+
+Esto nos dice que un modelo con colinealidad es malo para explicar la relación entre la respuesta y los predictores. Ni siquiera podemos tener confianza en la dirección de la relación. Sin embargo, ¿la colinealidad afecta la predicción?
+
+```{r}
+plot(fitted(hip_model), fitted(hip_model_noise), col = "dodgerblue", pch = 20,
+     xlab = "Predicho, sin ruido", ylab = "Predicho, con ruido", cex = 1.5)
+abline(a = 0, b = 1, col = "darkorange", lwd = 2)
+```
+
+Vemos que al graficar los valores predichos usando ambos modelos uno contra el otro, en realidad son bastante similares.
+
+Veamos ahora un modelo más pequeño,
+
+```{r}
+hip_model_small = lm(hipcenter ~ Age + Arm + Ht, data = seatpos)
+summary(hip_model_small)
+vif(hip_model_small)
+```
+
+Inmediatamente vemos que aquí la multicolinealidad no es un problema.
+
+```{r}
+anova(hip_model_small, hip_model)
+```
+
+También observe que usando una prueba $F$ para comparar los dos modelos, preferiríamos el modelo más pequeño.
+
+Ahora investigamos el efecto de agregar otra variable a este modelo más pequeño. Específicamente, queremos ver la adición de la variable `HtShoes`. Así que ahora nuestros posibles predictores son `HtShoes`, `Age`, `Arm` y `Ht`. Nuestra respuesta sigue siendo `hipcenter`.
+
+Para cuantificar este efecto, veremos un **gráfico de variable agregada** y un **coeficiente de correlación parcial**. Para ambos, veremos los residuos de los modelos:
+
+- Hacer una regresión de la respuesta (`hipcenter`) frente a todos los predictores excepto el predictor de interés (`HtShoes`).
+- la regresión el predictor de interés (`HtShoes`) frente a los otros predictores (` Age`, `Arm` y `Ht`).
+
+```{r}
+ht_shoes_model_small = lm(HtShoes ~ Age + Arm + Ht, data = seatpos)
+```
+
+Así que ahora, los residuos de `hip_model_small` nos dan la variación de `hipcenter` que es *inexplicable* por `Age`, `Arm` y `Ht`. De manera similar, los residuos de `ht_shoes_model_small` nos dan la variación de `HtShoes` sin explicación por `Age`, `Arm` y `Ht`.
+
+La correlación de estos dos residuos nos da el **coeficiente de correlación parcial** de `HtShoes` y `hipcenter` con los efectos de `Age`, `Arm` y `Ht` eliminados.
+
+```{r}
+cor(resid(ht_shoes_model_small), resid(hip_model_small))
+```
+
+Dado que este valor es pequeño, cercano a cero, significa que la variación de `hipcenter` que no se explica por` Age`, `Arm` y` Ht` muestra muy poca correlación con la variación de `HtShoes` que no se explica por `Age`, `Arm`, y `Ht`. Por lo tanto, agregar `HtShoes` al modelo probablemente sería de poco beneficio.
+
+De manera similar, una **gráfica de variable agregada** visualiza estos residuos entre sí. También es útil hacer una regresión de los residuos de la respuesta frente a los residuos del predictor y agregar la línea de regresión al gráfico.
+
+```{r}
+plot(resid(hip_model_small) ~ resid(ht_shoes_model_small), 
+     col = "dodgerblue", pch = 20,
+     xlab = "Residuales, Predictor agregado", 
+     ylab = "Residuales, Modelo original")
+abline(h = 0, lty = 2)
+abline(v = 0, lty = 2)
+abline(lm(resid(hip_model_small) ~ resid(ht_shoes_model_small)),
+       col = "darkorange", lwd = 2)
+```
+
+Aquí la gráfica agregada de variables no muestra casi ninguna relación lineal. Esto nos dice que agregar `HtShoes` al modelo probablemente no valdría la pena. Dado que su variación se explica en gran medida por los otros predictores, agregarlo al modelo no hará mucho por mejorarlo. Sin embargo, aumentará la variación de las estimaciones y hará que el modelo sea mucho más difícil de interpretar.
+
+Si hubiera habido una relación lineal fuerte, por lo tanto, un coeficiente de correlación parcial grande, probablemente hubiera sido útil agregar el predictor adicional al modelo.
+
+Esta compensación es mayoritariamente cierta en general. A medida que un modelo obtiene más predictores, los errores se harán más pequeños y su *predicción* será mejor, pero será más difícil de interpretar. Por eso, si estamos interesados en *explicar* la relación entre los predictores y la respuesta, a menudo queremos un modelo que se ajuste bien, pero con una pequeña cantidad de predictores con poca correlación.
+
+En el próximo capítulo, aprenderemos sobre métodos para encontrar modelos que se ajusten bien, pero que también tengan una pequeña cantidad de predictores. También discutiremos *sobreajuste*. Aunque agregar predictores adicionales siempre hará que los errores sean más pequeños, a veces "ajustaremos el ruido" y dicho modelo no se generalizará bien a observaciones adicionales.
+
+## Simulación
+
+Aquí simulamos datos de ejemplo con y sin colinealidad. Notaremos la diferencia en la distribución de las estimaciones de los parámetros $\beta$, en particular su varianza. Sin embargo, también notaremos la similitud en sus $MSE$.
+
+Usaremos el modelo,
+
+\[
+Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \epsilon
+\]
+
+donde $\epsilon \sim N(\mu = 0, \sigma^2 = 25)$ y los coeficientes $\beta$ se definen a continuación.
+
+```{r}
+set.seed(42)
+beta_0 = 7
+beta_1 = 3
+beta_2 = 4
+sigma  = 5
+```
+
+Usaremos un tamaño de muestra de 10 y 2500 simulaciones para ambas situaciones.
+
+```{r}
+sample_size = 10
+num_sim     = 2500
+```
+
+Primero consideraremos la situación con un problema de colinealidad, por lo que creamos manualmente las dos variables predictoras.
+
+```{r}
+x1 = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+x2 = c(1, 2, 3, 4, 5, 7, 6, 10, 9, 8)
+```
+
+```{r}
+c(sd(x1), sd(x2))
+cor(x1, x2)
+```
+
+Observe que tienen una correlación extremadamente alta.
+
+```{r}
+true_line_bad = beta_0 + beta_1 * x1 + beta_2 * x2
+beta_hat_bad  = matrix(0, num_sim, 2)
+mse_bad       = rep(0, num_sim)
+```
+
+Realizamos la simulación 2500 veces, cada vez ajustando un modelo de regresión, y almacenando los coeficientes estimados y el MSE.
+
+```{r}
+for (s in 1:num_sim) {
+  y = true_line_bad + rnorm(n = sample_size, mean = 0, sd = sigma)
+  reg_out = lm(y ~ x1 + x2)
+  beta_hat_bad[s, ] = coef(reg_out)[-1]
+  mse_bad[s] = mean(resid(reg_out) ^ 2)
+}
+```
+
+Ahora pasamos a la situación sin problema de colinealidad, por lo que nuevamente creamos manualmente las dos variables predictoras.
+
+```{r}
+z1 = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+z2 = c(9, 2, 7, 4, 5, 6, 3, 8, 1, 10)
+```
+
+Observe que las desviaciones estándar de cada uno son las mismas que antes, sin embargo, ahora la correlación es extremadamente cercana a 0.
+
+```{r}
+c(sd(z1), sd(z2))
+cor(z1, z2)
+```
+
+```{r}
+true_line_good = beta_0 + beta_1 * z1 + beta_2 * z2
+beta_hat_good  = matrix(0, num_sim, 2)
+mse_good       = rep(0, num_sim)
+```
+
+Luego realizamos simulaciones y almacenamos los mismos resultados.
+
+```{r}
+for (s in 1:num_sim) {
+  y = true_line_good + rnorm(n = sample_size, mean = 0, sd = sigma)
+  reg_out = lm(y ~ z1 + z2)
+  beta_hat_good[s, ] = coef(reg_out)[-1]
+  mse_good[s] = mean(resid(reg_out) ^ 2)
+}
+```
+
+Ahora investigaremos las diferencias.
+
+```{r, fig.width = 12, fig.height = 6}
+par(mfrow = c(1, 2))
+hist(beta_hat_bad[, 1],
+     col = "darkorange",
+     border = "dodgerblue",
+     main = expression("Histograma de " *hat(beta)[1]* " con colinealidad"),
+     xlab = expression(hat(beta)[1]),
+     breaks = 20)
+hist(beta_hat_good[, 1],
+     col = "darkorange",
+     border = "dodgerblue",
+     main = expression("Histograma de " *hat(beta)[1]* " sin colinealidad"),
+     xlab = expression(hat(beta)[1]),
+     breaks = 20)
+```
+
+Primero, para $\beta_1$, que tiene un valor real de $3$, vemos que tanto con colinealidad como sin ella, los valores simulados están centrados cerca de $3$.
+
+```{r}
+mean(beta_hat_bad[, 1])
+mean(beta_hat_good[, 1])
+```
+
+La forma en que se crearon los predictores, la $S_{x_j x_j}$ porción de la varianza es la misma para los predictores en ambos casos, pero la varianza es aún mucho mayor en las simulaciones realizadas con colinealidad. La varianza es tan grande en el caso colineal, que a veces el coeficiente estimado para $\beta_1$ es negativo.
+
+```{r}
+sd(beta_hat_bad[, 1])
+sd(beta_hat_good[, 1])
+```
+
+```{r, fig.width = 12, fig.height = 6}
+par(mfrow = c(1, 2))
+hist(beta_hat_bad[, 2],
+     col = "darkorange",
+     border = "dodgerblue",
+     main = expression("Histograma de " *hat(beta)[2]* " con colinealidad"),
+     xlab = expression(hat(beta)[2]),
+     breaks = 20)
+hist(beta_hat_good[, 2],
+     col = "darkorange",
+     border = "dodgerblue",
+     main = expression("Histograma de " *hat(beta)[2]* " sin colinealidad"),
+     xlab = expression(hat(beta)[2]),
+     breaks = 20)
+```
+
+Vemos los mismos problemas con $\beta_2$. En promedio, las estimaciones son correctas, pero la varianza es nuevamente mucho mayor con la colinealidad.
+
+```{r}
+mean(beta_hat_bad[, 2])
+mean(beta_hat_good[, 2])
+```
+
+```{r}
+sd(beta_hat_bad[, 2])
+sd(beta_hat_good[, 2])
+```
+
+```{r, fig.width = 12, fig.height = 6}
+par(mfrow = c(1, 2))
+hist(mse_bad,
+     col = "darkorange",
+     border = "dodgerblue",
+     main = "MSE, con colinealidad",
+     xlab = "MSE")
+hist(mse_good,
+     col = "darkorange",
+     border = "dodgerblue",
+     main = "MSE, sin colinealidad",
+     xlab = "MSE")
+```
+
+Curiosamente, en ambos casos, el MSE es aproximadamente el mismo en promedio. Nuevamente, esto se debe a que la colinealidad afecta la capacidad de un modelo para *explicar*, pero no predecir.
+
+```{r}
+mean(mse_bad)
+mean(mse_good)
+```

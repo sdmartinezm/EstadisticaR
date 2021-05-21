@@ -1,0 +1,1104 @@
+# Regresión logística
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(cache = TRUE, autodep = TRUE, fig.align = "center")
+```
+
+Después de leer este capítulo, podrá:
+
+- Comprender cómo los modelos lineales generalizados son una generalización de los modelos lineales ordinarios.
+- Utilice la regresión logística para modelar una respuesta binaria.
+- Aplicar conceptos aprendidos para modelos lineales ordinarios a la regresión logística.
+- Utilizar regresión logística para realizar la clasificación.
+
+Hasta ahora solo hemos considerado modelos para variables de respuesta numérica. ¿Qué pasa con las variables respuesta que solo toman valores enteros? ¿Qué pasa con una variable respuesta que es categórica? ¿Podemos utilizar modelos lineales en estas situaciones? ¡Sí! El modelo que hemos estado usando, al que llamaremos *regresión lineal ordinaria*, es en realidad un caso específico del *modelo lineal generalizado* más general. (¿No son buenos los estadísticos para nombrar cosas?)
+
+## Modelos lineales generalizados
+
+Hasta ahora, hemos tenido variables respuesta que, condicionadas por los predictores, se modelaron utilizando una distribución normal con una media que es una combinación lineal de los predictores. Esta combinación lineal es lo que hace que un modelo lineal sea "lineal".
+
+$$
+Y \mid {\bf X} = {\bf x} \sim N(\beta_0 + \beta_1x_1 + \ldots + \beta_{p - 1}x_{p - 1}, \ \sigma^2)
+$$
+
+Ahora permitiremos dos modificaciones de esta situación, lo que nos permitirá usar modelos lineales en muchas más situaciones. En lugar de utilizar una distribución normal para la respuesta condicionada a los predictores, permitiremos otras distribuciones. Además, en lugar de que la media condicional sea una combinación lineal de los predictores, puede ser alguna función de una combinación lineal de los predictores.
+
+En *general*, un modelo lineal generalizado tiene tres partes:
+
+- Una **distribución** de la respuesta condicionada a los predictores. (Técnicamente, esta distribución debe ser de la [familia exponencial](https://en.wikipedia.org/wiki/Exponential_family){target="_blank"}).
+- Una **combinación lineal** de los predictores $p - 1$, $\beta_0 + \beta_1 x_1 + \beta_2 x_2 + \ldots  + \beta_{p - 1} x_{p - 1}$, que escribimos como $\eta({\bf x})$. Es decir,
+
+$$\eta({\bf x}) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \ldots  + \beta_{p - 1} x_{p - 1}$$
+
+- Una función **enlace**, $g()$, que define cómo $\eta({\bf x}) $, la combinación lineal de los predictores, se relaciona con la media de la respuesta condicionada a los predictores, $\text{E}[Y \mid {\bf X} = {\bf x}]$.
+$$
+\eta({\bf x}) = g\left(\text{E}[Y \mid {\bf X} = {\bf x}]\right).
+$$
+
+La siguiente tabla resume tres ejemplos de un modelo lineal generalizado:
+
+|                 |Regresión lineal | Regresión Poisson | Regresión logística|
+|-----------------|------------------|--------------------|---------------------|
+| $Y \mid {\bf X} = {\bf x}$ | $N(\mu({\bf x}), \sigma^2)$    | $\text{Pois}(\lambda({\bf x}))$          | $\text{Bern}(p({\bf x}))$                                              |
+| **Nombre de la distribución**               | Normal                         | Poisson                                  | Bernoulli (Binomial)                                                   |
+| $\text{E}[Y \mid {\bf X} = {\bf x}]$            | $\mu({\bf x})$                 | $\lambda({\bf x})$                       | $p({\bf x})$                                                           |
+| **Soporte**                                     | Real: $(-\infty, \infty)$      | Entero: $0, 1, 2, \ldots$               | Entero: $0, 1$                                                        |
+| **Uso**                                         | Datos numéricos    | Datos de conteos (entero)                    | Datos binarios                                            |
+| **Nombre del enlace**                         | Identity                       | Log                                      | Logit                                                                  |
+| **Función de enlace**                         | $\eta({\bf x}) = \mu({\bf x})$ | $\eta({\bf x}) = \log(\lambda({\bf x}))$ | $\eta({\bf x}) = \log \left(\frac{p({\bf x})}{1 - p({\bf x})} \right)$          |
+| **Función de la media**                               | $\mu({\bf x}) = \eta({\bf x})$ | $\lambda({\bf x}) = e^{\eta({\bf x})}$   | $p({\bf x}) = \frac{e^{\eta({\bf x})}}{1 + e^{\eta({\bf x})}} = \frac{1}{1 + e^{-\eta({\bf x})}}$ |
+
+Como en la regresión lineal ordinaria, buscaremos "ajustar" el modelo estimando los parámetros $\beta$. Para ello utilizaremos el método de máxima verosimilitud.
+
+Tenga en cuenta que una distribución Bernoulli es un caso específico de una distribución binomial donde el parámetro $n$ de un binomio es $1$. La regresión binomial también es posible, pero nos centraremos en el caso Bernoulli, mucho más popular.
+
+Entonces, en general, los GLM relacionan la media de la respuesta con una combinación lineal de predictores, $\eta({\bf x})$, mediante el uso de una función de enlace, $g()$. Es decir,
+
+$$
+\eta({\bf x}) = g\left(\text{E}[Y \mid {\bf X} = {\bf x}]\right).
+$$
+
+La media es entonces
+
+$$
+\text{E}[Y \mid {\bf X} = {\bf x}] = g^{-1}(\eta({\bf x})).
+$$
+
+## Respuesta binaria
+
+Para ilustrar el uso de un GLM, nos centraremos en el caso de la variable respuestas binaria codificada con $0$ y $1$. En la práctica, estos $0$ y $1$ codificarán para dos clases como sí/no, gato/perro, enfermo/sano, etc.
+
+$$
+Y = 
+\begin{cases} 
+      1 & \text{Si} \\
+      0 & \text{No} 
+\end{cases}
+$$
+
+Primero, definimos una notación que usaremos en todo momento.
+
+$$
+p({\bf x}) = P[Y = 1 \mid {\bf X} = {\bf x}]
+$$
+
+Con una respuesta binaria (Bernoulli), nos centraremos principalmente en el caso cuando $Y = 1$, ya que con solo dos posibilidades, es trivial obtener probabilidades cuando $Y = 0$.
+
+$$
+P[Y = 0 \mid {\bf X} = {\bf x}] + P[Y = 1 \mid {\bf X} = {\bf x}] = 1
+$$
+
+$$
+P[Y = 0 \mid {\bf X} = {\bf x}] = 1 - p({\bf x})
+$$
+
+Ahora definimos el modelo de **regresión logística**.
+
+$$
+\log\left(\frac{p({\bf x})}{1 - p({\bf x})}\right) = \beta_0 + \beta_1 x_1 + \ldots  + \beta_{p - 1} x_{p - 1}
+$$
+
+Inmediatamente notamos algunas similitudes con la regresión lineal ordinaria, en particular, del lado derecho. Esta es nuestra combinación lineal habitual de predictores. Tenemos nuestros predictores habituales $p - 1$ para un total de $p$ parámetros $\beta$. (Tenga en cuenta que muchos más textos centrados en el aprendizaje automático utilizarán $p$ como número de predictores. Esta es una elección arbitraria, pero debe tenerla en cuenta).
+
+El lado izquierdo se llama **log odds**, que es el log de los odds. Los odds son la probabilidad de un evento positivo $(Y = 1)$ dividida por la probabilidad de un evento negativo $(Y = 0)$. Entonces, cuando los odds son $1$, los dos eventos tienen la misma probabilidad. Los odds superiores a $1$ favorecen un evento positivo. Lo contrario es cierto cuando los odds son inferiores a $1$.
+
+$$
+\frac{p({\bf x})}{1 - p({\bf x})} = \frac{P[Y = 1 \mid {\bf X} = {\bf x}]}{P[Y = 0 \mid {\bf X} = {\bf x}]}
+$$
+
+Básicamente, el log de los odds son la transformación [logit](https://en.wikipedia.org/wiki/Logit){target="_blank"} aplicada a $p({\bf x})$.
+
+$$
+\text{logit}(\xi) = \log\left(\frac{\xi}{1 - \xi}\right)
+$$
+
+También será útil definir el logit inverso, también conocido como la función "logística" o [sigmoid](https://en.wikipedia.org/wiki/Sigmoid_function){target="_blank"}.
+
+$$
+\text{logit}^{-1}(\xi) = \frac{e^\xi}{1 + e^{\xi}} = \frac{1}{1 + e^{-\xi}}
+$$
+
+Tenga en cuenta que para $x \in (-\infty, \infty))$, esta función genera valores entre 0 y 1.
+
+Los estudiantes a menudo preguntan, ¿dónde está el término de error? La respuesta es que es algo específico del modelo normal. Primero observe que el modelo con el término de error,
+
+$$
+Y = \beta_0 + \beta_1x_1 + \ldots + \beta_qx_q + \epsilon, \ \ \epsilon \sim N(0, \sigma^2)
+$$
+
+en su lugar se puede escribir como
+
+$$
+Y \mid {\bf X} = {\bf x} \sim N(\beta_0 + \beta_1x_1 + \ldots + \beta_qx_q, \ \sigma^2).
+$$
+
+Si bien nuestro enfoque principal es estimar la media, $\beta_0 + \beta_1x_1 + \ldots + \beta_qx_q$, también hay otro parámetro, $\sigma^2$ que debe estimarse. Este es el resultado de que la distribución normal tiene dos parámetros.
+
+Con la regresión logística, que usa la distribución de Bernoulli, solo necesitamos estimar el parámetro único de la distribución de Bernoulli $p({\bf x})$, que resulta ser su media.
+
+$$
+\log\left(\frac{p({\bf x})}{1 - p({\bf x})}\right) = \beta_0 + \beta_1 x_1 + \ldots  + \beta_{q} x_{q}
+$$
+
+Entonces, aunque introdujimos primero la regresión lineal ordinaria, de alguna manera, la regresión logística es en realidad más simple.
+
+Tenga en cuenta que la aplicación de la transformación logit inversa nos permite obtener una expresión para $p({\bf x})$.
+
+$$
+p({\bf x}) = P[Y = 1 \mid {\bf X} = {\bf x}] = \frac{e^{\beta_0 + \beta_1 x_{1} + \cdots + \beta_{p-1} x_{(p-1)}}}{1 + e^{\beta_0 + \beta_1 x_{1} + \cdots + \beta_{p-1} x_{(p-1)}}}
+$$
+
+### Ajuste de la regresión logística
+
+Con $n$ observaciones, escribimos el modelo indexado con $i$ para notar que se está aplicando a cada observación.
+
+$$
+\log\left(\frac{p({\bf x_i})}{1 - p({\bf x_i)})}\right) = \beta_0 + \beta_1 x_{i1} + \cdots + \beta_{p-1} x_{i(p-1)}
+$$
+
+Podemos aplicar la transformación logit inversa para obtener $P[Y_i = 1 \mid {\bf X_i} = {\bf x_i}]$ para cada observación. Dado que estas son probabilidades, es bueno que usemos una función que devuelve valores entre $0$ y $1$.
+
+$$
+p({\bf x_i}) = P[Y_i = 1 \mid {\bf X_i} = {\bf x_i}] = \frac{e^{\beta_0 + \beta_1 x_{i1} + \cdots + \beta_{p-1} x_{i(p-1)}}}{1 + e^{\beta_0 + \beta_1 x_{i1} + \cdots + \beta_{p-1} x_{i(p-1)}}}
+$$
+
+$$
+1 - p({\bf x_i}) = P[Y_i = 0 \mid {\bf X} = {\bf x_i}] = \frac{1}{1 + e^{\beta_0 + \beta_1 x_{i1} + \cdots + \beta_{p-1} x_{i(p-1)}}}
+$$
+
+Para "ajustar" este modelo, es decir, estimar los parámetros $\beta$, usaremos la máxima verosimilitud.
+
+$$
+\boldsymbol{{\beta}} = [\beta_0, \beta_1, \beta_2, \beta_3, \ldots, \beta_{p - 1}]
+$$
+
+Primero escribimos la verosimilitud dados los datos observados.
+
+$$
+L(\boldsymbol{{\beta}}) = \prod_{i = 1}^{n} P[Y_i = y_i \mid {\bf X_i} = {\bf x_i}]
+$$
+
+Esto ya es técnicamente una función de los parámetros $\beta$, pero haremos algunos cambios para que esto sea más explícito.
+
+$$
+L(\boldsymbol{{\beta}}) = \prod_{i = 1}^{n} p({\bf x_i})^{y_i} (1 - p({\bf x_i}))^{(1 - y_i)}
+$$
+
+$$
+L(\boldsymbol{{\beta}}) = \prod_{i : y_i = 1}^{n} p({\bf x_i}) \prod_{j : y_j = 0}^{n} (1 - p({\bf x_j}))
+$$
+
+$$
+L(\boldsymbol{{\beta}}) = \prod_{i : y_i = 1}^{} \frac{e^{\beta_0 + \beta_1 x_{i1} + \cdots + \beta_{p-1} x_{i(p-1)}}}{1 + e^{\beta_0 + \beta_1 x_{i1} + \cdots + \beta_{p-1} x_{i(p-1)}}} \prod_{j : y_j = 0}^{} \frac{1}{1 + e^{\beta_0 + \beta_1 x_{j1} + \cdots + \beta_{p-1} x_{j(p-1)}}}
+$$
+
+Desafortunadamente, a diferencia de la regresión lineal ordinaria, no existe una solución analítica para este problema de maximización. En cambio, deberá resolverse numéricamente. Afortunadamente, `R` se encargará de esto por nosotros usando un algoritmo de mínimos cuadrados reponderados iterativamente. (Dejaremos los detalles para un curso de optimización o aprendizaje automático, que probablemente también discutirá estrategias de optimización alternativas).
+
+### Problemas de ajuste
+
+Debemos tener en cuenta que, si existe algún $\beta^*$ tal que
+
+$$
+{\bf x_i}^{\top} \boldsymbol{{\beta}^*} > 0 \implies y_i = 1
+$$
+
+y
+
+$$
+{\bf x_i}^{\top} \boldsymbol{{\beta}^*} < 0 \implies y_i = 0
+$$
+
+para todas las observaciones, el MLE no es único. Se dice que estos datos son separables.
+
+Esto, y otros problemas numéricos similares relacionados con las probabilidades estimadas cercanas a 0 o 1, devolverán una advertencia en `R`:
+
+```{r, echo = FALSE}
+message("Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred")
+```
+
+Cuando esto sucede, el modelo todavía está "ajustado", pero hay consecuencias, es decir, los coeficientes estimados son muy sospechosos. Este es un problema al intentar interpretar el modelo. Cuando esto sucede, el modelo a menudo seguirá siendo útil para crear un clasificador, que se discutirá más adelante. Sin embargo, todavía está sujeto a las evaluaciones habituales de los clasificadores para determinar qué tan bien se está desempeñando. Para obtener más información, consulte [Modern Applied Statistics with S-PLUS, Chapter 7](https://link.springer.com/content/pdf/10.1007/978-1-4757-2719-7_7.pdf){target="_blank"}.
+
+### Ejemplos de simulación
+
+```{r}
+sim_logistic_data = function(sample_size = 25, beta_0 = -2, beta_1 = 3) {
+  x = rnorm(n = sample_size)
+  eta = beta_0 + beta_1 * x
+  p = 1 / (1 + exp(-eta))
+  y = rbinom(n = sample_size, size = 1, prob = p)
+  data.frame(y, x)
+}
+```
+
+Podría pensar, ¿por qué no usar simplemente la regresión lineal ordinaria? Incluso con una respuesta binaria, nuestro objetivo sigue siendo modelar (alguna función de) $\text{E}[Y \mid {\bf X} = {\bf x}]$. Sin embargo, con una respuesta binaria codificada como $0$ y $1$, $\text{E}[Y \mid {\bf X} = {\bf x}] = P[Y = 1 \mid {\bf X} = {\bf x}]$ desde
+
+$$
+\begin{aligned}
+\text{E}[Y \mid {\bf X} = {\bf x}] &=  1 \cdot P[Y = 1 \mid {\bf X} = {\bf x}] + 0 \cdot P[Y = 0 \mid {\bf X} = {\bf x}] \\
+                                  &= P[Y = 1 \mid {\bf X} = {\bf x}]
+\end{aligned}
+$$
+
+Entonces, ¿por qué no podemos usar la regresión lineal ordinaria para estimar $\text{E}[Y \mid {\bf X} = {\bf x}]$, y por lo tanto $P[Y = 1 \mid {\bf X} = {\bf x}]$?
+
+Para investigar, simulemos datos del siguiente modelo:
+
+$$
+\log\left(\frac{p({\bf x})}{1 - p({\bf x})}\right) = -2 + 3 x
+$$
+
+Otra forma de escribir esto, que coincide mejor con la función que estamos usando para simular los datos:
+
+$$
+\begin{aligned}
+Y_i \mid {\bf X_i} = {\bf x_i} &\sim \text{Bern}(p_i) \\
+p_i &= p({\bf x_i}) = \frac{1}{1 + e^{-\eta({\bf x_i})}} \\
+\eta({\bf x_i}) &= -2 + 3 x_i
+\end{aligned}
+$$
+
+```{r}
+set.seed(1)
+example_data = sim_logistic_data()
+head(example_data)
+```
+
+Después de simular un conjunto de datos, ajustaremos tanto la regresión lineal ordinaria como la regresión logística. Observe que actualmente la variable respuesta `y` es una variable numérica que solo toma los valores `0` y `1`. Más adelante veremos que también podemos ajustar la regresión logística cuando la respuesta es una variable factor con solo dos niveles. (Generalmente, se prefiere tener una respuesta factor, pero tener una respuesta ficticia (dummy) permite hacer la comparación con el uso de la regresión lineal ordinaria).
+
+```{r}
+# regresión lineal ordinaria
+fit_lm  = lm(y ~ x, data = example_data)
+# Regresión logística
+fit_glm = glm(y ~ x, data = example_data, family = binomial)
+```
+
+Observe que la sintaxis es extremadamente similar. ¿Qué ha cambiado?
+
+- `lm()` se ha convertido en `glm()`
+- Hemos agregado el argumento `family = binomial`
+
+En muchos sentidos, `lm()` es solo una versión más específica de `glm()`. Por ejemplo
+
+```{r, eval = FALSE}
+glm(y ~ x, data = example_data)
+```
+
+en realidad ajustaría la regresión lineal ordinaria que hemos visto en el pasado. Por defecto, `glm()` usa el argumento `family = gaussian`. Es decir, estamos ajustando un GLM con una respuesta normalmente distribuida y la función de identidad como enlace.
+
+El argumento `family` para `glm()` en realidad especifica tanto la distribución como la función de enlace. Si no se hace explícita, la función de enlace se elige para que sea la **función de enlace canónica**, que es esencialmente la función de enlace matemática más conveniente. Consulte `?Glm` y `?family` para obtener más detalles. Por ejemplo, el siguiente código especifica explícitamente la función de enlace que se utilizó anteriormente de forma predeterminada.
+
+```{r}
+# llamada más detallada a glm para regresión logística
+fit_glm = glm(y ~ x, data = example_data, family = binomial(link = "logit"))
+```
+
+Hacer predicciones con un objeto de tipo `glm` es ligeramente diferente a hacer predicciones después de ajustar con `lm()`. En el caso de la regresión logística, con `family = binomial`, tenemos:
+
+| `type`             | Devuelve |
+|--------------------|----------|
+| `"link"` [por defecto] | $\hat{\eta}({\bf x}) = \log\left(\frac{\hat{p}({\bf x})}{1 - \hat{p}({\bf x})}\right)$ |
+| `"response"`       | $\hat{p}({\bf x}) = \frac{e^{\hat{\eta}({\bf x})}}{1 + e^{\hat{\eta}({\bf x})}} = \frac{1}{1 + e^{-\hat{\eta}({\bf x})}}$                                                                     |
+
+Es decir, `type = "link"` obtendrá el log odds, mientras que `type = "response"` devolverá la media estimada, en este caso, $P[Y = 1 \mid {\bf X} = {\bf x}]$ para cada observación.
+
+```{r}
+plot(y ~ x, data = example_data, 
+     pch = 20, ylab = "Probabilidad estimada", 
+     main = "Regresión ordinaria vs logística")
+grid()
+abline(fit_lm, col = "darkorange")
+curve(predict(fit_glm, data.frame(x), type = "response"), 
+      add = TRUE, col = "dodgerblue", lty = 2)
+legend("topleft", c("Ordinaria", "Logística", "Datos"), lty = c(1, 2, 0), 
+       pch = c(NA, NA, 20), lwd = 2, col = c("darkorange", "dodgerblue", "black"))
+```
+
+Dado que solo tenemos una única variable predictora, podemos mostrar gráficamente esta situación. Primero, tenga en cuenta que los datos se grafican utilizando puntos negros. La respuesta `y` solo toma los valores `0` y `1`.
+
+A continuación, necesitamos discutir las dos líneas agregadas a la gráfica. La primera, la línea naranja sólida, es la regresión lineal ordinaria ajustada.
+
+La curva azul punteada es la regresión logística estimada. Es útil darse cuenta de que no estamos trazando una estimación de $Y$ para ninguno de los dos. (A veces puede parecer así con la regresión lineal ordinaria, pero eso no es lo que está sucediendo). Para ambos, estamos trazando $\hat{\text{E}}[Y \mid {\bf X} = {\bf x}]$, la media estimada, que para una respuesta binaria resulta ser una estimación de $P[Y = 1 \mid {\bf X} = {\bf x}]$.
+
+Vemos inmediatamente por qué la regresión lineal ordinaria no es una buena idea. Mientras estima la media, vemos que produce estimaciones que son menores que 0. (¡Y en otras situaciones podría producir estimaciones mayores que 1!) Si la media es una probabilidad, no queremos probabilidades menores que 0 o mayores que 1.
+
+Introduzca regresión logística. Dado que la salida de la función logit inversa está restringida a estar entre 0 y 1, nuestras estimaciones tienen mucho más sentido como probabilidades. Veamos nuestros coeficientes estimados. (Con mucho redondeo, por simplicidad).
+
+```{r}
+round(coef(fit_glm), 1)
+```
+
+Nuestro modelo estimado es entonces:
+
+$$
+\log\left(\frac{\hat{p}({\bf x})}{1 - \hat{p}({\bf x})}\right) = -2.3 + 3.7 x
+$$
+
+Debido a que no estamos estimando directamente la media, sino una función de la media, debemos tener cuidado con nuestra interpretación de $\hat{\beta}_1 = 3.7$. Esto significa que, para un aumento de una unidad en $x$, los log odds cambian (en este caso aumentan) en $3.7$. Además, dado que $\hat{\beta}_1$ es positivo, a medida que aumentamos $x$, también aumentamos $\hat{p}({\bf x})$. Para ver cuánto, tenemos que considerar la función logística inversa.
+
+Por ejemplo, tenemos:
+
+$$
+\hat{P}[Y = 1 \mid X = -0.5] = \frac{e^{-2.3 + 3.7 \cdot (-0.5)}}{1 + e^{-2.3 + 3.7 \cdot (-0.5)}} \approx 0.016
+$$
+
+$$
+\hat{P}[Y = 1 \mid X = 0] = \frac{e^{-2.3 + 3.7 \cdot (0)}}{1 + e^{-2.3 + 3.7 \cdot (0)}} \approx 0.09112296
+$$
+
+$$
+\hat{P}[Y = 1 \mid X = 1] = \frac{e^{-2.3 + 3.7 \cdot (1)}}{1 + e^{-2.3 + 3.7 \cdot (1)}} \approx 0.8021839
+$$
+
+Ahora que sabemos que debemos usar la regresión logística y no la regresión lineal ordinaria, consideremos otro ejemplo. Esta vez, consideremos el modelo
+
+$$
+\log\left(\frac{p({\bf x})}{1 - p({\bf x})}\right) = 1 + -4 x.
+$$
+
+Nuevamente, podríamos reescribir esto para que coincida mejor con la función que estamos usando para simular los datos:
+
+$$
+\begin{aligned}
+Y_i \mid {\bf X_i} = {\bf x_i} &\sim \text{Bern}(p_i) \\
+p_i &= p({\bf x_i}) = \frac{1}{1 + e^{-\eta({\bf x_i})}} \\
+\eta({\bf x_i}) &= 1 + -4 x_i
+\end{aligned}
+$$
+
+En este modelo, a medida que aumenta $x$, las probabilidades logarítmicas disminuyen.
+
+```{r}
+set.seed(1)
+example_data = sim_logistic_data(sample_size = 50, beta_0 = 1, beta_1 = -4)
+```
+
+Simulamos nuevamente algunas observaciones de este modelo, luego ajustamos la regresión logística.
+
+```{r}
+fit_glm = glm(y ~ x, data = example_data, family = binomial)
+```
+
+```{r}
+plot(y ~ x, data = example_data, 
+     pch = 20, ylab = "Probabilidad estimada", 
+     main = "Regresión logística, probabilidad decreciente")
+grid()
+curve(predict(fit_glm, data.frame(x), type = "response"), 
+      add = TRUE, col = "dodgerblue", lty = 2)
+curve(boot::inv.logit(1 - 4 * x), add = TRUE, col = "darkorange", lty = 1)
+legend("bottomleft", c("Probabilidad verdadera", "Probabilidad estimada", "Datos"), lty = c(1, 2, 0), 
+       pch = c(NA, NA, 20), lwd = 2, col = c("darkorange", "dodgerblue", "black"))
+```
+
+Vemos que esta vez, a medida que $x$ aumenta, $\hat{p}({\bf x})$ disminuye.
+
+Ahora veamos un ejemplo en el que la probabilidad estimada no siempre simplemente aumenta o disminuye. Al igual que la regresión lineal ordinaria, la combinación lineal de predictores puede contener transformaciones de predictores (en este caso, un término cuadrático) e interacciones.
+
+```{r}
+sim_quadratic_logistic_data = function(sample_size = 25) {
+  x = rnorm(n = sample_size)
+  eta = -1.5 + 0.5 * x + x ^ 2
+  p = 1 / (1 + exp(-eta))
+  y = rbinom(n = sample_size, size = 1, prob = p)
+  data.frame(y, x)
+}
+```
+
+$$
+\log\left(\frac{p({\bf x})}{1 - p({\bf x})}\right) = -1.5 + 0.5x + x^2.
+$$
+
+Nuevamente, podríamos reescribir esto para que coincida mejor con la función que estamos usando para simular los datos:
+
+$$
+\begin{aligned}
+Y_i \mid {\bf X_i} = {\bf x_i} &\sim \text{Bern}(p_i) \\
+p_i &= p({\bf x_i}) = \frac{1}{1 + e^{-\eta({\bf x_i})}} \\
+\eta({\bf x_i}) &= -1.5 + 0.5x_i + x_i^2
+\end{aligned}
+$$
+
+```{r}
+set.seed(42)
+example_data = sim_quadratic_logistic_data(sample_size = 50)
+```
+
+```{r}
+fit_glm = glm(y ~ x + I(x^2), data = example_data, family = binomial)
+```
+
+```{r}
+plot(y ~ x, data = example_data, 
+     pch = 20, ylab = "Probabilidad estimada", 
+     main = "Regresión logística, relación cuadrática")
+grid()
+curve(predict(fit_glm, data.frame(x), type = "response"), 
+      add = TRUE, col = "dodgerblue", lty = 2)
+curve(boot::inv.logit(-1.5 + 0.5 * x + x ^ 2), 
+      add = TRUE, col = "darkorange", lty = 1)
+legend("bottomleft", c("Probabilidad verdadera", "Probabilidad estimada", "Datos"), lty = c(1, 2, 0), 
+       pch = c(NA, NA, 20), lwd = 2, col = c("darkorange", "dodgerblue", "black"))
+```
+
+## Trabajar con regresión logística
+
+Si bien el modelo de regresión logística no es exactamente el mismo que el modelo de regresión lineal ordinario, porque ambos usan una combinación **lineal** de los predictores
+
+$$
+\eta({\bf x}) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \ldots  + \beta_{p - 1} x_{p - 1}
+$$
+
+trabajar con regresión logística es muy similar. Muchas de las cosas que hicimos con la regresión lineal ordinaria se pueden hacer con la regresión logística de una manera muy similar. Por ejemplo,
+
+- Prueba de un solo parámetro $\beta$
+- Prueba de un conjunto de parámetros $\beta$
+- Especificación de la fórmula en `R`
+- Interpretación de parámetros y estimaciones
+- Intervalos de confianza para parámetros
+- Intervalos de confianza para la respuesta media
+- Selección de variable
+
+Después de una introducción a las nuevas pruebas, demostraremos cada una de ellas con un ejemplo.
+
+### Pruebas con GLMs
+
+Al igual que la regresión lineal ordinaria, vamos a querer realizar la prueba de hipótesis. Nuevamente querremos pruebas de un solo parámetro y de múltiples parámetros.
+
+### Prueba de Wald
+
+En regresión lineal ordinaria, realizamos la prueba de
+
+$$
+H_0: \beta_j = 0 \quad \text{vs} \quad H_1: \beta_j \neq 0
+$$
+
+usando una prueba $t$.
+
+Para el modelo de regresión logística,
+
+$$
+\log\left(\frac{p({\bf x})}{1 - p({\bf x})}\right) = \beta_0 + \beta_1 x_1 + \ldots  + \beta_{p - 1} x_{p - 1}
+$$
+
+podemos volver a realizar una prueba de
+
+$$
+H_0: \beta_j = 0 \quad \text{vs} \quad H_1: \beta_j \neq 0
+$$
+
+sin embargo, el estadístico de prueba y su distribución ya no son $t$. Vemos que el estadístico de prueba toma la misma forma
+
+$$
+z = \frac{\hat{\beta}_j - \beta_j}{\text{SE}[\hat{\beta}_j]} \overset{\text{approx}}{\sim} N(0, 1)
+$$
+
+pero ahora estamos realizando una prueba $z$, ya que el estadístico de prueba se aproxima a una distribución normal estándar, *siempre que tengamos una muestra lo suficientemente grande*. (La prueba $t$ para la regresión lineal ordinaria, asumiendo que los supuestos eran correctos, tenía una distribución exacta para cualquier tamaño de muestra).
+
+Omitiremos algunos de los detalles exactos de los cálculos, ya que `R` obtendrá el error estándar para nosotros. El uso de esta prueba será extremadamente similar a la prueba $t$ para la regresión lineal ordinaria. Básicamente, lo único que cambia es la distribución del estadístico de prueba.
+
+### Prueba de razón de verosimilitud
+
+Considere el siguiente modelo **completo**,
+
+$$
+\log\left(\frac{p({\bf x_i})}{1 - p({\bf x_i})}\right) = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_{(p-1)} x_{i(p-1)} + \epsilon_i
+$$
+
+Este modelo tiene $p-1$ predictores, para un total de $p$ parámetros $\beta$. Denotaremos el MLE de estos parámetros $\beta$ como $\hat{\beta}_{\text{Full}}$
+
+Ahora considere un modelo **nulo** (o **reducido**),
+
+$$
+\log\left(\frac{p({\bf x_i})}{1 - p({\bf x_i})}\right) = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_{(q-1)} x_{i(q-1)} + \epsilon_i
+$$
+
+donde $q<p$. Este modelo tiene $q-1$ predictores, para un total de $q$ parámetros $\beta$. Denotaremos el MLE de estos parámetros $\beta$ como $\hat{\beta}_{\text{Null}}$
+
+La diferencia entre estos dos modelos se puede codificar mediante la hipótesis nula de una prueba.
+
+$$
+H_0: \beta_q = \beta_{q+1} = \cdots = \beta_{p - 1} = 0.
+$$
+
+Esto implica que el modelo reducido está anidado dentro del modelo completo.
+
+Luego definimos un estadístico de prueba, $D$,
+
+$$
+D = -2 \log \left( \frac{L(\boldsymbol{\hat{\beta}_{\text{Null}}})} {L(\boldsymbol{\hat{\beta}_{\text{Full}}})} \right) = 2 \log \left( \frac{L(\boldsymbol{\hat{\beta}_{\text{Full}}})} {L(\boldsymbol{\hat{\beta}_{\text{Null}}})} \right) = 2 \left( \ell(\hat{\beta}_{\text{Full}}) - \ell(\hat{\beta}_{\text{Null}})\right)
+$$
+
+donde $L$ denota la verosimilitud y $\ell$ denota la log-verosimilitud Para una muestra lo suficientemente grande, este estadístico de prueba tiene una distribución Chi-cuadrado aproximada
+
+$$
+D \overset{\text{approx}}{\sim} \chi^2_{k}
+$$
+
+donde $k = p - q$, la diferencia en el número de parámetros de los dos modelos.
+
+Esta prueba, que llamaremos **Prueba de razón de verosimilitud**, será análoga a la prueba ANOVA $F$ para regresión logística. Curiosamente, para realizar la prueba de razón de verosimilitud, en realidad usaremos nuevamente la función `anova()` en `R` !.
+
+La prueba de razón de verosimilitud es en realidad una prueba bastante general, sin embargo, aquí hemos presentado una aplicación específica a los modelos de regresión logística anidados.
+
+### Ejemplo `SAheart`
+
+Para ilustrar el uso de la regresión logística, usaremos el conjunto de datos `SAheart` del paquete `ElemStatLearn`.
+
+```{r}
+# install.packages("bestglm")
+library(bestglm)
+data("SAheart")
+```
+
+```{r, echo = FALSE}
+knitr::kable(head(SAheart))
+```
+
+Estos datos provienen de una muestra retrospectiva de hombres en una región de alto riesgo de enfermedades cardíacas en Western Cape, Sudáfrica. La variable `chd`, que usaremos como respuesta, indica si la enfermedad coronaria está presente en un individuo o no. Tenga en cuenta que esto está codificado como una variable numérica `0` / `1`. Usando esto como respuesta con `glm()` es importante indicar `family = binomial`, de lo contrario se ajustará la regresión lineal ordinaria. Más adelante, veremos el uso de una respuesta de variable de factor, que en realidad se prefiere, ya que no se puede ajustar la regresión lineal ordinaria accidentalmente.
+
+Los predictores son varias medidas para cada individuo, muchas de ellas relacionadas con la salud del corazón. Por ejemplo, `sbp`, presión arterial sistólica y `ldl`, colesterol unido a lipoproteínas de baja densidad. Para obtener todos los detalles, utilice `?SAheart`.
+
+Comenzaremos por intentar modelar la probabilidad de enfermedad coronaria con base en el colesterol de lipoproteínas de baja densidad. Es decir, nos ajustaremos al modelo.
+
+$$
+\log\left(\frac{P[\texttt{chd} = 1]}{1 - P[\texttt{chd} = 1]}\right) = \beta_0 + \beta_{\texttt{ldl}} x_{\texttt{ldl}}
+$$
+
+```{r}
+chd_mod_ldl = glm(chd ~ ldl, data = SAheart, family = binomial)
+plot(jitter(chd, factor = 0.1) ~ ldl, data = SAheart, pch = 20, 
+     ylab = "Probabilidad de CHD", xlab = "Colesterol de lipoproteínas de baja densidad")
+grid()
+curve(predict(chd_mod_ldl, data.frame(ldl = x), type = "response"), 
+      add = TRUE, col = "dodgerblue", lty = 2)
+```
+
+Como antes, graficamos los datos además de las probabilidades estimadas. Tenga en cuenta que hemos "alterado" los datos para que sean más fáciles de visualizar, pero los datos solo toman valores `0` y `1`.
+
+Como era de esperar, este gráfico indica que a medida que aumenta `ldl`, también lo hace la probabilidad de `chd`.
+
+```{r}
+coef(summary(chd_mod_ldl))
+```
+
+Para realizar la prueba
+
+$$
+H_0: \beta_{\texttt{ldl}} = 0
+$$
+
+usamos la función `summary()` como lo hemos hecho tantas veces antes. Al igual que la prueba $t$ para la regresión lineal ordinaria, devuelve la estimación del parámetro, su error estándar, el estadístico de prueba relevante ($z$) y su valor p. Aquí tenemos un valor p increíblemente bajo, por lo que rechazamos la hipótesis nula. La variable `ldl` parece ser un predictor significativo.
+
+Al ajustar la regresión logística, podemos usar la misma sintaxis de fórmula que la regresión lineal ordinaria. Entonces, para ajustar un modelo aditivo usando todos los predictores disponibles, usamos:
+
+```{r}
+chd_mod_additive = glm(chd ~ ., data = SAheart, family = binomial)
+```
+
+Luego, podemos usar la prueba de razón de verosimilitud para comparar los dos modelos. Específicamente, estamos probando
+
+$$
+H_0: \beta_{\texttt{sbp}} = \beta_{\texttt{tobacco}} = \beta_{\texttt{adiposity}} = \beta_{\texttt{famhist}} = \beta_{\texttt{typea}} = \beta_{\texttt{obesity}} = \beta_{\texttt{alcohol}} = \beta_{\texttt{age}} = 0
+$$
+
+Podríamos calcular manualmente el estadístico de prueba,
+
+```{r}
+-2 * as.numeric(logLik(chd_mod_ldl) - logLik(chd_mod_additive))
+```
+
+O podríamos utilizar la función `anova()`. Al especificar `test = "LRT"`, `R` usará la prueba de razón de verosimilitud para comparar los dos modelos.
+
+```{r}
+anova(chd_mod_ldl, chd_mod_additive, test = "LRT")
+```
+
+Vemos que el estadístico de prueba que acabamos de calcular aparece en la salida. El valor p muy pequeño sugiere que preferimos el modelo más grande.
+
+Si bien preferimos el modelo aditivo en comparación con el modelo de un solo predictor, ¿realmente necesitamos todos los predictores en el modelo aditivo? Para seleccionar un subconjunto de predictores, podemos usar un procedimiento paso a paso como hicimos con la regresión lineal ordinaria. Recuerde que AIC y BIC se definieron en términos de probabilidades. Aquí demostramos el uso de AIC con un procedimiento de selección hacia atrás.
+
+```{r}
+chd_mod_selected = step(chd_mod_additive, trace = 0)
+coef(chd_mod_selected)
+```
+
+Podríamos volver a comparar este modelo con los modelos aditivos.
+
+$$
+H_0: \beta_{\texttt{sbp}} = \beta_{\texttt{adiposity}} = \beta_{\texttt{obesity}} = \beta_{\texttt{alcohol}} = 0
+$$
+
+```{r}
+anova(chd_mod_selected, chd_mod_additive, test = "LRT")
+```
+
+Aquí parece que preferiríamos el modelo seleccionado.
+
+### Intervalos de confianza
+
+Podemos crear intervalos de confianza para los parámetros $\beta$ usando la función `confint()` como hicimos con la regresión lineal ordinaria.
+
+```{r}
+confint(chd_mod_selected, level = 0.99)
+```
+
+Tenga en cuenta que podríamos crear intervalos reordenando los resultados de la prueba de Wald para obtener el intervalo de confianza de Wald. Esto estaría dado por
+
+$$
+\hat{\beta}_j \pm z_{\alpha/2} \cdot \text{SE}[\hat{\beta}_j].
+$$
+
+Sin embargo, `R` utiliza un enfoque ligeramente diferente basado en un concepto llamado verosimilitud de perfil. (Los detalles los omitiremos). En última instancia, los intervalos informados serán similares, pero el método utilizado por `R` es más común en la práctica, probablemente al menos parcialmente porque es el enfoque predeterminado en `R`. Compruebe cómo se comparan los intervalos que utilizan la fórmula anterior con los de la salida de `confint()`. (O, tenga en cuenta que el uso de `confint.default()` devolverá los resultados del cálculo del intervalo de confianza de Wald).
+
+### Intervalos de confianza para la respuesta promedio
+
+Los intervalos de confianza para la respuesta promedio requieren una reflexión adicional. Con una muestra "suficientemente grande", tenemos
+
+$$
+\frac{\hat{\eta}({\bf x}) - \eta({\bf x})}{\text{SE}[\hat{\eta}({\bf x})]} \overset{\text{approx}}{\sim} N(0, 1)
+$$
+
+Entonces podemos crear intervalos de confianza aproximados, al $(1 - \alpha)\%$ para $\eta({\bf x})$ usando
+
+$$
+\hat{\eta}({\bf x}) \pm z_{\alpha/2} \cdot \text{SE}[\hat{\eta}({\bf x})]
+$$
+
+donde $z_{\alpha/2}$ es el valor crítico tal que $P(Z > z_{\alpha/2}) = \alpha/2$.
+
+Este no es un intervalo particularmente interesante. En cambio, lo que realmente queremos es un intervalo para la respuesta promedio, $p({\bf x})$. Para obtener un intervalo para $p({\bf x})$, simplemente aplicamos la transformación logit inversa a los puntos finales del intervalo para $\eta.$
+
+$$
+\left(\text{logit}^{-1}(\hat{\eta}({\bf x}) - z_{\alpha/2} \cdot \text{SE}[\hat{\eta}({\bf x})] ), \ \text{logit}^{-1}(\hat{\eta}({\bf x}) + z_{\alpha/2} \cdot \text{SE}[\hat{\eta}({\bf x})])\right)
+$$
+
+Para demostrar la creación de estos intervalos, consideraremos una nueva observación.
+
+```{r}
+new_obs = data.frame(
+  sbp = 148.0,
+  tobacco = 5,
+  ldl = 12,
+  adiposity = 31.23,
+  famhist = "Present",
+  typea = 47,
+  obesity = 28.50,
+  alcohol = 23.89,
+  age = 60
+)
+```
+
+Primero, usaremos la función `predict()` para obtener $\hat{\eta}({\bf x})$ para esta observación.
+
+```{r}
+eta_hat = predict(chd_mod_selected, new_obs, se.fit = TRUE, type = "link")
+eta_hat
+```
+
+Al establecer `se.fit = TRUE`, `R` también calcula $\text{SE}[\hat{\eta}({\bf x})]$. Tenga en cuenta que usamos `type = "link"`, pero este es en realidad un valor predeterminado. Lo agregamos para enfatizar que la salida de `predict()` será el valor de la función de enlace.
+
+```{r}
+z_crit = round(qnorm(0.975), 2)
+round(z_crit, 2)
+```
+
+Después de obtener el valor crítico correcto, podemos crear fácilmente un intervalo de confianza al $95\%$ para $\eta({\bf x})$.
+
+```{r}
+eta_hat$fit + c(-1, 1) * z_crit * eta_hat$se.fit
+```
+
+Ahora simplemente necesitamos aplicar la transformación correcta para hacer de este un intervalo de confianza para $p({\bf x})$, la probabilidad de enfermedad coronaria para esta observación. Tenga en cuenta que el paquete `boot` contiene las funciones `logit()` e `inv.logit()` que son las transformaciones logit y logit inverso, respectivamente.
+
+```{r}
+boot::inv.logit(eta_hat$fit + c(-1, 1) * z_crit * eta_hat$se.fit)
+```
+
+Como era de esperar, los límites de este intervalo están entre 0 y 1. Además, dado que ambos límites del intervalo para $\eta({\bf x})$ son positivos, ambos límites del intervalo para $p({\bf x})$ son mayores que 0.5.
+
+### Sintaxis de la fórmula
+
+Sin pensarlo realmente, hemos estado usando nuestro conocimiento previo de la sintaxis de la fórmula del modelo de `R` para ajustar la regresión logística.
+
+#### Interacciones
+
+Agreguemos una interacción entre LDL e historia familiar para el modelo que seleccionamos.
+
+```{r}
+chd_mod_interaction = glm(chd ~ alcohol + ldl + famhist + typea + age + ldl:famhist, 
+                          data = SAheart, family = binomial)
+summary(chd_mod_interaction)
+```
+
+Según la prueba $z$ vista en el resumen anterior, esta interacción es significativa. El efecto de las LDL sobre la probabilidad de CHD es diferente según los antecedentes familiares.
+
+#### Términos polinomiales
+
+Tomemos el modelo anterior y ahora agreguemos un término polinomial.
+
+```{r}
+chd_mod_int_quad = glm(chd ~ alcohol + ldl + famhist + typea + age + ldl:famhist + I(ldl^2),
+                       data = SAheart, family = binomial)
+summary(chd_mod_int_quad)
+```
+
+Como era de esperar, dado que esta variable transformada adicional no se eligió inteligentemente, no es significativa. Sin embargo, esto nos permite enfatizar el hecho de que la notación de sintaxis que habíamos estado usando con `lm()` funciona básicamente exactamente igual para `glm()`, sin embargo ahora entendemos que esto está especificando la combinación lineal de predicciones , $\eta({\bf x})$.
+
+Es decir, lo anterior se ajusta al modelo.
+
+$$
+\log\left(\frac{p({\bf x})}{1 - p({\bf x})}\right) = 
+\beta_0 +
+\beta_{1}x_{\texttt{alcohol}} +
+\beta_{2}x_{\texttt{ldl}} +
+\beta_{3}x_{\texttt{famhist}} +
+\beta_{4}x_{\texttt{typea}} +
+\beta_{5}x_{\texttt{age}} +
+\beta_{6}x_{\texttt{ldl}}x_{\texttt{famhist}} +
+\beta_{7}x_{\texttt{ldl}}^2
+$$
+
+¡Es posible que se haya dado cuenta de esto antes de que lo escribiéramos explícitamente!
+
+### Desviación
+
+Probablemente haya notado que la salida de `summary()` también es muy similar a la de la regresión lineal ordinaria. Una diferencia es la "desviación" que se informa. `Null deviance` es la desviación del modelo nulo, es decir, un modelo sin predictores. La `Residual deviance` es la desviación del modelo que se ajustó.
+
+[**Desviación**](https://en.wikipedia.org/wiki/Deviance_(statistics)){target="_blank"} compara el modelo con un modelo saturado. (Sin observaciones repetidas, un modelo saturado es un modelo que se ajusta perfectamente, utilizando un parámetro para cada observación). Esencialmente, la desviación es una *suma de cuadrados residual* generalizada para GLM. Al igual que RSS, la desviación disminuye a medida que aumenta la complejidad del modelo.
+
+```{r}
+deviance(chd_mod_ldl)
+deviance(chd_mod_selected)
+deviance(chd_mod_additive)
+```
+
+Tenga en cuenta que estos están anidados y vemos que la desviación disminuye a medida que aumenta el tamaño del modelo. Entonces, si bien una desviación más baja es mejor, si el modelo se vuelve demasiado grande, puede estar sobreajustado. Tenga en cuenta que `R` también genera AIC en el resumen, que penalizará según el tamaño del modelo, para evitar el sobreajuste.
+
+## Clasificación
+
+Hasta ahora, hemos utilizado principalmente la regresión logística para estimar las probabilidades de clase. El siguiente paso algo obvio es usar estas probabilidades para hacer "predicciones", que en este contexto, llamaríamos **clasificaciones**. Según los valores de los predictores, ¿debería clasificarse una observación como $Y=1$ o como $Y=0$?
+
+Supongamos que no necesitáramos estimar probabilidades a partir de datos y, en cambio, supiéramos ambos
+
+$$
+p({\bf x}) = P[Y = 1 \mid {\bf X} = {\bf x}]
+$$
+
+y
+
+$$
+1 - p({\bf x}) = P[Y = 0 \mid {\bf X} = {\bf x}].
+$$
+
+Con esta información, clasificar las observaciones basadas en los valores de los predictores es realmente muy fácil. Simplemente clasifique una observación en la clase ($0$ o $1$) con mayor probabilidad. En general, este resultado se denomina **Clasificador de Bayes**,
+
+$$
+C^B({\bf x}) = \underset{k}{\mathrm{argmax}} \ P[Y = k \mid {\bf X = x}].
+$$
+
+Para una respuesta binaria, es decir,
+
+$$
+\hat{C}(\bf x) = 
+\begin{cases} 
+      1 & p({\bf x}) > 0.5 \\
+      0 & p({\bf x}) \leq 0.5 
+\end{cases}
+$$
+
+En pocas palabras, el clasificador de Bayes (que no debe confundirse con el clasificador Naive Bayes) minimiza la probabilidad de clasificación errónea al clasificar cada observación en la clase con la probabilidad más alta. Desafortunadamente, en la práctica, no conoceremos las probabilidades necesarias para usar directamente el clasificador de Bayes. En su lugar, tendremos que usar probabilidades estimadas. Entonces, para crear un clasificador que busque minimizar las clasificaciones erróneas, usaríamos,
+
+$$
+\hat{C}({\bf x}) = \underset{k}{\mathrm{argmax}} \ \hat{P}[Y = k \mid {\bf X = x}].
+$$
+
+En el caso de una respuesta binaria desde $\hat{p}({\bf x}) = 1 - \hat{p}({\bf x})$, esto se convierte en
+
+$$
+\hat{C}(\bf x) = 
+\begin{cases} 
+      1 & \hat{p}({\bf x}) > 0.5 \\
+      0 & \hat{p}({\bf x}) \leq 0.5 
+\end{cases}
+$$
+
+Usando esta simple regla de clasificación, podemos convertir la regresión logística en un clasificador. Para usarla en la clasificación, primero usamos la regresión logística para obtener probabilidades estimadas, $\hat{p}({\bf x})$, luego las usamos junto con la regla de clasificación anterior.
+
+La regresión logística es solo una de las muchas formas en que se pueden estimar estas probabilidades. En un curso completamente centrado en el aprendizaje automático, aprenderá muchas formas adicionales de hacer esto, así como métodos para realizar clasificaciones directamente sin necesidad de estimar las probabilidades primero. Pero como ya habíamos introducido la regresión logística, tiene sentido discutirla en el contexto de la clasificación.
+
+### Ejemplo `spam`
+
+Para ilustrar el uso de la regresión logística como clasificador, usaremos el conjunto de datos `spam` del paquete `kernlab`.
+
+```{r}
+# install.packages("kernlab")
+library(kernlab)
+data("spam")
+tibble::as.tibble(spam)
+```
+
+Este conjunto de datos, creado a finales de la década de 1990 en Hewlett-Packard Labs, contiene 4601 correos electrónicos, de los cuales 1813 se consideran spam. El resto no es spam. (Que para simplificar, podríamos llamar ham.) Se pueden obtener detalles adicionales usando `?Spam` o visitando [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/spambase){target="_blank"}. .
+
+La variable de respuesta, `type`, es un **factor** con niveles que etiquetan cada correo electrónico como `spam` o `nonspam`. Al ajustar los modelos, `nonspam` será el nivel de referencia, $Y=0$, ya que aparece primero en orden alfabético.
+
+```{r}
+is.factor(spam$type)
+levels(spam$type)
+```
+
+Muchos de los predictores (a menudo llamados características en el aprendizaje automático) se diseñan en función de los correos electrónicos. Por ejemplo, `charDollar` es el número de veces que un correo electrónico contiene el carácter `$`. Algunas variables son muy específicas de este conjunto de datos, por ejemplo, `george` y `num650`. (El nombre y código de área de uno de los investigadores cuyos correos electrónicos se utilizaron). Debemos tener en cuenta que este conjunto de datos se creó a partir de correos electrónicos enviados a un investigador de tipo académico en la década de 1990. Es probable que los resultados que obtengamos no se generalicen a los correos electrónicos modernos para el público en general.
+
+Para comenzar, primero dividiremos los datos en entrenamiento-prueba (test-train).
+
+```{r}
+set.seed(42)
+# spam_idx = sample(nrow(spam), round(nrow(spam) / 2))
+spam_idx = sample(nrow(spam), 1000)
+spam_trn = spam[spam_idx, ]
+spam_tst = spam[-spam_idx, ]
+```
+
+Hemos utilizado un conjunto de entrenamiento algo pequeño en relación con el tamaño total del conjunto de datos. En la práctica, probablemente debería ser más grande, pero esto es simplemente para reducir el tiempo de entrenamiento para la ilustración y reproducción de este documento.
+
+```{r, message = FALSE, warning = FALSE}
+fit_caps = glm(type ~ capitalTotal, 
+               data = spam_trn, family = binomial)
+fit_selected = glm(type ~ edu + money + capitalTotal + charDollar, 
+                   data = spam_trn, family = binomial)
+fit_additive = glm(type ~ ., 
+                   data = spam_trn, family = binomial)
+fit_over = glm(type ~ capitalTotal * (.), 
+               data = spam_trn, family = binomial, maxit = 50)
+```
+
+Ajustaremos cuatro regresiones logísticas, cada una más compleja que la anterior. Tenga en cuenta que estamos suprimiendo dos advertencias. La primera la mencionamos anteriormente.
+
+```{r, echo = FALSE}
+message("Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred")
+```
+
+Tenga en cuenta que, cuando recibamos esta advertencia, deberíamos sospechar mucho de las estimaciones de los parámetros.
+
+```{r}
+coef(fit_selected)
+```
+
+Sin embargo, el modelo aún se puede usar para crear un clasificador, y evaluaremos ese clasificador por sus propios méritos.
+
+También "suprimimos" la advertencia:
+
+```{r, echo = FALSE}
+message("Warning: glm.fit: algorithm did not converge")
+```
+
+En realidad, no lo suprimimos, sino que cambiamos `maxit` a `50`, al ajustar el modelo `fit_over`. Estas fueron suficientes iteraciones adicionales para permitir que el algoritmo de mínimos cuadrados reponderados iterativamente converja al ajustar el modelo.
+
+### Evaluar clasificadores
+
+La métrica que más nos interesará para evaluar el rendimiento general de un clasificador es la **tasa de clasificación errónea**. (A veces, en cambio, se informa la precisión, que es la proporción de clasificaciones correctas, por lo que ambas métricas tienen el mismo propósito).
+
+$$
+\text{Misclass}(\hat{C}, \text{Data}) = \frac{1}{n}\sum_{i = 1}^{n}I(y_i \neq \hat{C}({\bf x_i}))
+$$
+
+$$
+I(y_i \neq \hat{C}({\bf x_i})) = 
+\begin{cases} 
+  0 & y_i = \hat{C}({\bf x_i}) \\
+  1 & y_i \neq \hat{C}({\bf x_i}) \\
+\end{cases}
+$$
+
+Al usar esta métrica en los datos de entrenamiento, tendrá los mismos problemas que RSS para la regresión lineal ordinaria, es decir, solo disminuirá.
+
+```{r}
+# tasa de clasificación errónea de entrenamiento
+mean(ifelse(predict(fit_caps) > 0, "spam", "nonspam") != spam_trn$type)
+mean(ifelse(predict(fit_selected) > 0, "spam", "nonspam") != spam_trn$type)
+mean(ifelse(predict(fit_additive) > 0, "spam", "nonspam") != spam_trn$type)
+mean(ifelse(predict(fit_over) > 0, "spam", "nonspam") != spam_trn$type)
+```
+
+Debido a esto, los datos de entrenamiento no son útiles para evaluar, ya que sugerirían que siempre deberíamos usar el modelo más grande posible, cuando en realidad, es probable que ese modelo esté sobreajustado. Recuerde, un modelo que es demasiado complejo se sobreajustará. Un modelo demasiado simple quedará bien. (Estamos buscando algo en el medio).
+
+Para superar esto, usaremos la validación cruzada como hicimos con la regresión lineal ordinaria, pero esta vez validaremos de forma cruzada la tasa de clasificación errónea. Para hacerlo, usaremos la función `cv.glm()` de la libreria `boot`. Toma argumentos para los datos (en este caso entrenamiento), un modelo ajustado a través de `glm()` y `K`, el número de veces Consulte `?Cv.glm` para obtener más detalles.
+
+Anteriormente, para la validación cruzada de RMSE en regresión lineal ordinaria, usamos LOOCV. Ciertamente podríamos hacer eso aquí. Sin embargo, con la regresión logística, ya no tenemos el truco inteligente que permitiría obtener una métrica LOOCV sin necesidad de ajustar el modelo $n$ veces. Entonces, en su lugar, usaremos una validación cruzada de 5 veces. (5 y 10 veces son las más comunes en la práctica). En lugar de omitir una sola observación repetidamente, omitiremos una quinta parte de los datos.
+
+Básicamente, repetiremos el siguiente proceso 5 veces:
+
+- Separar al azar una quinta parte de los datos (cada observación solo se retendrá una vez)
+- Modelo de entrenamiento con datos restantes
+- Evaluar la tasa de clasificación errónea de los datos retenidos
+
+La tasa de clasificación errónea con validación cruzada de 5 veces será el promedio de estas tasas de clasificación errónea. Solo necesitando reajustar el modelo 5 veces, en lugar de $n$ veces, ahorraremos mucho tiempo de cálculo.
+
+```{r, message=FALSE, warning=FALSE}
+library(boot)
+set.seed(1)
+cv.glm(spam_trn, fit_caps, K = 5)$delta[1]
+cv.glm(spam_trn, fit_selected, K = 5)$delta[1]
+cv.glm(spam_trn, fit_additive, K = 5)$delta[1]
+cv.glm(spam_trn, fit_over, K = 5)$delta[1]
+```
+ 
+Tenga en cuenta que estamos suprimiendo las advertencias nuevamente. (Ahora habría muchos más, ya que se ajustarían un total de 20 modelos).
+
+Según estos resultados, `fit_caps` y `fit_selected` son insuficientes en relación con `fit_additive`. De manera similar, `fit_over` está sobreajustado en relación con `fit_additive`. Por lo tanto, con base en estos resultados, preferimos el clasificador creado con base al ajuste de regresión logística y almacenado en `fit_additive`.
+
+En el futuro, para evaluar e informar sobre la eficacia de este clasificador, usaremos el conjunto de datos de prueba. Adoptaremos la posición de que el conjunto de datos de prueba **nunca** debe usarse en el entrenamiento, por lo que usamos la validación cruzada dentro del conjunto de datos de entrenamiento para seleccionar un modelo. Aunque la validación cruzada utiliza conjuntos de reserva para generar métricas, en algún momento todos los datos se utilizan para el entrenamiento.
+
+Para resumir rápidamente qué tan bien funciona este clasificador, crearemos una matriz de confusión.
+
+![Matriz de confusión](images/confusion.png)
+
+Además, desglosa los errores de clasificación en falsos positivos y falsos negativos.
+
+```{r}
+make_conf_mat = function(predicted, actual) {
+  table(predicted = predicted, actual = actual)
+}
+```
+
+Almacenemos explícitamente los valores predichos de nuestro clasificador en el conjunto de datos de prueba.
+
+```{r}
+spam_tst_pred = ifelse(predict(fit_additive, spam_tst) > 0, 
+                       "spam", 
+                       "nonspam")
+spam_tst_pred = ifelse(predict(fit_additive, spam_tst, type = "response") > 0.5, 
+                       "spam", 
+                       "nonspam")
+```
+
+Las dos líneas de código anteriores producen el mismo resultado, es decir, las mismas predicciones, ya que
+
+$$
+\eta({\bf x}) = 0 \iff p({\bf x}) = 0.5
+$$
+
+Ahora usaremos estas predicciones para crear una matriz de confusión.
+
+```{r}
+(conf_mat_50 = make_conf_mat(predicted = spam_tst_pred, actual = spam_tst$type))
+```
+
+$$
+\text{Prev} = \frac{\text{P}}{\text{Total Obs}}= \frac{\text{TP + FN}}{\text{Total Obs}}
+$$
+
+```{r}
+table(spam_tst$type) / nrow(spam_tst)
+```
+
+Primero, tenga en cuenta que para ser un clasificador razonable, debe superar al clasificador obvio de simplemente clasificar todas las observaciones en la clase mayoritaria. En este caso, clasificar todo como no spam para una tasa de clasificación errónea de prueba de `r as.numeric((table(spam_tst$type) / nrow(spam_tst))[2])`
+
+A continuación, podemos ver que usando el clasificador creado a partir de `fit_additive`, un total de $137 + 161 = 298$ del total de 3601 correos electrónicos en el conjunto de prueba están mal clasificados. En general, la precisión en la prueba se establece
+
+```{r}
+mean(spam_tst_pred == spam_tst$type)
+```
+
+En otras palabras, la clasificación errónea de la prueba es
+
+```{r}
+mean(spam_tst_pred != spam_tst$type)
+```
+
+Esto parece un clasificador decente ...
+
+Sin embargo, ¿todos los errores son iguales? En este caso, absolutamente no. Los 137 correos electrónicos no spam que se marcaron como spam (falsos positivos) son un problema. No podemos permitir que información importante, digamos, una oferta de trabajo, se pierda de nuestra bandeja de entrada y sea enviada a la carpeta de correo no deseado. Por otro lado, los 161 correos electrónicos no deseados que llegarían a una bandeja de entrada (falsos negativos) se tratan fácilmente, simplemente elimínelos.
+
+En lugar de simplemente evaluar un clasificador en función de su tasa de clasificación errónea (o precisión), definiremos dos métricas adicionales, sensibilidad y especificidad. Tenga en cuenta que estas son simplemente dos de muchas más métricas que se pueden considerar. La [página de Wikipedia para sensibilidad y especificidad](https://en.wikipedia.org/wiki/Sensitivity_and_specificity){target="_blank"} detalla una gran cantidad de métricas que pueden derivarse de una matriz de confusión.
+
+**Sensibilidad** es esencialmente la tasa de verdaderos positivos. Entonces, cuando la sensibilidad es alta, el número de falsos negativos es bajo.
+
+$$
+\text{Sens} = \text{True Positive Rate} = \frac{\text{TP}}{\text{P}} = \frac{\text{TP}}{\text{TP + FN}}
+$$
+
+Tenemos una función en `R` para calcular la sensibilidad basada en la matriz de confusión. Tenga en cuenta que esta función es buena para fines ilustrativos, pero se rompe fácilmente. (Piense en lo que sucede si no se pronostican "positivos").
+
+```{r}
+get_sens = function(conf_mat) {
+  conf_mat[2, 2] / sum(conf_mat[, 2])
+}
+```
+
+**Especificidad** es esencialmente la tasa de verdaderos negativos. Entonces, cuando la especificidad es alta, el número de falsos positivos es bajo.
+
+$$
+\text{Spec} = \text{True Negative Rate} = \frac{\text{TN}}{\text{N}} = \frac{\text{TN}}{\text{TN + FP}}
+$$
+
+```{r}
+get_spec =  function(conf_mat) {
+  conf_mat[1, 1] / sum(conf_mat[, 1])
+}
+```
+
+Calculamos ambos en función de la matriz de confusión que habíamos creado para nuestro clasificador.
+
+```{r}
+get_sens(conf_mat_50)
+get_spec(conf_mat_50)
+```
+
+Recuerde que habíamos creado este clasificador usando una probabilidad de $0.5$ como un "límite" de cómo se deben clasificar las observaciones. Ahora modificaremos este límite. Veremos que al modificar el límite, $c$, podemos mejorar la sensibilidad o la especificidad a expensas de la precisión general (tasa de clasificación errónea).
+
+$$
+\hat{C}(\bf x) = 
+\begin{cases} 
+      1 & \hat{p}({\bf x}) > c \\
+      0 & \hat{p}({\bf x}) \leq c 
+\end{cases}
+$$
+
+Además, si cambiamos el límite para mejorar la sensibilidad, disminuiremos la especificidad y viceversa.
+
+Primero veamos qué sucede cuando bajamos el límite de $0.5$ a $0.1$ para crear un nuevo clasificador y, por lo tanto, nuevas predicciones.
+
+```{r}
+spam_tst_pred_10 = ifelse(predict(fit_additive, spam_tst, type = "response") > 0.1, 
+                          "spam", 
+                          "nonspam")
+```
+
+Esto es esencialmente *disminuir* el umbral para que un correo electrónico sea etiquetado como spam, hasta ahora *más* correos electrónicos serán etiquetados como spam. Vemos eso en la siguiente matriz de confusión.
+
+```{r}
+(conf_mat_10 = make_conf_mat(predicted = spam_tst_pred_10, actual = spam_tst$type))
+```
+
+Desafortunadamente, si bien esto reduce en gran medida los falsos negativos, los falsos positivos casi se han cuadriplicado. Vemos esto reflejado en la sensibilidad y especificidad.
+
+```{r}
+get_sens(conf_mat_10)
+get_spec(conf_mat_10)
+```
+
+Este clasificador, que usa $0.1$ en lugar de $0.5$ tiene una mayor sensibilidad, pero una especificidad mucho menor. Claramente, deberíamos haber movido el límite en la otra dirección. Probemos $0.9$.
+
+```{r}
+spam_tst_pred_90 = ifelse(predict(fit_additive, spam_tst, type = "response") > 0.9, 
+                          "spam", 
+                          "nonspam")
+```
+
+Esto es esencialmente *aumentar* el umbral para que un correo electrónico sea etiquetado como spam, hasta ahora *menos* correos electrónicos serán etiquetados como spam. Nuevamente, vemos eso en la siguiente matriz de confusión.
+
+```{r}
+(conf_mat_90 = make_conf_mat(predicted = spam_tst_pred_90, actual = spam_tst$type))
+```
+
+Este es el resultado que buscamos. Tenemos muchos menos falsos positivos. Si bien la sensibilidad se reduce considerablemente, la especificidad ha aumentado.
+
+```{r}
+get_sens(conf_mat_90)
+get_spec(conf_mat_90)
+```
+
+Si bien se trata de muchos menos falsos positivos, ¿es aceptable? Probablemente todavía no. Además, no olvide que este sería un terrible detector de spam hoy en día, ya que se basa en datos de una era de Internet muy diferente, para un grupo de personas muy específico. ¡El spam ha cambiado mucho desde los 90! (Irónicamente, el aprendizaje automático es probablemente parcialmente el culpable).
+
+Este capítulo ha proporcionado una introducción bastante rápida a la clasificación y, por tanto, al aprendizaje automático. Para obtener una cobertura más completa del aprendizaje automático, [An Introduction to Statistical Learning](http://www-bcf.usc.edu/~gareth/ISL/){target="_blank"} es un recurso muy recomendable. Además, `R` for Statistical Learning] se ha escrito como un suplemento que proporciona detalles adicionales sobre cómo realizar estos métodos utilizando `R`.
+

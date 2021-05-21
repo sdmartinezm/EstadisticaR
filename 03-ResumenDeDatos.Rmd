@@ -1,0 +1,140 @@
+# Resumen de datos
+
+## Resumen estadístico
+
+`R` tiene funciones integradas para una gran cantidad de estadísticas resumidas. Para las variables numéricas, podemos resumir los datos con las medidas de tendencia central y de dispersión Veremos nuevamente el conjunto de datos `mpg` del paquete` ggplot2`.
+
+```{r, message = FALSE, warning = FALSE}
+library(ggplot2)
+```
+
+### Tendencia central {-}
+
+| Medida  | `R`               | Resultado           |
+|---------|-------------------|---------------------|
+| Promedio| `mean(mpg$cty)`   | `r mean(mpg$cty)`   |
+| Mediana | `median(mpg$cty)` | `r median(mpg$cty)` |
+
+### Dispersión {-}
+
+| Measure            | `R`              | Result             |
+|--------------------|------------------|--------------------|
+| Varianza           | `var(mpg$cty)`   | `r var(mpg$cty)`   |
+| Desviación Estándar| `sd(mpg$cty)`    | `r sd(mpg$cty)`    |
+| IQR                | `IQR(mpg$cty)`   | `r IQR(mpg$cty)`   |
+| Mínimo             | `min(mpg$cty)`   | `r min(mpg$cty)`   |
+| Máximo             | `max(mpg$cty)`   | `r max(mpg$cty)`   |
+| Rango              | `range(mpg$cty)` | `r range(mpg$cty)` |
+
+### Categórica {-}
+
+Para las variables categóricas, se pueden utilizar recuentos y porcentajes para el resumen.
+
+```{r}
+table(mpg$drv)
+table(mpg$drv) / nrow(mpg)
+```
+
+## Graficas
+
+Ahora que tenemos algunos datos con que trabajar y hemos aprendido sobre los datos en el nivel más básico, nuestra próxima tarea es visualizar los datos. A menudo, una visualización adecuada puede iluminar las características de los datos que pueden informar más análisis.
+
+Veremos cuatro métodos de visualización de datos que usaremos a lo largo del curso:
+
+- Histogramas
+- Gráfico de barras
+- Gráfico de cajas
+- Gráfico de dispersión
+
+### Histogramas
+
+Al visualizar una sola variable numérica, un **histograma** será nuestra herramienta de referencia, que se puede crear en `R` usando la función `hist()`.
+
+```{r}
+hist(mpg$cty)
+```
+
+La función de histograma tiene una serie de parámetros que se pueden cambiar para que nuestro gráfico se vea mucho mejor. Utilice el operador `?` Para leer la documentación de `hist()` para ver una lista completa de estos parámetros.
+
+```{r}
+hist(mpg$cty,
+     xlab   = "Millas por galón (Ciudad)",
+     main   = "Histograma de MPG (Ciudad)",
+     breaks = 12,
+     col    = "dodgerblue",
+     border = "darkorange")
+```
+
+Es importante destacar que siempre debe asegurarse de etiquetar sus ejes y darle un título a la gráfica El argumento `breaks` es específico de `hist()`. Ingresar un número entero le dará una sugerencia a `R` de cuántas barras usar para el histograma. Por defecto, `R` intentará adivinar inteligentemente un buen número de `breaks`, pero como podemos ver aquí, a veces es útil modificarlo usted mismo.
+
+### Gráfico de barras
+
+Es algo similar a un histograma, un gráfico de barras puede proporcionar un resumen visual de una variable categórica o una variable numérica con un número finito de valores, como una clasificación del 1 al 10.
+
+```{r}
+barplot(table(mpg$drv))
+```
+
+```{r}
+barplot(table(mpg$drv),
+        xlab   = "Drivetrain (f = FWD, r = RWD, 4 = 4WD)",
+        ylab   = "Frecuencia",
+        main   = "Drivetrains",
+        col    = "dodgerblue",
+        border = "darkorange")
+```
+
+### Diagramas de cajas
+
+Para visualizar la relación entre una variable numérica y categórica, usaremos un **gráfico de cajas**. En el conjunto de datos `mpg`, la variable `drv` toma un pequeño número finito de valores. Un automóvil solo puede ser de tracción delantera, 4 ruedas motrices o tracción trasera.
+
+```{r}
+unique(mpg$drv)
+```
+
+En primer lugar, tenga en cuenta que podemos utilizar una gráfica de caja única como alternativa a un histograma para visualizar una única variable numérica. Para hacerlo en `R`, usamos la función` boxplot()`.
+
+```{r}
+boxplot(mpg$hwy)
+```
+
+Sin embargo, más a menudo usaremos gráficas de cajas para comparar una variable numérica para diferentes valores de una variable categórica.
+
+```{r}
+boxplot(hwy ~ drv, data = mpg)
+```
+
+Aquí usamos el comando `boxplot()` para crear gráficas de cajas una al lado de la otra. Sin embargo, dado que ahora estamos tratando con dos variables, la sintaxis ha cambiado. La sintaxis en `R` `hwy ~ drv, data = mpg` dice "Trace la variable `hwy` contra la variable `drv` usando el conjunto de datos `mpg` ". Vemos el uso de un `~` (que especifica una fórmula) y también un argumento `data =`. Esta será una sintaxis común a muchas funciones que usaremos en este curso.
+
+```{r}
+boxplot(hwy ~ drv, data = mpg,
+     xlab   = "Drivetrain (f = FWD, r = RWD, 4 = 4WD)",
+     ylab   = "Millas por galón (Carretera)",
+     main   = "MPG (Carretera) vs Drivetrain",
+     pch    = 20,
+     cex    = 2,
+     col    = "darkorange",
+     border = "dodgerblue")
+```
+
+Nuevamente, `boxplot()` tiene una serie de argumentos adicionales que tienen la capacidad de hacer que nuestra gráfica sea más atractiva visualmente.
+
+### Gráfico de dispersión
+
+Por último, para visualizar la relación entre dos variables numéricas usaremos un **diagrama de dispersión**. Esto se puede hacer con la función `plot()` y la sintaxis `~` que acabamos de usar con una gráfica de cajas. (La función `plot()` también se puede utilizar de forma más general; consulte la documentación para obtener más detalles.)
+
+```{r}
+plot(hwy ~ displ, data = mpg)
+```
+
+```{r}
+plot(hwy ~ displ, data = mpg,
+     xlab = "Desplazamiento del motor (en litros)",
+     ylab = "Millas por galón (Carretera)",
+     main = "MPG (Carretera) vs Desplazamiento del motor",
+     pch  = 20,
+     cex  = 2,
+     col  = "dodgerblue")
+```
+
+

@@ -1,0 +1,118 @@
+# Introducción a `R`
+
+## Primeros pasos
+
+`R` es un lenguaje de programación y un entorno de software para la computación estadística, que es *gratuito* y *de código abierto*. Para comenzar, necesitará instalar dos piezas de software:
+
+- [`R`, el lenguaje de programación actual.](http://cran.r-project.org/){target="_blank"}
+    - Elija su sistema operativo y seleccione la versión más reciente, `r paste0(version$major, "." ,version$minor)`.
+- [RStudio, un excelente entorno de desarrollo integrado para trabajar con `R`.](http://www.rstudio.com/){target="_blank"}
+    - Nota, debe tener `R` instalado para usar RStudio. RStudio es simplemente una interfaz utilizada para interactuar con `R`.
+
+La popularidad de `R` va en aumento y cada día se convierte en una mejor herramienta para el análisis estadístico. ¡Incluso generó este libro! (Una habilidad que aprenderá en este curso). Hay muchos buenos recursos para aprender `R`.
+
+Los siguientes capítulos servirán como una rápida introducción a `R`. De ninguna manera pretenden ser una referencia completa para el lenguaje `R`, sino simplemente una introducción a los conceptos básicos que necesitaremos en el camino. Se volverán a enfatizar varios de los temas más importantes, ya que son realmente necesarios para los análisis.
+
+Estos capítulos introductorios a `R` pueden parecer una cantidad abrumadora de información. No se espera que recoja todo la primera vez. Debe probar todo el código de estos capítulos y luego volver a ellos varias veces a medida que regrese a los conceptos al realizar análisis.
+
+`R` se utiliza tanto para el desarrollo de software como para el análisis de datos. Operaremos en un área gris, en algún lugar entre estas dos tareas. Nuestro principal objetivo será analizar datos, pero también realizaremos ejercicios de programación que ayuden a ilustrar ciertos conceptos.
+
+RStudio tiene una gran cantidad de atajos de teclado útiles. Se puede encontrar una lista de estos usando un atajo de teclado, el atajo de teclado para gobernarlos a todos:
+
+- En Windows: `Alt` + `Shift` + `K`
+- En Mac:  `Option` + `Shift` + `K`
+
+El equipo de RStudio ha desarrollado una serie de ["hojas de trucos"](https://www.rstudio.com/resources/cheatsheets/){target="_blank"} para trabajar con `R` y RStudio. [Esta hoja de referencia en particular para `R` "Base"](http://www.rstudio.com/wp-content/uploads/2016/05/base-r.pdf){target="_blank"} resumirá muchos de los conceptos de este documento. (`R` "Base" es un nombre que se usa para diferenciar la práctica de usar funciones` R` integradas, en contraposición a usar funciones de paquetes externos, en particular, las de [`tidyverse`](https://www.tidyverse.org/){target="_blank"}. Más sobre esto más adelante.)
+
+Al programar, a menudo es una buena práctica seguir una guía de estilo. (¿A dónde van los espacios? ¿Tabuladores o espacios? ¿Guiones bajos o CamelCase al nombrar variables?) Ninguna guía de estilo es "correcta", pero ayuda a estar al tanto de lo que hacen los demás. Lo más importante es ser coherente con su propio código.
+
+- [Guía de estilo de Hadley Wickham](http://adv-r.had.co.nz/Style.html){target="_blank"} from [`R` avanzado](http://adv-r.had.co.nz/){target="_blank"}
+- [Guía de estilo de Google](https://google.github.io/styleguide/Rguide.xml){target="_blank"}
+
+Para este curso, nuestra principal desviación de estas dos guías es el uso de `=` en lugar de `<-`. (Más sobre eso más adelante).
+
+## Cálculos básicos
+
+Para comenzar, usaremos `R` como una simple calculadora.
+
+#### Suma, resta, multiplicación y división {-}
+
+| Matemáticas   | `R`     | Resultado |
+|---------------|---------|-----------|
+| $3 + 2$       | `3 + 2` | `r 3 + 2` |
+| $3 - 2$       | `3 - 2` | `r 3 - 2` |
+| $3 \cdot2$    | `3 * 2` | `r 3 * 2` |
+| $3 / 2$       | `3 / 2` | `r 3 / 2` |
+
+#### Exponentes  {-}
+
+| Matemáticas  | `R`             | Resultado         |
+|--------------|-----------------|-------------------|
+| $3^2$        | `3 ^ 2`         | `r 3 ^ 2`         |
+| $2^{(-3)}$   | `2 ^ (-3)`      | `r 2 ^ (-3)`      |
+| $100^{1/2}$  | `100 ^ (1 / 2)` | `r 100 ^ (1 / 2)` |
+| $\sqrt{100}$ | `sqrt(100)`     | `r sqrt(100)`     |
+
+#### Constantes Matemáticas  {-}
+
+| Matemáticas  | `R`             | Resultado         |
+|--------------|-----------------|-------------------|
+| $\pi$        | `pi`            | `r pi`            |
+| $e$          | `exp(1)`        | `r exp(1)`        |
+
+#### Logaritmos  {-}
+
+Tenga en cuenta que usaremos $\ln$ y $\log$ indistintamente para significar el logaritmo natural. No hay `ln()` en `R`, en su lugar usa`log ()`para significar el logaritmo natural.
+
+| Matemáticas       | `R`                 | Resultado             |
+|-------------------|---------------------|-----------------------|
+| $\log(e)$         | `log(exp(1))`       | `r log(exp(1))`       |
+| $\log_{10}(1000)$ | `log10(1000)`       | `r log10(1000)`       |
+| $\log_{2}(8)$     | `log2(8)`           | `r log2(8)`           |
+| $\log_{4}(16)$    | `log(16, base = 4)` | `r log(16, base = 4)` |
+
+#### Trigonometría  {-}
+
+| Matemáticas     | `R`           | Resultado       |
+|-----------------|---------------|-----------------|
+| $\sin(\pi / 2)$ | `sin(pi / 2)` | `r sin(pi / 2)` |
+| $\cos(0)$       | `cos(0)`      | `r cos(0)`      |
+
+## Obteniendo ayuda
+
+Al usar `R` como calculadora, hemos visto varias funciones:`sqrt()`,`exp()`,`log()`y`sin()`. Para obtener documentación sobre una función en `R`, simplemente coloque un signo de interrogación delante del nombre de la función y RStudio mostrará la documentación, por ejemplo:
+
+```{r, eval = FALSE}
+?log
+?sin
+?paste
+?lm
+```
+
+Con frecuencia, una de las cosas más difíciles de hacer al aprender `R` es pedir ayuda. Primero, debe decidir pedir ayuda, luego necesita saber *cómo* pedir ayuda. Su primera línea de defensa debe ser buscar en Google su mensaje de error o una breve descripción de su problema. (La capacidad de resolver problemas utilizando este método se está convirtiendo rápidamente en una habilidad extremadamente valiosa). Si eso falla, y eventualmente lo hará, debe pedir ayuda. Hay una serie de cosas que debe incluir al enviar un correo electrónico a un instructor o al publicar en un sitio web de ayuda como [Stack Exchange](http://stats.stackexchange.com/){target="_blank"}.
+
+- Describa qué espera que haga el código.
+- Indique el objetivo final que está tratando de lograr. (A veces, lo que espera que haga el código no es lo que realmente quiere hacer).
+- Proporcione el texto completo de los errores que haya recibido.
+- Proporcione suficiente código para recrear el error. A menudo, para el propósito de este curso, simplemente puede enviar por correo electrónico todo el archivo `.R` o` .Rmd`.
+- A veces también es útil incluir una captura de pantalla de toda la ventana de RStudio cuando se produce el error.
+
+Si sigue estos pasos, su problema se resolverá mucho más rápido y posiblemente aprenderá más en el proceso. No se desanime al encontrarse con errores y dificultades al aprender `R`. (O cualquier habilidad técnica). Es simplemente parte del proceso de aprendizaje.
+
+## Instalación de paquetes
+
+`R` viene con una serie de funciones integradas y conjuntos de datos, pero una de las principales fortalezas de` R` como proyecto de código abierto es su sistema de paquetes. Los paquetes agregan funciones y datos adicionales. Con frecuencia, si desea hacer algo en `R`, y no está disponible de forma predeterminada, es muy probable que haya un paquete que satisfaga sus necesidades.
+
+Para instalar un paquete, use la función `install.packages()`. Piense en esto como comprar un libro de recetas en la tienda, llevarlo a casa y ponerlo en su estante.
+
+```{r, eval = FALSE}
+install.packages("ggplot2")
+```
+
+Una vez que se instala un paquete, debe cargarse en su sesión actual de `R` antes de ser utilizado. Piense en esto como sacar el libro del estante y abrirlo para leer.
+
+```{r, message = FALSE, warning = FALSE}
+library(ggplot2)
+```
+
+Una vez que cierra `R`, todos los paquetes se cierran y se vuelven a colocar en el estante imaginario. La próxima vez que abra `R`, no es necesario que vuelva a instalar el paquete, pero debe cargar los paquetes que desee utilizar invocando`library()`.

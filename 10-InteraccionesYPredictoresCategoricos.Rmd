@@ -1,0 +1,945 @@
+# Interacciones y predictores categóricos
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(cache = TRUE, autodep = TRUE, fig.align = "center")
+```
+
+> "El mayor valor de una imagen es cuando nos obliga a notar lo que nunca esperábamos ver."
+>
+> --- **John Tukey**
+
+Después de leer este capítulo, podrá:
+
+- Incluir e interpretar variables categóricas en un modelo de regresión lineal mediante variables ficticias.
+- Comprender las implicaciones de usar un modelo con una variable categórica de dos maneras: niveles que sirven como predictores únicos versus niveles que sirven como comparación con una línea de base.
+- Construir e interpretar modelos de regresión lineal con términos de interacción.
+- Identificar variables categóricas en un conjunto de datos y convertirlas en variables factor, si es necesario, utilizando `R`.
+
+Hasta ahora, en cada uno de nuestros análisis, solo hemos utilizado variables numéricas como predictores. También hemos utilizado solo *modelos aditivos*, lo que significa que el efecto que cualquier predictor tuvo en la respuesta no dependió de los otros predictores. En este capítulo, eliminaremos ambas restricciones. Ajustaremos modelos con predictores categóricos y usaremos modelos que permitan a los predictores *interactuar*. Las matemáticas de la regresión múltiple permanecerán en gran parte sin cambios, sin embargo, prestaremos mucha atención a la interpretación, así como a algunas diferencias en el uso de `R`.
+
+## Variables ficticias (Dummy)
+
+Para este capítulo, usaremos brevemente el conjunto de datos integrado `mtcars` antes de regresar a nuestro conjunto de datos `autompg` que creamos en el último capítulo. El conjunto de datos `mtcars` es algo más pequeño, por lo que rápidamente veremos todo el conjunto de datos.
+
+```{r}
+mtcars
+```
+
+Nos interesarán tres de las variables: `mpg`, `hp` y` am`.
+
+- `mpg`: eficiencia de combustible, en millas por galón.
+- `hp`: caballos de fuerza, en libras-pie por segundo.
+- `am`: transmisión. Automática o manual.
+
+Como hacemos a menudo, comenzaremos graficando los datos. Estamos interesados en `mpg` como variable respuesta y `hp` como predictor.
+
+```{r}
+plot(mpg ~ hp, data = mtcars, cex = 2)
+```
+
+Dado que también estamos interesados en el tipo de transmisión, también podríamos etiquetar los puntos,
+
+```{r}
+plot(mpg ~ hp, data = mtcars, col = am + 1, pch = am + 1, cex = 2)
+legend("topright", c("Automática", "Manual"), col = c(1, 2), pch = c(1, 2))
+```
+
+Usamos un "truco" común de `R` al graficar estos datos. La variable `am` toma dos valores posibles; `0` para transmisión automática y `1` para transmisiones manuales. `R` puede usar números para representar colores, sin embargo, el color de `0` es blanco. Así que tomamos el vector `am` y le agregamos `1`. Entonces, las observaciones con transmisiones automáticas ahora se representan con `1`, que es negro en `R`, y la transmisión manual se representa con `2`, que es rojo en `R`. (Tenga en cuenta que solo estamos agregando `1` dentro de la llamada a `plot()`, en realidad no estamos modificando los valores almacenados en `am`).
+
+Ahora ajustamos el modelo SLR
+
+\[
+Y = \beta_0 + \beta_1 x_1 + \epsilon,
+\]
+
+donde $Y$ es `mpg` y $x_1$ es `hp`. Para abreviar la notación, descartamos el índice $i$ para las observaciones.
+
+```{r}
+mpg_hp_slr = lm(mpg ~ hp, data = mtcars)
+```
+
+Luego volvemos a graficar los datos y agregamos la línea ajustada
+
+```{r}
+plot(mpg ~ hp, data = mtcars, col = am + 1, pch = am + 1, cex = 2)
+abline(mpg_hp_slr, lwd = 3, col = "grey")
+legend("topright", c("Automática", "Manual"), col = c(1, 2), pch = c(1, 2))
+```
+
+Deberíamos notar un patrón. Las observaciones manuales rojas están en gran parte por encima de la línea, mientras que las observaciones automáticas negras están en su mayoría por debajo de la línea. Esto significa que nuestro modelo subestima la eficiencia de combustible de las transmisiones manuales y sobreestima la eficiencia de combustible de las transmisiones automáticas. Para corregir esto, agregaremos un predictor a nuestro modelo, a saber, `am` como $x_2$.
+
+Nuestro nuevo modelo es
+
+\[
+Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \epsilon,
+\]
+
+donde $x_1$ y $Y$ siguen siendo los mismos, pero ahora
+
+\[
+x_2 =
+  \begin{cases}
+   1 & \text{transmisión manual} \\
+   0       & \text{transmisión automática}
+  \end{cases}.
+\]
+
+En este caso, llamamos $x_2$ una **variable ficticia**. Una variable ficticia tiene un nombre algo desafortunado, ya que de ninguna manera es "tonta". De hecho, en realidad es algo inteligente. Una variable ficticia es una variable numérica que se utiliza en un análisis de regresión para "codificar" una variable categórica binaria. Veamos cómo funciona esto.
+
+Primero, tenga en cuenta que `am` ya es una variable ficticia, ya que usa los valores `0` y `1` para representar transmisiones automáticas y manuales. A menudo, una variable como `am` almacenaría los valores de los caracteres `auto` y `man` y tendríamos que convertirlos en `0` y `1` o, como veremos más adelante,`R` prestará cuidado de crear variables ficticias por nosotros.
+
+Entonces, para ajustar el modelo anterior, lo hacemos como cualquier otro modelo de regresión múltiple que hayamos visto antes.
+
+```{r}
+mpg_hp_add = lm(mpg ~ hp + am, data = mtcars)
+```
+
+Comprobando brevemente la salida, vemos que `R` ha estimado los tres parámetros $\beta$.
+
+```{r}
+mpg_hp_add
+```
+
+Dado que $x_2$ solo puede tomar valores `0` y `1`, podemos escribir efectivamente dos modelos diferentes, uno para transmisiones manuales y otro para transmisiones automáticas.
+
+Para transmisiones automáticas, $x_2 = 0$, tenemos,
+
+\[
+Y = \beta_0 + \beta_1 x_1 + \epsilon.
+\]
+
+Luego, para las transmisiones manuales, $x_2=1$, tenemos,
+
+\[
+Y = (\beta_0 + \beta_2) + \beta_1 x_1 + \epsilon.
+\]
+
+Observe que estos modelos comparten la misma pendiente, $\beta_1$, pero tienen intersecciones diferentes, que difieren en $\beta_2$. Entonces, el cambio en `mpg` es el mismo para ambos modelos, pero en promedio,`mpg` difiere en $\beta_2$ entre los dos tipos de transmisión.
+
+Ahora calcularemos la pendiente estimada y el intercepto de estos dos modelos para que podamos agregarlos a una gráfica. Tenga en cuenta que:
+
+- $\hat{\beta}_0$ = `coef(mpg_hp_add)[1]` = `r coef(mpg_hp_add)[1]`
+- $\hat{\beta}_1$ = `coef(mpg_hp_add)[2]` = `r coef(mpg_hp_add)[2]`
+- $\hat{\beta}_2$ = `coef(mpg_hp_add)[3]` = `r coef(mpg_hp_add)[3]`
+
+Luego, podemos combinarlos para calcular la pendiente y las intersecciones estimadas.
+
+```{r}
+int_auto = coef(mpg_hp_add)[1]
+int_manu = coef(mpg_hp_add)[1] + coef(mpg_hp_add)[3]
+
+slope_auto = coef(mpg_hp_add)[2]
+slope_manu = coef(mpg_hp_add)[2]
+```
+
+Al volver a graficar los datos, usamos estas pendientes e intersecciones para agregar los "dos" modelos ajustados a la gráfica.
+
+```{r}
+plot(mpg ~ hp, data = mtcars, col = am + 1, pch = am + 1, cex = 2)
+abline(int_auto, slope_auto, col = 1, lty = 1, lwd = 2) # agregar línea para auto
+abline(int_manu, slope_manu, col = 2, lty = 2, lwd = 2) # agregar línea para manual
+legend("topright", c("Automática", "Manual"), col = c(1, 2), pch = c(1, 2))
+```
+
+Notamos de inmediato que los puntos ya no son sistemáticamente incorrectos. Las observaciones manuales rojas varían alrededor de la línea roja sin un patrón en particular sin subestimar las observaciones como antes. Los puntos negros automáticos varían alrededor de la línea negra, también sin un patrón obvio.
+
+Dicen que una imagen vale más que mil palabras, pero como estadístico, vale la pena realizar un análisis completo. La imagen de arriba hace claramente obvio que $\beta_2$ es significativo, pero verifiquémoslo matemáticamente. Básicamente nos gustaría probar:
+
+\[
+H_0: \beta_2 = 0 \quad \text{vs} \quad H_1: \beta_2 \neq 0.
+\]
+
+Esto no es nada nuevo. Nuevamente, las matemáticas son las mismas que las de los análisis de regresión múltiple que hemos visto antes. Podríamos realizar una prueba $t$ o $F$. La única diferencia es un ligero cambio de interpretación. Podríamos pensar en esto como probar un modelo con una sola línea ($H_0$) contra un modelo que permite dos líneas ($H_1$).
+
+Para obtener el estadístico de prueba y el valor p para la prueba $t$, usaríamos
+
+```{r}
+summary(mpg_hp_add)$coefficients["am",]
+```
+
+Para hacer lo mismo con la prueba $F$, usaríamos
+
+```{r}
+anova(mpg_hp_slr, mpg_hp_add)
+```
+
+Tenga en cuenta que estos de hecho están probando lo mismo, ya que los valores p son exactamente iguales. (Y el estadístico de prueba $F$ es el estadístico de prueba $t$ al cuadrado).
+
+Recapitulando algunas interpretaciones:
+
+- $\hat{\beta}_0 = `r coef(mpg_hp_add)[1]`$ es el promedio estimado de `mpg` para un automóvil con transmisión automática y **0** `hp`.
+- $\hat{\beta}_0 + \hat{\beta}_2 = `r coef(mpg_hp_add)[1] + coef(mpg_hp_add)[3]`$ es el promedio estimado de `mpg` para un automóvil con transmisión manual y **0** `hp`.
+- $\hat{\beta}_2 = `r coef(mpg_hp_add)[3]`$ es la **diferencia** estimada en el promedio de `mpg` para automóviles con transmisión manual en comparación con aquellos con transmisión automática, para **cualquier** `hp`.
+- $\hat{\beta}_1 = `r coef(mpg_hp_add)[2]`$ es el cambio estimado en el promedio de `mpg` para un aumento en un `hp`, para **cualquiera de los** tipos de transmisión.
+
+Deberíamos prestar especial atención a esos dos últimos. En el modelo,
+
+\[
+Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \epsilon,
+\]
+
+vemos que $\beta_1$ es el cambio promedio en $Y$ para un aumento en $x_1$, *sin importar* el valor de $x_2$. Además, $\beta_2$ es siempre la diferencia en el promedio de $Y$ para *cualquier* valor de $x_1$. Estas son dos restricciones que no siempre querremos, por lo que necesitamos una forma de especificar un modelo más flexible.
+
+Aquí nos limitamos a un solo predictor numérico $x_1$ y una variable ficticia $x_2$. Sin embargo, el concepto de variable ficticia se puede utilizar con modelos de regresión múltiple más grandes. Aquí solo usamos un único predictor numérico para facilitar la visualización, ya que podemos pensar en la interpretación de "dos líneas". Pero, en general, podemos pensar en una variable ficticia como la creación de "dos modelos", uno para cada categoría de una variable categórica binaria.
+
+## Interacciones
+
+Para eliminar la restricción de la "misma pendiente", ahora discutiremos la **interacción**. Para ilustrar este concepto, regresaremos al conjunto de datos `autompg` que creamos en el último capítulo, con algunas modificaciones más.
+
+```{r}
+# leer el marco de datos de la web
+autompg = read.table(
+  "http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data",
+  quote = "\"",
+  comment.char = "",
+  stringsAsFactors = FALSE)
+# dar los encabezados del marco de datos
+colnames(autompg) = c("mpg", "cyl", "disp", "hp", "wt", "acc", "year", "origin", "name")
+# eliminar los datos que faltan, que se almacenan como "?"
+autompg = subset(autompg, autompg$hp != "?")
+# eliminar plymouth reliant, ya que causa algunos problemas
+autompg = subset(autompg, autompg$name != "plymouth reliant")
+# dar los nombres de las filas del conjunto de datos, según el motor, el año y el nombre
+rownames(autompg) = paste(autompg$cyl, "cylinder", autompg$year, autompg$name)
+# eliminar la variable de nombre
+autompg = subset(autompg, select = c("mpg", "cyl", "disp", "hp", "wt", "acc", "year", "origin"))
+# cambiar caballos de fuerza de carácter a numérico
+autompg$hp = as.numeric(autompg$hp)
+# Cree una variable ficticia para automóviles nacionales y extranjeros. nacionales = 1.
+autompg$domestic = as.numeric(autompg$origin == 1)
+# quitar los carros de 3 y 5 cilindros (que son muy raros).
+autompg = autompg[autompg$cyl != 5,]
+autompg = autompg[autompg$cyl != 3,]
+# la siguiente línea verificaría que las posibilidades restantes del cilindro son 4, 6, 8
+#unique(autompg$cyl)
+# cambiar cyl a una variable de factor
+autompg$cyl = as.factor(autompg$cyl)
+```
+
+```{r}
+str(autompg)
+```
+
+Hemos eliminado los automóviles con cilindros `3` y` 5`, y hemos creado una nueva variable `domestic` que indica si un automóvil se fabricó o no en los Estados Unidos. Quitar los cilindros `3` y` 5` es simplemente para facilitar la demostración más adelante en el capítulo y no se haría en la práctica. La nueva variable `domestic` toma el valor` 1` si el automóvil se fabricó en los Estados Unidos, y `0` en caso contrario, al que nos referiremos como "extranjero". (Estamos usando arbitrariamente los Estados Unidos como punto de referencia.) También hemos convertido `cyl` y `origin` en variables de factor, que discutiremos más adelante.
+
+Ahora nos ocuparemos de tres variables: `mpg`, `disp` y `domestic`. Usaremos `mpg` como respuesta. Podemos ajustar un modelo,
+
+\[
+Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \epsilon,
+\]
+
+donde 
+
+- $Y$ es `mpg`, la eficiencia del combustible en millas por galón,
+- $x_1$ es `disp`, el desplazamiento en pulgadas cúbicas,
+- $x_2$ es `domestic` como se describió anteriormente, es una variable ficticia.
+
+\[
+x_2 =
+  \begin{cases}
+   1 & \text{Nacional} \\
+   0 & \text{Extranjero}
+  \end{cases}
+\]
+
+Ajustaremos este modelo, extraeremos la pendiente y el intercepto de las "dos líneas", graficaremos los datos y sumaremos las líneas.
+
+```{r}
+mpg_disp_add = lm(mpg ~ disp + domestic, data = autompg)
+
+int_for = coef(mpg_disp_add)[1]
+int_dom = coef(mpg_disp_add)[1] + coef(mpg_disp_add)[3]
+
+slope_for = coef(mpg_disp_add)[2]
+slope_dom = coef(mpg_disp_add)[2]
+
+plot(mpg ~ disp, data = autompg, col = domestic + 1, pch = domestic + 1)
+abline(int_for, slope_for, col = 1, lty = 1, lwd = 2) # agregar línea para autos extranjeros
+abline(int_dom, slope_dom, col = 2, lty = 2, lwd = 2) # agregar línea para autos nacionales
+legend("topright", c("Extranjero", "Nacional"), pch = c(1, 2), col = c(1, 2))
+```
+
+Este es un modelo que muestra dos líneas *paralelas*, lo que significa que el `mpg` puede ser diferente en promedio entre los automóviles nacionales y extranjeros del mismo desplazamiento del motor, pero el cambio en el` mpg` promedio para un aumento en el desplazamiento es el mismo para ambos. Podemos ver que este modelo no está funcionando muy bien. La línea roja se ajusta bastante bien a los puntos rojos, pero a la línea negra no le va muy bien con los puntos negros, claramente debería tener una pendiente más negativa. Básicamente, nos gustaría un modelo que muestre dos pendientes diferentes.
+
+Considere el siguiente modelo,
+
+\[
+Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_1 x_2 + \epsilon,
+\]
+
+donde $x_1$, $x_2$ y $Y$ son los mismos que antes, pero hemos agregado un nuevo **término de interacción** $x_1x_2$ que multiplica $x_1$ y $x_2$, por lo que también tenemos un parámetro adicional $\beta$ $\beta_3$.
+
+Este modelo esencialmente crea dos pendientes y dos intersecciones, siendo $\beta_2$ la diferencia en las intersecciones y $\beta_3$ la diferencia en las pendientes. Para ver esto, dividiremos el modelo en dos "submodelos" para automóviles nacionales y extranjeros.
+
+Para autos extranjeros, $x_2=0$, tenemos
+
+\[
+Y = \beta_0 + \beta_1 x_1 + \epsilon.
+\]
+
+Para autos nacionales, $x_2=1$, tenemos
+
+\[
+Y = (\beta_0 + \beta_2) + (\beta_1 + \beta_3) x_1 + \epsilon.
+\]
+
+Estos modelos tienen pendientes e intersecciones diferentes.
+
+- $\beta_0$ es el `mpg` promedio para un automóvil extranjero con **0** `disp`.
+- $\beta_1$ es el cambio en el `mpg` promedio para un aumento de un `disp`, para vehículos **extranjeros**.
+- $\beta_0+\beta_2$ es el `mpg` promedio para un automóvil nacional con **0**` disp`.
+- $\beta_1+\beta_3$ es el cambio en el promedio de `mpg` para un aumento de un `disp`, para autos **nacionales**.
+
+¿Cómo ajustamos este modelo en `R`? Hay diferentes maneras.
+
+Un método sería simplemente crear una nueva variable y luego ajustar un modelo como cualquier otro.
+
+```{r, eval = FALSE}
+autompg$x3 = autompg$disp * autompg$domestic # ¡ESTE CÓDIGO NO FUNCIONA!
+do_not_do_this = lm(mpg ~ disp + domestic + x3, data = autompg) # ¡ESTE CÓDIGO NO FUNCIONA!
+```
+
+Solo debe hacer esto como último recurso. Preferimos no tener que modificar nuestros datos simplemente para ajustarlos a un modelo. En su lugar, podemos decirle a `R` que nos gustaría usar los datos existentes con un término de interacción, que creará automáticamente cuando usemos el operador `:`.
+
+```{r}
+mpg_disp_int = lm(mpg ~ disp + domestic + disp:domestic, data = autompg)
+```
+
+Un método alternativo, que se ajustará exactamente al mismo modelo anterior, sería utilizar el operador `*`. Este método crea automáticamente el término de interacción, así como cualquier "término de orden inferior", que en este caso son los términos de primer orden para `disp` y `domestic`
+
+```{r}
+mpg_disp_int2 = lm(mpg ~ disp * domestic, data = autompg)
+```
+
+Podemos verificar rápidamente que estos están haciendo lo mismo.
+
+```{r}
+coef(mpg_disp_int)
+coef(mpg_disp_int2)
+```
+
+Vemos que tanto las variables como las estimaciones de sus coeficientes son, de hecho, las mismas para ambos modelos.
+
+```{r}
+summary(mpg_disp_int)
+```
+
+Vemos que el uso de `summary()` da el resultado habitual para un modelo de regresión múltiple. Prestamos mucha atención a la fila de `disp:domestic` que prueba,
+
+\[
+H_0: \beta_3 = 0.
+\]
+
+En este caso, la prueba de $\beta_3=0$ está probando dos líneas con pendientes paralelas frente a dos líneas con pendientes posiblemente diferentes. La línea `disp:domestic` en la salida de `summary()` usa una prueba $t$ para realizar la prueba.
+
+También podríamos usar una prueba ANOVA $F$. El modelo aditivo, sin interacción es nuestro modelo nulo, y el modelo de interacción es el alternativo.
+
+```{r}
+anova(mpg_disp_add, mpg_disp_int)
+```
+
+Nuevamente vemos que esta prueba tiene el mismo valor p que la prueba $t$. Además, el valor p es extremadamente bajo, por lo que entre los dos, elegimos el modelo de interacción.
+
+```{r}
+int_for = coef(mpg_disp_int)[1]
+int_dom = coef(mpg_disp_int)[1] + coef(mpg_disp_int)[3]
+
+slope_for = coef(mpg_disp_int)[2]
+slope_dom = coef(mpg_disp_int)[2] + coef(mpg_disp_int)[4]
+```
+
+Aquí calculamos nuevamente la pendiente y las intersecciones de las dos líneas para su uso en la gráfica.
+
+```{r}
+plot(mpg ~ disp, data = autompg, col = domestic + 1, pch = domestic + 1)
+abline(int_for, slope_for, col = 1, lty = 1, lwd = 2) # line for foreign cars
+abline(int_dom, slope_dom, col = 2, lty = 2, lwd = 2) # line for domestic cars
+legend("topright", c("Extranjero", "Nacionl"), pch = c(1, 2), col = c(1, 2))
+```
+
+Vemos que estas líneas se ajustan mucho mejor a los datos, lo que coincide con el resultado de nuestras pruebas.
+
+Hasta ahora solo hemos visto interacción entre una variable categórica (`domestic`) y una variable numérica (`disp`). Si bien esto es fácil de visualizar, dado que permite diferentes pendientes para dos líneas, no es el único tipo de interacción que podemos usar en un modelo. También podemos considerar interacciones entre dos variables numéricas.
+
+Considere el modelo,
+
+\[
+Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_1 x_2 + \epsilon,
+\]
+
+donde
+
+- $Y$ es `mpg`, la eficiencia de combustible en millas por galón,
+- $x_1$ es `disp`, el desplazamiento en pulgadas cúbicas,
+- $x_2$ es `hp`, los caballos de fuerza, en pies-libras por segundo.
+
+¿Cómo cambia `mpg` basado en `disp` en este modelo? Podemos reorganizar algunos términos para ver cómo.
+
+\[
+Y = \beta_0 + (\beta_1 + \beta_3 x_2) x_1 + \beta_2 x_2 + \epsilon
+\]
+
+Entonces, para un aumento de una unidad en $x_1$ (`disp`), la media de $Y$ (`mpg`) aumenta $\beta_1 + \beta_3 x_2$, que es un valor diferente dependiendo del valor de $x_2$ (`hp`)!
+
+Dado que ahora estamos trabajando en tres dimensiones, este modelo no se puede justificar fácilmente mediante visualizaciones como el ejemplo anterior. En cambio, tendremos que confiar en una prueba.
+
+```{r}
+mpg_disp_add_hp = lm(mpg ~ disp + hp, data = autompg)
+mpg_disp_int_hp = lm(mpg ~ disp * hp, data = autompg)
+summary(mpg_disp_int_hp)
+```
+
+Usando `summary()` nos enfocamos en la fila de `disp:hp` que prueba,
+
+\[
+H_0: \beta_3 = 0.
+\]
+
+Nuevamente, vemos un valor p muy bajo, por lo que rechazamos el nulo (modelo aditivo) a favor del modelo de interacción. Nuevamente, hay una prueba $F$ equivalente.
+
+```{r}
+anova(mpg_disp_add_hp, mpg_disp_int_hp)
+```
+
+Podemos echar un vistazo más de cerca a los coeficientes de nuestro modelo de interacción ajustado.
+
+```{r}
+coef(mpg_disp_int_hp)
+```
+
+- $\hat{\beta}_0 = `r coef(mpg_disp_int_hp)[1]`$ es el promedio estimado de `mpg` para un automóvil con 0 `disp` y 0 `hp`.
+- $\hat{\beta}_1 = `r coef(mpg_disp_int_hp)[2]`$ es el cambio estimado en el promedio de `mpg` para un aumento de 1 `disp`, **para un automóvil con 0 `hp`**.
+- $\hat{\beta}_2 = `r coef(mpg_disp_int_hp)[3]`$ es el cambio estimado en el promedio de `mpg` para un aumento de 1 `hp`, **para un automóvil con 0 `disp`**.
+- $\hat{\beta}_3 = `r coef(mpg_disp_int_hp)[4]`$ es una estimación de la modificación del cambio en el promedio de `mpg` para un aumento en `disp`, para un automóvil de cierto `hp` (o viceversa).
+
+Ese último coeficiente necesita más explicación. Recuerda el reordenamiento que hicimos antes.
+
+\[
+Y = \beta_0 + (\beta_1 + \beta_3 x_2) x_1 + \beta_2 x_2 + \epsilon.
+\]
+
+Entonces, nuestra estimación de $\beta_1+\beta_3x_2$, es $\hat{\beta}_1+\hat{\beta}_3x_2 $, que en este caso es
+
+\[
+`r coef(mpg_disp_int_hp)[2]` + `r coef(mpg_disp_int_hp)[4]` x_2.
+\]
+
+Esto dice que, para un aumento de un `disp`, vemos un cambio estimado en el `mpg` promedio de $`r coef(mpg_disp_int_hp)[2]` + `r coef(mpg_disp_int_hp)[4]` x_2$. Entonces, la relación entre `disp` y `mpg` depende de los `hp` del automóvil.
+
+Entonces, para un automóvil con 50 `hp`, el cambio estimado en el promedio de `mpg` para un aumento de un `disp` es
+
+\[
+`r coef(mpg_disp_int_hp)[2]` + `r coef(mpg_disp_int_hp)[4]` \cdot 50 = `r coef(mpg_disp_int_hp)[2] + coef(mpg_disp_int_hp)[4] * 50`
+\]
+
+Y para un automóvil con 350 `hp`, el cambio estimado en el promedio de`mpg` para un aumento de un `disp` es
+
+\[
+`r coef(mpg_disp_int_hp)[2]` + `r coef(mpg_disp_int_hp)[4]` \cdot 350 = `r coef(mpg_disp_int_hp)[2] + coef(mpg_disp_int_hp)[4] * 350`
+\]
+
+¡Observe que el signo cambió!
+
+## Variables factor
+
+Hasta ahora en este capítulo, hemos limitado nuestro uso de variables categóricas a variables categóricas binarias. Específicamente, nos hemos limitado a variables ficticias que toman un valor de `0` o `1` y representan una variable categórica numéricamente.
+
+Ahora discutiremos las variables **factor**, que es una forma especial en la que `R` trata las variables categóricas. Con las variables factor, un usuario puede simplemente pensar en las categorías de una variable, y `R` se encargará de las variables ficticias necesarias sin que el usuario realice ninguna asignación 0/1.
+
+```{r}
+is.factor(autompg$domestic)
+```
+
+Anteriormente, cuando usamos la variable `domestic`, **no** era una variable factor. Era simplemente una variable numérica que solo tomaba dos valores posibles, "1" para nacionales y "0" para extranjeros. Creemos una nueva variable `origin` que almacene la misma información, pero de una manera diferente.
+
+```{r}
+autompg$origin[autompg$domestic == 1] = "domestic"
+autompg$origin[autompg$domestic == 0] = "foreign"
+head(autompg$origin)
+```
+
+Ahora, la variable `origin` almacena` "domestic" `para automóviles nacionales y `"foreign"` para automóviles extranjeros.
+
+```{r}
+is.factor(autompg$origin)
+```
+
+Sin embargo, esto es simplemente un vector de valores de caracteres. Un vector de modelos de automóviles es una variable de carácter en `R`. Un vector de números de identificación de vehículos (VIN) también es una variable de carácter. Pero esos no representan una lista corta de niveles que podrían influir en una variable respuesta. Querremos **coaccionar** esta variable origin para que sea algo más: una variable factor.
+
+```{r}
+autompg$origin = as.factor(autompg$origin)
+```
+
+Ahora, cuando comprobamos la estructura del conjunto de datos `autompg`, vemos que el `origin` es una variable de factor.
+
+```{r}
+str(autompg)
+```
+
+Las variables factor tienen **niveles** que son los posibles valores (categorías) que puede tomar la variable, en este caso extranjera o nacional.
+
+```{r}
+levels(autompg$origin)
+```
+
+Recordemos que previamente hemos ajustado el modelo
+
+\[
+Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_1 x_2 + \epsilon,
+\]
+
+donde 
+
+- $Y$ es `mpg`, la eficiencia de combustible en millas por galón,
+- $x_1$ es `disp`, el desplazamiento en pulgadas cúbicas,
+- $x_2$ es `domestic` una variable ficticia donde `1` indica un automóvil nacional
+
+```{r}
+(mod_dummy = lm(mpg ~ disp * domestic, data = autompg))
+```
+
+Entonces aquí vemos
+
+\[
+\hat{\beta}_0 + \hat{\beta}_2 = `r coef(mod_dummy)[1]` + `r coef(mod_dummy)[3]` = `r coef(mod_dummy)[1] + coef(mod_dummy)[3]`
+\]
+
+es el `mpg` promedio estimado para un automóvil **nacional** con 0 `disp`.
+
+Ahora intentemos hacer lo mismo, pero usando nuestra nueva variable factor.
+
+```{r}
+(mod_factor = lm(mpg ~ disp * origin, data = autompg))
+```
+
+Parece que no produce los mismos resultados. Inmediatamente notamos que el intercepto es diferente, al igual que el coeficiente delante de `disp`. También notamos que los dos coeficientes restantes son de la misma magnitud que sus respectivas contrapartes usando la variable domestic, pero con un signo diferente. ¿Por qué está pasando esto?
+
+Resulta que al usar una variable de factor, `R` está creando automáticamente una variable ficticia para nosotros. Sin embargo, no es la variable ficticia que usamos originalmente.
+
+`R` esta ajustando el modelo
+
+\[
+Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_1 x_2 + \epsilon,
+\]
+
+donde 
+
+- $Y$ es `mpg`, la eficiencia de combustible en millas por galón,
+- $x_1$ es `disp`, el desplazamiento en pulgadas cúbicas,
+- $x_2$ **es una variable ficticia creada por `R`.** Utiliza `1` para representar un **auto extranjero**.
+
+Y ahora,
+
+\[
+\hat{\beta}_0 = `r coef(mod_factor)[1]`
+\]
+
+es el `mpg` promedio estimado para un automóvil **doméstico** con 0 `disp`, que de hecho es el mismo que antes.
+
+Cuando `R` creó $x_2$, la variable ficticia, utilizó automóviles nacionales como el nivel de **referencia**, que es el valor predeterminado de la variable factor. Entonces, cuando la variable ficticia es `0`, el modelo representa este nivel de referencia, que es nacional. (`R` hace esta elección porque domestic viene antes que foreing en orden alfabético).
+
+Entonces, los dos modelos tienen coeficientes estimados diferentes, pero debido a las diferentes representaciones, en realidad son el mismo modelo.
+
+### Factores con más de dos niveles
+
+Consideremos ahora una variable factor con más de dos niveles. En este conjunto de datos, `cyl` es un ejemplo.
+
+```{r}
+is.factor(autompg$cyl)
+levels(autompg$cyl)
+```
+
+Aquí la variable `cyl` tiene tres niveles posibles: `4`, `6` y `8`. Quizás se pregunte, ¿por qué no usar simplemente `cyl` como variable numérica? Ciertamente podría.
+
+Sin embargo, eso obligaría a que la diferencia de `mpg` promedio entre los cilindros 4 y 6 sea la misma que la diferencia de `mpg` promedio entre los cilindros 6 y 8. Eso suele tener sentido para una variable continua, pero no para una variable discreta con tan pocos valores posibles. En el caso de esta variable, no existe un motor de 7 cilindros o un motor de 6.23 cilindros en los vehículos personales. Por estas razones, simplemente consideraremos que `cyl` es categórica. Esta es una decisión que normalmente deberá tomarse con variables ordinales. A menudo, con un gran número de categorías, la decisión de tratarlas como variables numéricas es apropiada porque, de lo contrario, se necesita una gran cantidad de variables ficticias para representarlas.
+
+Definamos tres variables ficticias relacionadas con la variable del factor `cyl`.
+
+\[
+v_1 =
+  \begin{cases}
+   1 & \text{4 cilindros} \\
+   0       & \text{no 4 cilindros}
+  \end{cases}
+\]
+
+\[
+v_2 =
+  \begin{cases}
+   1 & \text{6 cilindros} \\
+   0       & \text{no 6 cilindros}
+  \end{cases}
+\]
+
+\[
+v_3 =
+  \begin{cases}
+   1 & \text{8 cilindros} \\
+   0       & \text{no 8 cilindros}
+  \end{cases}
+\]
+
+Ahora, ajustemos un modelo aditivo en `R`, usando `mpg` como respuesta y `disp` y `cyl` como predictores. Este debe ser un modelo que use "tres líneas de regresión" para modelar `mpg`, una para cada uno de los posibles niveles de `cyl`. Todos tendrán la misma pendiente (ya que es un modelo aditivo), pero cada uno tendrá su propio intercepto
+
+```{r}
+(mpg_disp_add_cyl = lm(mpg ~ disp + cyl, data = autompg))
+```
+
+La pregunta es, ¿cuál es el modelo que `R` ha ajustado? Ha optado por utilizar el modelo
+
+\[
+Y = \beta_0 + \beta_1 x + \beta_2 v_2 + \beta_3 v_3 + \epsilon,
+\]
+
+donde
+
+- $Y$ es `mpg`, la eficiencia de combustible en millas por galón,
+- $x$ es `disp`, el desplazamiento en pulgadas cúbicas,
+- $v_2$ y $v_3$ son las variables ficticias definidas anteriormente.
+
+¿Por qué `R` no usa $v_1$? Básicamente porque no es necesario. Para crear tres líneas, solo necesita dos variables ficticias ya que está usando un nivel de referencia, que en este caso es un automóvil de 4 cilindros. Los tres "submodelos" son entonces:
+
+- 4 Cilindros: $Y = \beta_0 + \beta_1 x + \epsilon$
+- 6 Cilindros: $Y = (\beta_0 + \beta_2) + \beta_1 x + \epsilon$
+- 8 Cilindros: $Y = (\beta_0 + \beta_3) + \beta_1 x + \epsilon$
+
+Observe que todos tienen la misma pendiente. Sin embargo, usando las dos variables ficticias, logramos los tres interceptos.
+
+- $\beta_0$ es el `mpg` promedio para un automóvil de 4 cilindros con 0 `disp`.
+- $\beta_0+\beta_2$ es el `mpg` promedio para un automóvil de 6 cilindros con 0 `disp`.
+- $\beta_0+\beta_3$ es el `mpg` promedio para un automóvil de 8 cilindros con 0 `disp`.
+
+Entonces, debido a que 4 cilindros es el nivel de referencia, $\beta_0$ es específico de 4 cilindros, pero $\beta_2$ y $\beta_3$ se utilizan para representar cantidades relativas a 4 cilindros.
+
+Como hemos hecho antes, podemos extraer estos interceptos y pendientes para las tres líneas y graficarlas.
+
+```{r}
+int_4cyl = coef(mpg_disp_add_cyl)[1]
+int_6cyl = coef(mpg_disp_add_cyl)[1] + coef(mpg_disp_add_cyl)[3]
+int_8cyl = coef(mpg_disp_add_cyl)[1] + coef(mpg_disp_add_cyl)[4]
+
+slope_all_cyl = coef(mpg_disp_add_cyl)[2]
+
+plot_colors = c("Darkorange", "Darkgrey", "Dodgerblue")
+plot(mpg ~ disp, data = autompg, col = plot_colors[cyl], pch = as.numeric(cyl))
+abline(int_4cyl, slope_all_cyl, col = plot_colors[1], lty = 1, lwd = 2)
+abline(int_6cyl, slope_all_cyl, col = plot_colors[2], lty = 2, lwd = 2)
+abline(int_8cyl, slope_all_cyl, col = plot_colors[3], lty = 3, lwd = 2)
+legend("topright", c("4 Cilindros", "6 Cilindros", "8 Cilindros"),
+       col = plot_colors, lty = c(1, 2, 3), pch = c(1, 2, 3))
+```
+
+En esta gráfica, tenemos
+
+- 4 cilindros: puntos naranjas, línea naranja continua.
+- 6 cilindros: puntos grises, línea gris discontinua.
+- 8 cilindros: puntos azules, línea azul punteada.
+
+Un resultado extraño es que estamos estimando que los autos de 8 cilindros tienen una mejor eficiencia de combustible que los autos de 6 cilindros en **cualquier** desplazamiento. La línea azul punteada siempre está por encima de la línea gris punteada. Eso no parece correcto. Tal vez para motores de cilindrada muy grande eso podría ser cierto, pero parece incorrecto para motores de cilindrada media a baja.
+
+Para intentar arreglar esto, intentaremos usar un modelo de interacción, es decir, en lugar de simplemente tres interceptos y una pendiente, permitiremos tres pendientes. Nuevamente, dejaremos que `R` tome el volante, (sin juego de palabras) y luego averiguaremos qué modelo ha aplicado.
+
+```{r}
+(mpg_disp_int_cyl = lm(mpg ~ disp * cyl, data = autompg))
+# también podría usar mpg ~ disp + cyl + disp:cyl
+```
+
+`R` ha vuelto a optar por utilizar coches de 4 cilindros como nivel de referencia, pero ahora esto también tiene un efecto en los términos de interacción. `R` se ajusta al modelo.
+
+\[
+Y = \beta_0 + \beta_1 x + \beta_2 v_2 + \beta_3 v_3 + \gamma_2 x v_2 + \gamma_3 x v_3 + \epsilon
+\]
+
+Estamos usando $\gamma$ como un parámetro $\beta$ para simplificar, de modo que, por ejemplo, $\beta_2$ y $\gamma_2$ están asociados con $v_2$.
+
+Ahora, los tres "submodelos" son:
+
+- 4 cilindros: $Y = \beta_0 + \beta_1 x + \epsilon$.
+- 6 cilindros: $Y = (\beta_0 + \beta_2) + (\beta_1 + \gamma_2) x + \epsilon$.
+- 8 cilindros: $Y = (\beta_0 + \beta_3) + (\beta_1 + \gamma_3) x + \epsilon$.
+
+Interpretando algunos parámetros y coeficientes:
+
+- $(\beta_0 + \beta_2)$ es el `mpg` promedio de un automóvil de 6 cilindros con 0 `disp`
+- $(\hat{\beta}_1 + \hat{\gamma}_3) = `r coef(mpg_disp_int_cyl)[2]` + `r coef(mpg_disp_int_cyl)[6]` = `r coef(mpg_disp_int_cyl)[2] + coef(mpg_disp_int_cyl)[6]`$ es el cambio estimado en el promedio de `mpg` para un aumento de un `disp`, en un automóvil de 8 cilindros.
+
+Entonces, como hemos visto antes, $\beta_2$ y $\beta_3$ cambian los interceptos para autos de 6 y 8 cilindros en relación con el nivel de referencia de $\beta_0$ para autos de 4 cilindros.
+
+Ahora, de manera similar $\gamma_2$ y $\gamma_3$ cambian las pendientes para autos de 6 y 8 cilindros en relación con el nivel de referencia de $\beta_1$ para autos de 4 cilindros.
+
+Una vez más, extraemos los coeficientes y graficamos los resultados.
+
+```{r}
+int_4cyl = coef(mpg_disp_int_cyl)[1]
+int_6cyl = coef(mpg_disp_int_cyl)[1] + coef(mpg_disp_int_cyl)[3]
+int_8cyl = coef(mpg_disp_int_cyl)[1] + coef(mpg_disp_int_cyl)[4]
+
+slope_4cyl = coef(mpg_disp_int_cyl)[2]
+slope_6cyl = coef(mpg_disp_int_cyl)[2] + coef(mpg_disp_int_cyl)[5]
+slope_8cyl = coef(mpg_disp_int_cyl)[2] + coef(mpg_disp_int_cyl)[6]
+
+plot_colors = c("Darkorange", "Darkgrey", "Dodgerblue")
+plot(mpg ~ disp, data = autompg, col = plot_colors[cyl], pch = as.numeric(cyl))
+abline(int_4cyl, slope_4cyl, col = plot_colors[1], lty = 1, lwd = 2)
+abline(int_6cyl, slope_6cyl, col = plot_colors[2], lty = 2, lwd = 2)
+abline(int_8cyl, slope_8cyl, col = plot_colors[3], lty = 3, lwd = 2)
+legend("topright", c("4 cilindros", "6 cilindros", "8 cilindros"),
+       col = plot_colors, lty = c(1, 2, 3), pch = c(1, 2, 3))
+```
+
+¡Esto se ve mucho mejor! Podemos ver que para los coches de cilindrada media, los coches de 6 cilindros ahora funcionan mejor que los de 8 cilindros, lo que parece mucho más razonable que antes.
+
+Para justificar completamente el modelo de interacción (es decir, una pendiente única para cada nivel `cyl`) en comparación con el modelo aditivo (pendiente única), podemos realizar una prueba $F$. Observe primero que no hay una prueba $t$ que pueda hacer esto, ya que la diferencia entre los dos modelos no es un solo parámetro.
+
+Nosotros probaremos,
+
+\[
+H_0: \gamma_2 = \gamma_3 = 0
+\]
+
+que representa las líneas de regresión paralelas que vimos antes,
+
+\[
+Y = \beta_0 + \beta_1 x + \beta_2 v_2 + \beta_3 v_3 + \epsilon.
+\]
+
+Nuevamente, esta es una diferencia de dos parámetros, por lo que ninguna prueba $t$ será útil.
+
+```{r}
+anova(mpg_disp_add_cyl, mpg_disp_int_cyl)
+```
+
+Como era de esperar, vemos un valor p muy bajo y, por lo tanto, rechazamos la Hipótesis nula. Preferimos el modelo de interacción sobre el modelo aditivo.
+
+Recapitulando un poco:
+
+- Modelo nulo: $Y = \beta_0 + \beta_1 x + \beta_2 v_2 + \beta_3 v_3 + \epsilon$
+     - Número de parámetros: $q=4$
+- Modelo completo: $Y = \beta_0 + \beta_1 x + \beta_2 v_2 + \beta_3 v_3 + \gamma_2 x v_2 + \gamma_3 x v_3 + \epsilon$
+     - Número de parámetros: $p=6$
+    
+```{r}
+length(coef(mpg_disp_int_cyl)) - length(coef(mpg_disp_add_cyl))
+```
+
+Vemos que hay una diferencia de dos parámetros, que también se muestra en la tabla ANOVA resultante de `R`. Observe que los siguientes dos valores también aparecen en la tabla ANOVA.
+
+```{r}
+nrow(autompg) - length(coef(mpg_disp_int_cyl))
+nrow(autompg) - length(coef(mpg_disp_add_cyl))
+```
+
+## Parametrización
+
+Hasta ahora, simplemente hemos dejado que `R` decida cómo crear las variables ficticias y, por lo tanto, `R` ha estado decidiendo la parametrización de los modelos. Para ilustrar la capacidad de usar parametrizaciones alternativas, recrearemos los datos, pero creando directamente las variables ficticias nosotros mismos.
+
+```{r}
+new_param_data = data.frame(
+  y = autompg$mpg,
+  x = autompg$disp,
+  v1 = 1 * as.numeric(autompg$cyl == 4),
+  v2 = 1 * as.numeric(autompg$cyl == 6),
+  v3 = 1 * as.numeric(autompg$cyl == 8))
+
+head(new_param_data, 20)
+```
+
+Ahora,
+
+- `y` es `mpg`
+- `x` es `disp`, el desplazamiento en pulgadas cúbicas,
+- `v1`,`v2` y `v3` son variables ficticias como se definieron anteriormente.
+
+Primero intentemos ajustar un modelo aditivo usando `x` así como las tres variables ficticias.
+
+```{r}
+lm(y ~ x + v1 + v2 + v3, data = new_param_data)
+```
+
+¿Que está sucediendo aquí? Observe que `R` esencialmente ignora `v3`, pero ¿por qué? Bueno, debido a que `R` usa un intercepto, no puede usar también `v3`. Esto es porque
+
+\[
+\boldsymbol{1} = v_1 + v_2 + v_3
+\]
+
+lo que significa que $\boldsymbol{1}$, $v_1$, $v_2$ y $v_3$ son linealmente dependientes. Esto haría que la matriz $X^\top X$ sea singular, pero necesitamos poder invertirla para resolver las ecuaciones normales y obtener $\hat{\beta}.$ Con el intercepto, `v1` y `v2`, `R` puede hacer los "tres interceptos" necesarips. Entonces, en este caso, `v3` es el nivel de referencia.
+
+Si eliminamos el intercepto, podemos obtener directamente los "tres interceptos" sin un nivel de referencia.
+
+```{r}
+lm(y ~ 0 + x + v1 + v2 + v3, data = new_param_data)
+```
+
+Aquí, estamos ajustando el modelo.
+
+\[
+Y = \mu_1 v_1 + \mu_2 v_2 + \mu_3 v_3 + \beta x +\epsilon.
+\]
+
+Así tenemos:
+
+- 4 Cilindros: $Y = \mu_1 + \beta x + \epsilon$
+- 6 Cilindros: $Y = \mu_2 + \beta x + \epsilon$
+- 8 Cilindros: $Y = \mu_3 + \beta x + \epsilon$
+
+También podríamos hacer algo similar con el modelo de interacción y darle a cada línea un intercepto y una pendiente, sin la necesidad de un nivel de referencia.
+
+```{r}
+lm(y ~ 0 + v1 + v2 + v3 + x:v1 + x:v2 + x:v3, data = new_param_data)
+```
+
+\[
+Y = \mu_1 v_1 + \mu_2 v_2 + \mu_3 v_3 + \beta_1 x v_1 + \beta_2 x v_2 + \beta_3 x v_3 +\epsilon
+\]
+
+- 4 Cilindros: $Y = \mu_1 + \beta_1 x + \epsilon$
+- 6 Cilindros: $Y = \mu_2 + \beta_2 x + \epsilon$
+- 8 Cilindros: $Y = \mu_3 + \beta_3 x + \epsilon$
+
+Usando los datos originales, tenemos (al menos) tres formas equivalentes de especificar el modelo de interacción con `R`.
+
+```{r}
+lm(mpg ~ disp * cyl, data = autompg)
+lm(mpg ~ 0 + cyl + disp : cyl, data = autompg)
+lm(mpg ~ 0 + disp + cyl + disp : cyl, data = autompg)
+```
+
+Todos se ajustan al mismo modelo, y lo que es más importante, cada uno utiliza seis parámetros, pero los coeficientes significan cosas ligeramente diferentes en cada uno. Sin embargo, una vez que se interpreten como pendientes e interceptos para las "tres líneas", tendrán el mismo resultado.
+
+Utilice `?All.equal` para aprender sobre la función `all.equal()` y piense en cómo el siguiente código verifica que los residuos de los dos modelos son iguales.
+
+```{r}
+all.equal(fitted(lm(mpg ~ disp * cyl, data = autompg)), 
+          fitted(lm(mpg ~ 0 + cyl + disp : cyl, data = autompg)))
+```
+
+## Construcción de modelos más grandes
+
+Ahora que hemos visto cómo incorporar predictores categóricos, así como términos de interacción, podemos comenzar a construir modelos mucho más grandes y flexibles que potencialmente pueden ajustarse mejor a los datos.
+
+Definamos un modelo "grande",
+
+\[
+Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \beta_4 x_1 x_2 + \beta_5 x_1 x_3 + \beta_6 x_2 x_3 + \beta_7 x_1 x_2 x_3 + \epsilon.
+\]
+
+Aquí,
+
+- $Y$ es `mpg`.
+- $x_1$ es `disp`.
+- $x_2$ es `hp`.
+- $x_3$ es `domestic`, que es una variable ficticia que definimos, donde `1` es un vehículo nacional.
+
+Lo primero a tener en cuenta, hemos incluido un nuevo término $x_1x_2x_3$ que es una interacción de tres vías. Los términos de interacción pueden ser cada vez mayores, hasta el número de predictores del modelo.
+
+Dado que usamos el término de interacción de tres vías, también usamos todas las interacciones de dos vías posibles, así como cada uno de los términos de primer orden (**efecto principal**). Este es el concepto de una **jerarquía**. Siempre que haya un término de "orden superior" en un modelo, también deben incluirse los términos relacionados de "orden inferior". Matemáticamente, su inclusión o exclusión a veces es irrelevante, pero desde el punto de vista de la interpretación, es mejor seguir las reglas de la jerarquía.
+
+Hagamos un reordenamiento para obtener un "coeficiente" delante de $x_1$.
+
+\[
+Y = \beta_0 + \beta_2 x_2 + \beta_3 x_3 + \beta_6 x_2 x_3 + (\beta_1 + \beta_4 x_2 + \beta_5 x_3 + \beta_7 x_2 x_3)x_1 + \epsilon.
+\]
+
+Específicamente, el "coeficiente" delante de $x_1$ es
+
+\[
+(\beta_1 + \beta_4 x_2 + \beta_5 x_3 + \beta_7 x_2 x_3).
+\]
+
+Analicemos este "coeficiente" para ayudarnos a comprender la idea de la *flexibilidad* de un modelo. Recordemos que,
+
+- $\beta_1$ es el coeficiente para un término de primer orden,
+- $\beta_4$ y $\beta_5$ son coeficientes para interacciones bidireccionales,
+- $\beta_7$ es el coeficiente de la interacción de tres vías.
+
+Si las interacciones de dos y tres vías no estuvieran en el modelo, todo el "coeficiente" sería simplemente
+
+\[
+\beta_1. 
+\]
+
+Por lo tanto, sin importar los valores de $x_2$ y $x_3$, $\beta_1$ determinaría la relación entre $x_1$ (`disp`) y $Y$ (`mpg`).
+
+Con la adición de las interacciones bidireccionales, ahora el "coeficiente" sería
+
+\[
+(\beta_1 + \beta_4 x_2 + \beta_5 x_3).
+\]
+
+Ahora, cambiar $x_1$ (`disp`) tiene un efecto diferente en $Y$ (`mpg`), dependiendo de los valores de $x_2$ y $x_3$.
+
+Por último, agregar la interacción de tres vías da el "coeficiente" completo
+
+\[
+(\beta_1 + \beta_4 x_2 + \beta_5 x_3 + \beta_7 x_2 x_3)
+\]
+
+que es aún más flexible. Ahora cambiar $x_1$ (`disp`) tiene un efecto diferente en $Y$ (`mpg`), dependiendo de los valores de $x_2$ y $x_3$, pero de una manera más flexible que podemos ver con algunos reordenamientos más. Ahora, el "coeficiente" delante de $x_3$ depende de $x_2$.
+
+\[
+(\beta_1 + \beta_4 x_2 + (\beta_5 + \beta_7 x_2) x_3)
+\]
+
+¡Es tan flexible que se está volviendo difícil de interpretar!
+
+Ajustemos este modelo de interacción de tres vías en `R`.
+
+```{r}
+big_model = lm(mpg ~ disp * hp * domestic, data = autompg)
+summary(big_model)
+```
+
+¿Realmente necesitamos un modelo tan grande? Primero probemos la necesidad del término de interacción de tres vías. Es decir,
+
+\[
+H_0: \beta_7 = 0.
+\]
+
+Entonces,
+
+- Modelo completo: $Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \beta_4 x_1 x_2 + \beta_5 x_1 x_3 + \beta_6 x_2 x_3 + \beta_7 x_1 x_2 x_3 + \epsilon$
+- Modelo nulo: $Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \beta_4 x_1 x_2 + \beta_5 x_1 x_3 + \beta_6 x_2 x_3 + \epsilon$
+
+Ajustamos el modelo nulo en `R` como `two_way_int_mod`, luego usamos `anova()` para realizar una prueba $F$ como de costumbre.
+
+```{r}
+two_way_int_mod = lm(mpg ~ disp * hp + disp * domestic + hp * domestic, data = autompg)
+#two_way_int_mod = lm(mpg ~ (disp + hp + domestic) ^ 2, data = autompg)
+anova(two_way_int_mod, big_model)
+```
+
+Vemos que el valor p es algo grande, por lo que no lo rechazaríamos. Preferimos el modelo nulo más pequeño, menos flexible, sin la interacción de tres vías.
+
+Una nota rápida: el modelo completo todavía "ajusta mejor". Tenga en cuenta que tiene un RMSE más pequeño que el modelo nulo, lo que significa que el modelo completo comete errores (cuadrados) más pequeños en promedio.
+
+```{r}
+mean(resid(big_model) ^ 2)
+mean(resid(two_way_int_mod) ^ 2)
+```
+
+Sin embargo, no es mucho más pequeño. Incluso podríamos decir que la diferencia es insignificante. Esta es una idea a la que volveremos más adelante con mayor detalle.
+
+Ahora que hemos elegido el modelo sin la interacción de tres vías, ¿podemos ir más lejos? ¿Necesitamos las interacciones bidireccionales? Vamos a probar
+
+\[
+H_0: \beta_4 = \beta_5 = \beta_6 = 0.
+\]
+
+Recuerde que ya elegimos $\beta_7=0$, entonces,
+
+- Modelo completo: $Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \beta_4 x_1 x_2 + \beta_5 x_1 x_3 + \beta_6 x_2 x_3 + \epsilon$
+- Modelo nulo: $Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \epsilon$
+
+Ajustamos el modelo nulo en `R` como `additive_mod`, luego usamos `anova()` para realizar una prueba $F$ como de costumbre.
+
+```{r}
+additive_mod = lm(mpg ~ disp + hp + domestic, data = autompg)
+anova(additive_mod, two_way_int_mod)
+```
+
+Aquí el valor p es pequeño, por lo que rechazamos el nulo y preferimos el modelo completo (alternativo). De los modelos que hemos considerado, nuestra preferencia final es por
+
+\[
+Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \beta_4 x_1 x_2 + \beta_5 x_1 x_3 + \beta_6 x_2 x_3 + \epsilon.
+\]
+

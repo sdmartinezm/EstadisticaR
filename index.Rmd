@@ -1,0 +1,38 @@
+--- 
+title: "Estadística aplicada con R"
+date: "`r Sys.Date()`"
+knit: "bookdown::render_book"
+site: bookdown::bookdown_site
+documentclass: book
+biblio-style: apalike
+favicon: "favicon.gif"
+link-citations: yes
+urlcolor: cyan
+description: ""
+---
+
+# Introducción
+
+¡Bienvenido a Estadísticas aplicadas con R!
+
+Adapatado de [David Dalpiaz, Applied Statistics](https://github.com/daviddalpiaz/appliedstats){target="_blank"}
+
+## Convenciones
+
+El código `R` se compondrá con una fuente `monoespaciada` con sintaxis resaltada.
+
+```{r, eval = FALSE}
+a = 3
+b = 4
+sqrt(a ^ 2 + b ^ 2)
+```
+
+Las líneas de salida `R`, que aparecerían en la consola, comenzarán con `##`. Por lo general, no se resaltarán la sintaxis.
+
+```{r, echo = FALSE, eval = TRUE}
+a = 3
+b = 4
+sqrt(a ^ 2 + b ^ 2)
+```
+
+Usamos la cantidad $p$ para referirnos al número de parámetros $\beta$ en un modelo lineal, no al número de predictores. ¡No se preocupe si aún no sabe lo que esto significa!

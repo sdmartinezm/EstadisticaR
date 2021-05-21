@@ -1,0 +1,1151 @@
+# Transformaciones
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(cache = TRUE, autodep = TRUE, fig.align = "center")
+```
+
+> "Dame una palanca lo suficientemente larga y un punto de apoyo para colocarla, y moveré el mundo."
+>
+> --- **Archimedes**
+
+Después de leer este capítulo, podrá:
+
+- Comprender el concepto de transformación estabilizadora de varianza.
+- Utilizar transformaciones de la respuesta para mejorar los modelos de regresión.
+- Utilice términos polinomiales como predictores para ajustar modelos de regresión más flexibles.
+
+En el último capítulo, verificamos los supuestos de los modelos de regresión y buscamos formas de diagnosticar posibles problemas. En este capítulo usaremos transformaciones de variables de respuesta y predictoras para corregir problemas con los diagnósticos del modelo, y también potencialmente, simplemente, hacer que un modelo se ajuste mejor a los datos.
+
+## Transformación de respuesta
+
+Veamos algunos datos salariales (*ficticios*) de la empresa (*ficticia*) *Initech*. Intentaremos modelar `salary` en función de `years`. Los datos se pueden encontrar en [`initech.csv`](data/initech.csv).
+
+```{r, echo = FALSE}
+sim_initech = function(sample_size = 50) {
+  x = round(seq(1, 25, length.out = sample_size))
+  log_y = 10.5 + 0.08 * x + rnorm(n = sample_size, sd = 0.20)
+  y = round(exp(log_y))
+  data.frame(years = x, salary = y)
+}
+
+set.seed(420)
+initech = sim_initech(sample_size = 100)
+write.csv(initech, "data/initech.csv", row.names = FALSE)
+```
+
+```{r}
+initech = read.csv("data/initech.csv")
+```
+
+```{r}
+plot(salary ~ years, data = initech, col = "grey", pch = 20, cex = 1.5,
+     main = "Salarios en Initech, por antigüedad")
+```
+
+Primero ajustamos un modelo lineal simple.
+
+```{r}
+initech_fit = lm(salary ~ years, data = initech)
+summary(initech_fit)
+```
+
+Este modelo parece significativo, pero ¿cumple los supuestos del modelo?
+
+```{r}
+plot(salary ~ years, data = initech, col = "grey", pch = 20, cex = 1.5,
+     main = "Salarios en Initech, por antigüedad")
+abline(initech_fit, col = "darkorange", lwd = 2)
+```
+
+Al agregar la línea ajustada al gráfico, vemos que la relación lineal parece correcta.
+
+```{r, fig.height=5, fig.width=10}
+par(mfrow = c(1, 2))
+
+plot(fitted(initech_fit), resid(initech_fit), col = "grey", pch = 20,
+     xlab = "Ajustados", ylab = "Residuales", main = "Ajustados versus Residuales")
+abline(h = 0, col = "darkorange", lwd = 2)
+
+qqnorm(resid(initech_fit), main = "Normal Q-Q Plot", col = "darkgrey")
+qqline(resid(initech_fit), col = "dodgerblue", lwd = 2)
+```
+
+Sin embargo, a partir de la gráfica de ajustados versus residuales, parece que hay una varianza no constante. Específicamente, la varianza aumenta a medida que aumenta el valor ajustado.
+
+### Transformaciones estabilizadoras de varianza
+
+Recuerde que el valor ajustado es nuestra estimación de la media a un valor particular de $x$. Bajo nuestras suposiciones habituales,
+
+\[
+  \epsilon \sim N(0,\sigma^2)
+\]
+
+y por lo tanto
+
+\[
+  \text{Var}[Y | X = x] = \sigma^2
+\]
+
+que es un valor constante para cualquier valor de $x$.
+
+Sin embargo, aquí vemos que la varianza es una función de la media,
+
+\[
+  \text{Var}[Y \mid X = x] = h(\text{E}[Y \mid X = x]).
+\]
+
+En este caso, $h$ es una función creciente.
+
+Para corregir esto, nos gustaría encontrar alguna función de $Y$, $g(Y)$ tal que,
+
+\[
+  \text{Var}[g(Y) \mid X = x] = c
+\]
+
+donde $c$ es una constante que no depende de la media, $\text{E}[Y \mid X = x]$. Una transformación que logra esto se llama **transformación estabilizadora de varianza.**
+
+Una transformación de estabilización de la varianza (VST) común cuando vemos una varianza creciente en una gráfica de ajustados versus residuales es $\log(Y)$. Además, si los valores de una variable abarcan más de un orden de magnitud y la variable es *estrictamente positiva*, es probable que sea útil reemplazar la variable por su logaritmo.
+
+Un recordatorio, que para nuestros propósitos, $\log$ y $\ln$ son ambos logaritmos naturales. `R` usa `log` para referirse al logaritmo natural, a menos que se especifique una base diferente.
+
+Ahora usaremos un modelo con una respuesta transformada logarítmicamente para los datos *Initech*,
+
+\[
+  \log(Y_i) = \beta_0 + \beta_1 x_i + \epsilon_i.
+\]
+
+Tenga en cuenta que si volvemos a escalar el modelo desde una escala logarítmica a la escala original de los datos, ahora tenemos
+
+\[
+  Y_i = \exp(\beta_0 + \beta_1 x_i) \cdot \exp(\epsilon_i)
+\]
+
+que tiene los errores que ingresan al modelo de forma multiplicativa.
+
+El ajuste de este modelo en `R` requiere sólo una pequeña modificación en la especificación de nuestra fórmula.
+
+```{r}
+initech_fit_log = lm(log(salary) ~ years, data = initech)
+```
+
+Tenga en cuenta que aunque `log(y)` se considera la nueva variable respuesta, en realidad no creamos una nueva variable en `R`, sino que simplemente transformamos la variable dentro de la fórmula del modelo.
+
+```{r}
+plot(log(salary) ~ years, data = initech, col = "grey", pch = 20, cex = 1.5,
+     main = "Salarios en Initech, por antigüedad")
+abline(initech_fit_log, col = "darkorange", lwd = 2)
+```
+
+Al graficar los datos en la escala logarítmica transformada y al agregar la línea ajustada, la relación vuelve a parecer lineal y ya podemos ver que la variación sobre la línea ajustada parece constante.
+
+```{r}
+plot(salary ~ years, data = initech, col = "grey", pch = 20, cex = 1.5,
+     main = "Salarios en Initech, por antigüedad")
+curve(exp(initech_fit_log$coef[1] + initech_fit_log$coef[2] * x),
+      from = 0, to = 30, add = TRUE, col = "darkorange", lwd = 2)
+```
+
+Al trazar los datos en la escala original y agregar la regresión ajustada, vemos una relación exponencial. Sin embargo, este sigue siendo un modelo *lineal*, ya que la nueva respuesta transformada, $\log(y)$, sigue siendo una combinación *lineal* de los predictores.
+
+```{r, fig.height=5, fig.width=10}
+par(mfrow = c(1, 2))
+
+plot(fitted(initech_fit_log), resid(initech_fit_log), col = "grey", pch = 20,
+     xlab = "Ajustados", ylab = "Residuales", main = "Ajustados versus Residuales")
+abline(h = 0, col = "darkorange", lwd = 2)
+
+qqnorm(resid(initech_fit_log), main = "Normal Q-Q Plot", col = "darkgrey")
+qqline(resid(initech_fit_log), col = "dodgerblue", lwd = 2)
+```
+
+La gráfica de ajustados versus residuales se ve mucho mejor. Parece que el supuesto de varianza constante ya no se viola.
+
+Al comparar el RMSE usando la respuesta original y transformada, también vemos que el modelo logarítmico transformado simplemente se ajusta mejor, con un error cuadrático promedio más pequeño.
+
+```{r}
+sqrt(mean(resid(initech_fit) ^ 2))
+sqrt(mean(resid(initech_fit_log) ^ 2))
+```
+
+Pero espere, eso no es justo, esta diferencia se debe simplemente a las diferentes escalas que se utilizan.
+
+```{r}
+sqrt(mean((initech$salary - fitted(initech_fit)) ^ 2))
+sqrt(mean((initech$salary - exp(fitted(initech_fit_log))) ^ 2))
+```
+
+Transformando los valores ajustados del modelo logarítmico de nuevo a la escala de los datos, ¡de hecho vemos que encaja mejor!
+
+```{r}
+summary(initech_fit_log)
+```
+
+Nuevamente, la respuesta transformada es una combinación *lineal* de los predictores,
+
+\[
+  \log(\hat{y}(x)) = \hat{\beta}_0 + \hat{\beta}_1 x  = `r round(coef(initech_fit_log)[1], 3)` + `r round(coef(initech_fit_log)[2], 3)`x.
+\]
+
+Pero ahora, si volvemos a escalar los datos de una escala logarítmica a la escala original, ahora tenemos
+
+\[
+  \hat{y}(x) = \exp(\hat{\beta}_0) \exp(\hat{\beta}_1 x) = \exp(`r round(coef(initech_fit_log)[1], 3)`)\exp(`r round(coef(initech_fit_log)[2], 3)`x).
+\]
+
+Vemos que por cada año adicional de experiencia, el salario promedio aumenta $\exp(`r round(coef(initech_fit_log)[2], 3)`) = `r round(exp(round(coef(initech_fit_log)[2], 3)), 4)`$ veces. Ahora estamos multiplicando, no sumando.
+
+Si bien el uso de una transformación $\log$ es posiblemente la transformación de variable de respuesta más común, existen muchas otras. Ahora consideraremos una familia de transformaciones y elegiremos la mejor de entre ellas, que incluye la transformación $\log$.
+
+### Transformaciones de Box-Cox
+
+El método de Box-Cox considera una familia de transformaciones sobre variables respuesta estrictamente positivas,
+
+\[
+g_\lambda(y) = \left\{
+\begin{array}{lr}\displaystyle\frac{y^\lambda - 1}{\lambda} &  \lambda \neq 0\\
+        & \\
+       \log(y) &  \lambda = 0
+     \end{array}
+   \right.
+\]
+
+El parámetro $\lambda$ se elige maximizando numéricamente la log-verosimilitud,
+
+\[
+  L(\lambda) = -\frac{n}{2}\log(RSS_\lambda / n) + (\lambda -1)\sum \log(y_i).
+\]
+
+Un intervalo de confianza al $100(1 - \alpha)\%$ para $\lambda$ es,
+
+\[
+    \left\{ \lambda :  L(\lambda) > L(\hat{\lambda}) - \frac{1}{2}\chi_{1,\alpha}^2  \right\}   
+\]
+
+que `R` trazará para que nos ayude a seleccionar rápidamente un valor $\lambda$ apropiado. A menudo elegimos un valor "agradable" dentro del intervalo de confianza, en lugar del valor de $\lambda$ que realmente maximiza la probabilidad.
+
+```{r}
+library(MASS)
+library(faraway)
+```
+
+Aquí necesitamos el paquete `MASS` para la función `boxcox()`, y consideraremos un par de conjuntos de datos del paquete `faraway`.
+
+Primero usaremos el conjunto de datos `savings` como un ejemplo del uso del método Box-Cox para justificar el uso de ninguna transformación. Ajustamos un modelo de regresión múltiple aditiva con `sr` como respuesta y cada una de las otras variables como predictoras.
+
+```{r}
+savings_model = lm(sr ~ ., data = savings)
+```
+
+Luego usamos la función `boxcox()` para encontrar la mejor transformación de la forma considerada por el método Box-Cox.
+
+```{r}
+boxcox(savings_model, plotit = TRUE)
+```
+
+`R` grafica automáticamente la log-verosimilitud como una función de los posibles valores $\lambda$. Indica tanto el valor que maximiza la probabilidad logarítmica como un intervalo de confianza para el valor $\lambda$ que maximiza la probabilidad logarítmica.
+
+```{r}
+boxcox(savings_model, plotit = TRUE, lambda = seq(0.5, 1.5, by = 0.1))
+```
+
+Tenga en cuenta que podemos especificar un rango de valores $\lambda$ para considerar y, por lo tanto, graficarlos. A menudo especificamos un rango que es más interesante visualmente. Aquí vemos que $\lambda = 1$ está en el intervalo de confianza y está extremadamente cerca del máximo. Esto sugiere una transformación de la forma.
+
+\[
+\frac{y^\lambda - 1}{\lambda} = \frac{y^1 - 1}{1} = y - 1.
+\]
+
+Básicamente, esto no es una transformación. No cambiaría la varianza ni haría que el modelo se ajustara mejor. Restando 1 de cada valor, solo cambiaríamos la intersección del modelo y los errores resultantes serían los mismos.
+
+```{r}
+plot(fitted(savings_model), resid(savings_model), col = "dodgerblue",
+     pch = 20, cex = 1.5, xlab = "Ajustados", ylab = "Residuales")
+abline(h = 0, lty = 2, col = "darkorange", lwd = 2)
+```
+
+Al observar una gráfica de ajustados versus residuales se verifica que probablemente no haya ningún problema con los supuestos de este modelo, que verifican las pruebas de Breusch-Pagan y Shapiro-Wilk.
+
+```{r, message = FALSE, warning = FALSE}
+library(lmtest)
+bptest(savings_model)
+shapiro.test(resid(savings_model))
+```
+
+Ahora usaremos el conjunto de datos `gala` como ejemplo del uso del método Box-Cox para justificar una transformación distinta de $\log$. Ajustamos un modelo de regresión múltiple aditivo con `Species` como respuesta y la mayoría de las otras variables como predictores.
+
+```{r}
+gala_model = lm(Species ~ Area + Elevation + Nearest + Scruz + Adjacent, data = gala)
+```
+
+```{r}
+plot(fitted(gala_model), resid(gala_model), col = "dodgerblue",
+     pch = 20, cex = 1.5, xlab = "Ajustados", ylab = "Residuales")
+abline(h = 0, lty = 2, col = "darkorange", lwd = 2)
+```
+
+Aunque no hay muchos datos para valores ajustados grandes, todavía parece muy claro que se viola el supuesto de varianza constante.
+
+```{r}
+boxcox(gala_model, lambda = seq(-0.25, 0.75, by = 0.05), plotit = TRUE)
+```
+
+Usando el método de Box-Cox, vemos que $\lambda=0.3$ está en el intervalo de confianza y está extremadamente cerca del máximo, lo que sugiere una transformación de la forma
+
+\[
+\frac{y^\lambda - 1}{\lambda} = \frac{y^{0.3} - 1}{0.3}.
+\]
+
+Luego ajustamos un modelo con esta transformación aplicada a la respuesta.
+
+```{r}
+gala_model_cox = lm((((Species ^ 0.3) - 1) / 0.3) ~ Area + Elevation + Nearest + Scruz + Adjacent, data = gala)
+```
+
+```{r}
+plot(fitted(gala_model_cox), resid(gala_model_cox), col = "dodgerblue",
+     pch = 20, cex = 1.5, xlab = "Ajustados", ylab = "Residuales")
+abline(h = 0, lty = 2, col = "darkorange", lwd = 2)
+```
+
+¡La gráfica resultante de ajustados versus residuales se ve mucho mejor!
+
+Por último, volvemos a los datos de `initech` y al modelo `initech_fit` que habíamos usado anteriormente. Recuerde que este era el modelo sin transformar y que usamos una transformación $\log$ para arreglarlo.
+
+```{r}
+boxcox(initech_fit)
+```
+
+Usando el método Box-Cox, vemos que $\lambda=0$ está tanto en el intervalo como muy cerca del máximo, lo que sugiere una transformación de la forma
+
+\[
+  \log(y).
+\]
+
+¡Entonces el método Box-Cox justifica nuestra elección previa de una transformación $\log$!
+
+## Transformación del predictor
+
+Además de la transformación de la variable de respuesta, también podemos considerar transformaciones de variables predictoras. A veces, estas transformaciones pueden ayudar con la violación de los supuestos del modelo, y otras veces se pueden usar para simplemente adaptarse a un modelo más flexible.
+
+```{r, echo = FALSE}
+
+autompg = read.table(
+  "http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data",
+  quote = "\"",
+  comment.char = "",
+  stringsAsFactors = FALSE)
+
+colnames(autompg) = c("mpg", "cyl", "disp", "hp", "wt", "acc", "year", "origin", "name")
+
+autompg = subset(autompg, autompg$hp != "?")
+
+autompg = subset(autompg, autompg$name != "plymouth reliant")
+
+rownames(autompg) = paste(autompg$cyl, "cylinder", autompg$year, autompg$name)
+
+autompg = subset(autompg, select = c("mpg", "cyl", "disp", "hp", "wt", "acc", "year", "origin"))
+
+autompg$hp = as.numeric(autompg$hp)
+
+autompg$domestic = as.numeric(autompg$origin == 1)
+
+autompg = autompg[autompg$cyl != 5,]
+autompg = autompg[autompg$cyl != 3,]
+
+autompg$cyl = as.factor(autompg$cyl)
+```
+
+```{r}
+str(autompg)
+```
+
+Recuerde el conjunto de datos `autompg` del capítulo anterior. Aquí intentaremos modelar `mpg` en función de `hp`.
+
+```{r, fig.height = 4, fig.width = 8}
+par(mfrow = c(1, 2))
+plot(mpg ~ hp, data = autompg, col = "dodgerblue", pch = 20, cex = 1.5)
+mpg_hp = lm(mpg ~ hp, data = autompg)
+abline(mpg_hp, col = "darkorange", lwd = 2)
+plot(fitted(mpg_hp), resid(mpg_hp), col = "dodgerblue",
+     pch = 20, cex = 1.5, xlab = "Ajustados", ylab = "Residuales")
+abline(h = 0, lty = 2, col = "darkorange", lwd = 2)
+```
+
+Primero intentamos SLR, pero vemos un patrón bastante obvio en la gráfica de ajustados versus residuales, que incluye una varianza creciente, por lo que intentamos una transformación $\log$ de la respuesta
+
+```{r, fig.height = 4, fig.width = 8}
+par(mfrow = c(1, 2))
+plot(log(mpg) ~ hp, data = autompg, col = "dodgerblue", pch = 20, cex = 1.5)
+mpg_hp_log = lm(log(mpg) ~ hp, data = autompg)
+abline(mpg_hp_log, col = "darkorange", lwd = 2)
+plot(fitted(mpg_hp_log), resid(mpg_hp_log), col = "dodgerblue",
+     pch = 20, cex = 1.5, xlab = "Ajustados", ylab = "Residuales")
+abline(h = 0, lty = 2, col = "darkorange", lwd = 2)
+```
+
+Después de realizar la transformación $\log$ de la respuesta, todavía tenemos algunos de los mismos problemas con la los ajustados versus respuesta. Ahora, intentaremos también $\log$ para transformar el **predictor**.
+
+```{r, fig.height = 4, fig.width = 8}
+par(mfrow = c(1, 2))
+plot(log(mpg) ~ log(hp), data = autompg, col = "dodgerblue", pch = 20, cex = 1.5)
+mpg_hp_loglog = lm(log(mpg) ~ log(hp), data = autompg)
+abline(mpg_hp_loglog, col = "darkorange", lwd = 2)
+plot(fitted(mpg_hp_loglog), resid(mpg_hp_loglog), col = "dodgerblue",
+     pch = 20, cex = 1.5, xlab = "Ajustados", ylab = "Residuales")
+abline(h = 0, lty = 2, col = "darkorange", lwd = 2)
+```
+
+Aquí, nuestra gráfica de ajustados versus residuales se ve bien.
+
+### Polinomios
+
+Otra "transformación" muy común de una variable predictora es el uso de transformaciones polinomiales. Son extremadamente útiles ya que permiten modelos más flexibles, pero no cambian las unidades de las variables.
+
+No debería sorprender que las ventas de un producto estén relacionadas con el presupuesto publicitario del producto, pero hay rendimientos decrecientes. Una empresa no siempre puede esperar rendimientos lineales basados en un mayor presupuesto publicitario.
+
+Considere los datos mensuales de las ventas de widgets *Initech *, $y$, en función del gasto publicitario de *Initech* para dicho widget, $x$, ambos por cada diez mil dólares. Los datos se pueden encontrar en [`marketing.csv`](data/marketing.csv).
+
+```{r}
+marketing = read.csv("data/marketing.csv")
+```
+
+```{r}
+plot(sales ~ advert, data = marketing, 
+     xlab = "Gasto publicitario (* $100,00)", ylab = "Ventas (* $100,00)",
+     pch = 20, cex = 2)
+```
+
+Nos gustaría ajustarnos al modelo,
+
+\[
+  Y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \epsilon_i
+\]
+
+donde $\epsilon_i \sim N(0,\sigma^2)$ para $i = 1, 2, \cdots 21.$ 
+
+La respuesta $y$ ahora es una función **lineal** de "dos" variables que permiten que $y$ sea una función no lineal del predictor único original $x$. Consideramos que esto es una transformación, aunque en cierto sentido hemos agregado otro predictor.
+
+Por lo tanto, nuestra matriz $X$ es,
+
+\[
+  \begin{bmatrix}
+  1      & x_1 & x_1^2    \\[3pt]
+  1      & x_2  & x_2^2   \\[3pt]
+  1      & x_3  & x_3^2   \\[3pt]
+  \vdots & \vdots & \vdots \\[3pt]
+  1      & x_{n}  & x_{n}^2   \\
+  \end{bmatrix}
+\]
+
+Luego podemos proceder a ajustar el modelo como lo hicimos en el pasado para la regresión lineal múltiple.
+
+\[
+\hat{\beta} = \left(  X^\top X  \right)^{-1}X^\top y.
+\]
+
+Nuestras estimaciones tendrán las propiedades habituales. La media sigue
+
+\[
+E[\hat{\beta}] = \beta,
+\]
+
+y varianza
+
+\[
+\text{Var}[\hat{\beta}] = \sigma^2 \left(  X^\top X  \right)^{-1}.
+\]
+
+También mantenemos los mismos resultados distribucionales
+
+\[
+\hat{\beta}_j \sim N\left(\beta_j, \sigma^2 C_{jj}  \right).
+\]
+
+```{r}
+mark_mod = lm(sales ~ advert, data = marketing)
+summary(mark_mod)
+```
+
+Si bien el modelo SLR es significativo, la gráfica de ajustados versus residuales tendría un patrón muy claro.
+
+```{r}
+mark_mod_poly2 = lm(sales ~ advert + I(advert ^ 2), data = marketing)
+summary(mark_mod_poly2)
+```
+
+Para agregar el término de segundo orden, necesitamos usar la función `I()` en la especificación del modelo alrededor de nuestro predictor recién creado. Vemos que con el término de primer orden en el modelo, el término cuadrático también es significativo.
+
+```{r}
+n = length(marketing$advert)
+X = cbind(rep(1, n), marketing$advert, marketing$advert ^ 2)
+t(X) %*% X
+solve(t(X) %*% X) %*% t(X) %*% marketing$sales
+```
+
+Aquí verificamos que las estimaciones de los parámetros se encontraron como era de esperar.
+
+También podríamos agregar términos de orden superior, como un predictor de tercer grado. Esto es fácil de hacer. Nuestra matriz $X$ simplemente se vuelve más grande nuevamente.
+
+\[
+  Y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \beta_3 x_i^3 + \epsilon_i
+\]
+
+\[
+  \begin{bmatrix}
+  1      & x_1 & x_1^2  & x_1^3    \\[3pt]
+  1      & x_2  & x_2^2  & x_2^3   \\[3pt]
+  1      & x_3  & x_3^2  & x_3^3   \\[3pt]
+  \vdots & \vdots & \vdots & \vdots \\[3pt]
+  1      & x_{n}  & x_{n}^2  & x_{n}^3    \\
+  \end{bmatrix}
+\]
+
+```{r}
+mark_mod_poly3 = lm(sales ~ advert + I(advert ^ 2) + I(advert ^ 3), data = marketing)
+summary(mark_mod_poly3)
+```
+
+Ahora vemos que con los términos de primer y segundo orden en el modelo, el término de tercer orden también es significativo. ¿Pero esto tiene sentido en la práctica? El siguiente gráfico debería dar pistas sobre por qué no es así. (¡El modelo con el término de tercer orden no tiene rendimientos decrecientes!)
+
+```{r}
+plot(sales ~ advert, data = marketing, 
+     xlab = "Gasto publicitario (* $100,00)", ylab = "Ventas (* $100,00)",
+     pch = 20, cex = 2)
+abline(mark_mod, lty = 2, col = "green", lwd = 2)
+xplot = seq(0, 16, by = 0.01)
+lines(xplot, predict(mark_mod_poly2, newdata = data.frame(advert = xplot)),
+      col = "blue", lwd = 2)
+lines(xplot, predict(mark_mod_poly3, newdata = data.frame(advert = xplot)),
+      col = "red", lty = 3, lwd = 3)
+```
+
+El gráfico anterior se realizó utilizando gráficos base en "R". El siguiente gráfico se hizo usando el paquete [`ggplot2`](http://ggplot2.org/){target="_blank"}, un método de graficación cada vez más popular en `R`.
+
+```{r}
+library(ggplot2)
+ggplot(data = marketing, aes(x = advert, y = sales)) +
+  stat_smooth(method = "lm", se = FALSE, color = "green", formula = y ~ x) +
+  stat_smooth(method = "lm", se = FALSE, color = "blue", formula = y ~ x + I(x ^ 2)) +
+  stat_smooth(method = "lm", se = FALSE, color = "red", formula = y ~ x + I(x ^ 2)+ I(x ^ 3)) +
+  geom_point(colour = "black", size = 3)
+```
+
+Tenga en cuenta que podríamos ajustar un polinomio de un orden arbitrario,
+
+\[
+  Y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \cdots + \beta_{p-1}x_i^{p-1} + \epsilon_i
+\]
+
+Sin embargo, debemos tener cuidado con el ajuste excesivo, ya que con un polinomio de un grado menor que el número de observaciones, a veces es posible ajustar un modelo perfectamente.
+
+```{r}
+set.seed(1234)
+x = seq(0, 10)
+y = 3 + x + 4 * x ^ 2 + rnorm(11, 0, 20)
+plot(x, y, ylim = c(-300, 400), cex = 2, pch = 20)
+fit = lm(y ~ x + I(x ^ 2))
+#summary(fit)
+fit_perf = lm(y ~ x + I(x ^ 2) + I(x ^ 3) + I(x ^ 4) + I(x ^ 5) + I(x ^ 6)
+               + I(x ^ 7) + I(x ^ 8) + I(x ^ 9) + I(x ^ 10))
+summary(fit_perf)
+xplot = seq(0, 10, by = 0.1)
+lines(xplot, predict(fit, newdata = data.frame(x = xplot)),
+      col = "dodgerblue", lwd = 2, lty = 1)
+lines(xplot, predict(fit_perf, newdata = data.frame(x = xplot)),
+      col = "darkorange", lwd = 2, lty = 2)
+```
+
+Observe que en el resumen, `R` no pudo calcular los errores estándar. Este es el resultado de estar "fuera" de los grados de libertad. Con 11 parámetros $\beta$ y 11 puntos de datos, usamos todos los grados de libertad antes de poder estimar $\sigma$.
+
+En este ejemplo, la verdadera relación es cuadrática, pero el ajuste del polinomio de orden 10 es "perfecto". En el próximo capítulo nos centraremos en el compromiso entre bondad de ajuste (minimización de errores) y complejidad del modelo.
+
+Suponga que trabaja para un fabricante de automóviles que fabrica un gran sedán de lujo. Le gustaría saber cómo funciona el automóvil desde el punto de vista de la eficiencia del combustible cuando se conduce a varias velocidades. En lugar de probar el automóvil a todas las velocidades imaginables (lo que sería imposible), crea un experimento en el que el automóvil se conduce a velocidades de interés en incrementos de 5 millas por hora.
+
+Nuestro objetivo, entonces, es ajustar un modelo a estos datos para poder predecir la eficiencia del combustible al conducir a ciertas velocidades. Los datos de este ejemplo se pueden encontrar en [`fuel_econ.csv`](data/fuel_econ.csv).
+
+```{r}
+econ = read.csv("data/fuel_econ.csv")
+```
+
+En este ejemplo, con frecuencia buscaremos una gráfica de ajustados versus residuales, por lo que *deberíamos* escribir una función para hacer nuestra vida más fácil, pero esto se deja como un ejercicio de tarea.
+
+También agregaremos curvas ajustadas a los graficos de dispersión repetidamente, así que, de manera inteligente, escribiremos una función para hacerlo.
+
+```{r}
+plot_econ_curve = function(model){
+  plot(mpg ~ mph, data = econ, xlab = "Velocidad (millas por hora)", 
+       ylab = "Eficiencia de combustible (millas por galón)", col = "dodgerblue", 
+       pch = 20, cex =2)
+  xplot = seq(10, 75, by = 0.1)
+  lines(xplot, predict(model, newdata = data.frame(mph = xplot)),
+        col = "darkorange", lwd = 2, lty = 1)
+}
+```
+
+Así que ahora primero ajustamos una regresión lineal simple a estos datos.
+
+```{r}
+fit1 = lm(mpg ~ mph, data = econ)
+```
+
+```{r, fig.height = 4, fig.width = 8}
+par(mfrow = c(1, 2))
+plot_econ_curve(fit1)
+plot(fitted(fit1), resid(fit1), xlab = "Ajustados", ylab = "Residuales", 
+     col = "dodgerblue", pch = 20, cex =2)
+  abline(h = 0, col = "darkorange", lwd = 2)
+```
+
+Claramente podemos hacerlo mejor. Sí, la eficiencia del combustible aumenta a medida que aumenta la velocidad, pero solo hasta cierto punto.
+
+Ahora agregaremos términos polinomiales hasta que encajemos en un ajuste adecuado.
+
+```{r}
+fit2 = lm(mpg ~ mph + I(mph ^ 2), data = econ)
+summary(fit2)
+```
+
+```{r, fig.height = 4, fig.width = 8}
+par(mfrow = c(1, 2))
+plot_econ_curve(fit2)
+plot(fitted(fit2), resid(fit2), xlab = "Ajustados", ylab = "Residuales", 
+     col = "dodgerblue", pch = 20, cex =2)
+  abline(h = 0, col = "darkorange", lwd = 2)
+```
+
+Si bien este modelo claramente se ajusta mucho mejor, y el término de segundo orden es significativo, todavía vemos un patrón en la gráfica ajustada versus residual que sugiere que los términos de orden superior ayudarán. Además, esperaríamos que la curva se aplana a medida que aumenta o disminuye la velocidad, no que descienda bruscamente como vemos aquí.
+
+```{r}
+fit3 = lm(mpg ~ mph + I(mph ^ 2) + I(mph ^ 3), data = econ)
+summary(fit3)
+```
+
+```{r, fig.height = 4, fig.width = 8}
+par(mfrow = c(1, 2))
+plot_econ_curve(fit3)
+plot(fitted(fit3), resid(fit3), xlab = "Ajustados", ylab = "Residuales", 
+     col = "dodgerblue", pch = 20, cex =2)
+  abline(h = 0, col = "darkorange", lwd = 2)
+```
+
+Agregar el término de tercer orden no parece ayudar en absoluto. La curva ajustada apenas cambia. Esto tiene sentido, ya que lo que nos gustaría es que la curva se aplanara en los extremos. Para ello necesitaremos un término polinomial de grado par.
+
+```{r}
+fit4 = lm(mpg ~ mph + I(mph ^ 2) + I(mph ^ 3) + I(mph ^ 4), data = econ)
+summary(fit4)
+```
+
+```{r, fig.height = 4, fig.width = 8}
+par(mfrow = c(1, 2))
+plot_econ_curve(fit4)
+plot(fitted(fit4), resid(fit4), xlab = "Ajustados", ylab = "Residuales", 
+     col = "dodgerblue", pch = 20, cex =2)
+  abline(h = 0, col = "darkorange", lwd = 2)
+```
+
+Ahora estamos progresando. El término de cuarto orden es significativo con los demás términos del modelo. También estamos empezando a ver lo que esperábamos para baja y alta velocidad. Sin embargo, todavía parece haber un patrón en los residuos, por lo que volveremos a intentar términos de orden superior. Sumaremos el quinto y el sexto juntos, ya que sumar el quinto será similar a sumar el tercero.
+
+```{r}
+fit6 = lm(mpg ~ mph + I(mph ^ 2) + I(mph ^ 3) + I(mph ^ 4) + I(mph ^ 5) + I(mph^6), data = econ)
+summary(fit6)
+```
+
+```{r, fig.height = 4, fig.width = 8}
+par(mfrow = c(1, 2))
+plot_econ_curve(fit6)
+plot(fitted(fit6), resid(fit6), xlab = "Ajustados", ylab = "Residuales", 
+     col = "dodgerblue", pch = 20, cex =2)
+  abline(h = 0, col = "darkorange", lwd = 2)
+```
+
+Nuevamente, el término de sexto orden es significativo con los otros términos del modelo y aquí vemos menos patrón en el gráfico de residuos. Probemos ahora cuál de los dos modelos anteriores preferimos. Vamos a probar
+
+\[
+H_0: \beta_5 = \beta_6 = 0.
+\]
+
+```{r}
+anova(fit4, fit6)
+```
+
+Entonces, esta prueba no rechaza la hipótesis nula a un nivel de significancia de $\alpha=0.05$, sin embargo, el valor p es todavía bastante pequeño, y la gráfica ajustada versus residual es mucho mejor para el modelo con el término de sexto orden. Esto hace que el modelo de sexto orden sea una buena elección. Podríamos repetir este proceso una vez más.
+
+```{r}
+fit8 = lm(mpg ~ mph + I(mph ^ 2) + I(mph ^ 3) + I(mph ^ 4) + I(mph ^ 5)
+          + I(mph ^ 6) + I(mph ^ 7) + I(mph ^ 8), data = econ)
+summary(fit8)
+```
+
+```{r, fig.height = 4, fig.width = 8}
+par(mfrow = c(1, 2))
+plot_econ_curve(fit8)
+plot(fitted(fit8), resid(fit8), xlab = "Ajustados", ylab = "Residuals", 
+     col = "dodgerblue", pch = 20, cex =2)
+  abline(h = 0, col = "darkorange", lwd = 2)
+```
+
+```{r}
+summary(fit8)
+anova(fit6, fit8)
+```
+
+Claramente nos quedaríamos con `fit6`. El término de octavo orden no es significativo con los otros términos del modelo y la prueba F no rechaza.
+
+Aparte, tenga en cuenta que existe una forma más rápida de especificar un modelo con muchos términos de orden superior.
+
+```{r}
+fit6_alt = lm(mpg ~ poly(mph, 6), data = econ)
+all.equal(fitted(fit6), fitted(fit6_alt))
+```
+
+Primero verificamos que este método produce los mismos valores ajustados. Sin embargo, los coeficientes estimados son diferentes.
+
+```{r}
+coef(fit6)
+coef(fit6_alt)
+```
+
+Esto se debe a que `poly()` usa *polinomios ortogonales*, lo que resuelve un problema que discutiremos en el próximo capítulo.
+
+```{r}
+summary(fit6)
+summary(fit6_alt)
+```
+
+Sin embargo, tenga en cuenta que el valor p para probar el término de grado 6 es el mismo. Debido a esto, en su mayor parte podemos usar estos indistintamente.
+
+Para usar `poly()` y obtener los mismos resultados que usar `I()` repetidamente, necesitaríamos establecer `raw = TRUE`.
+
+```{r}
+fit6_alt2 = lm(mpg ~ poly(mph, 6, raw = TRUE), data = econ)
+coef(fit6_alt2)
+```
+
+Ahora hemos visto cómo transformar variables de predicción y respuesta. En este capítulo nos hemos centrado principalmente en usar esto en el contexto de la reparación de modelos SLR. Sin embargo, estos conceptos se pueden usar fácilmente junto con variables e interacciones categóricas para construir modelos más grandes y flexibles. En el próximo capítulo, discutiremos cómo elegir un buen modelo de una colección de posibles modelos.
+
+## Transformaciones de respuesta {-}
+
+```{r}
+initech = read.csv("data/initech.csv")
+```
+
+```{r}
+plot(salary ~ years, data = initech, col = "grey", pch = 20, cex = 1.5,
+     main = "Salarios en Initech, por antigüedad")
+```
+
+```{r}
+initech_fit = lm(salary ~ years, data = initech)
+summary(initech_fit)
+```
+
+```{r}
+plot(salary ~ years, data = initech, col = "grey", pch = 20, cex = 1.5,
+     main = "Salarios en Initech, por antigüedad")
+abline(initech_fit, col = "darkorange", lwd = 2)
+```
+
+```{r, fig.height=5, fig.width=10}
+par(mfrow = c(1, 2))
+
+plot(fitted(initech_fit), resid(initech_fit), col = "grey", pch = 20,
+     xlab = "Ajustados", ylab = "Residuales", main = "Ajustados versus Residuales")
+abline(h = 0, col = "darkorange", lwd = 2)
+
+qqnorm(resid(initech_fit), main = "Normal Q-Q Plot", col = "darkgrey")
+qqline(resid(initech_fit), col = "dodgerblue", lwd = 2)
+```
+
+```{r}
+initech_fit_log = lm(log(salary) ~ years, data = initech)
+```
+
+$$
+\log(Y_i) = \beta_0 + \beta_1 x_i + \epsilon_i
+$$
+
+```{r}
+plot(log(salary) ~ years, data = initech, col = "grey", pch = 20, cex = 1.5,
+     main = "Salarios en Initech, por antigüedad")
+abline(initech_fit_log, col = "darkorange", lwd = 2)
+```
+
+$$
+Y_i = \exp(\beta_0 + \beta_1 x_i) \cdot \exp(\epsilon_i)
+$$
+
+```{r}
+plot(salary ~ years, data = initech, col = "grey", pch = 20, cex = 1.5,
+     main = "Salarios en Initech, por antigüedad")
+curve(exp(initech_fit_log$coef[1] + initech_fit_log$coef[2] * x),
+      from = 0, to = 30, add = TRUE, col = "darkorange", lwd = 2)
+```
+
+```{r, fig.height=5, fig.width=10}
+par(mfrow = c(1, 2))
+
+plot(fitted(initech_fit_log), resid(initech_fit_log), col = "grey", pch = 20,
+     xlab = "Ajustados", ylab = "Residuales", main = "Ajustados versus Residuales")
+abline(h = 0, col = "darkorange", lwd = 2)
+
+qqnorm(resid(initech_fit_log), main = "Normal Q-Q Plot", col = "darkgrey")
+qqline(resid(initech_fit_log), col = "dodgerblue", lwd = 2)
+```
+
+```{r}
+sqrt(mean(resid(initech_fit) ^ 2))
+sqrt(mean(resid(initech_fit_log) ^ 2))
+```
+
+```{r}
+sqrt(mean((initech$salary - fitted(initech_fit)) ^ 2))
+sqrt(mean((initech$salary - exp(fitted(initech_fit_log))) ^ 2))
+```
+
+## Transformaciones de predictores  {-}
+
+### Un modelo cuadrático
+
+```{r}
+sim_quad = function(sample_size = 500) {
+  x = runif(n = sample_size) * 5
+  y = 3 + 5 * x ^ 2 + rnorm(n = sample_size, mean = 0, sd = 5)
+  data.frame(x, y)
+}
+```
+
+```{r}
+set.seed(314)
+quad_data = sim_quad(sample_size = 200)
+```
+
+```{r}
+lin_fit = lm(y ~ x, data = quad_data)
+summary(lin_fit)
+```
+
+```{r}
+plot(y ~ x, data = quad_data, col = "grey", pch = 20, cex = 1.5,
+     main = "Datos cuadráticos simulados")
+abline(lin_fit, col = "darkorange", lwd = 2)
+```
+
+```{r, fig.height=5, fig.width=10}
+par(mfrow = c(1, 2))
+
+plot(fitted(lin_fit), resid(lin_fit), col = "grey", pch = 20,
+     xlab = "Ajustados", ylab = "Residuales", main = "Ajustados versus Residuales")
+abline(h = 0, col = "darkorange", lwd = 2)
+
+qqnorm(resid(lin_fit), main = "Normal Q-Q Plot", col = "darkgrey")
+qqline(resid(lin_fit), col = "dodgerblue", lwd = 2)
+```
+
+$$
+Y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \epsilon_i
+$$
+
+```{r}
+quad_fit = lm(y ~ x + I(x^2), data = quad_data)
+summary(quad_fit)
+```
+
+```{r}
+plot(y ~ x, data = quad_data, col = "grey", pch = 20, cex = 1.5,
+     main = "Datos cuadráticos simulados")
+curve(quad_fit$coef[1] + quad_fit$coef[2] * x + quad_fit$coef[3] * x ^ 2,
+      from = -5, to = 30, add = TRUE, col = "darkorange", lwd = 2)
+```
+
+```{r, fig.height=5, fig.width=10}
+par(mfrow = c(1, 2))
+
+plot(fitted(quad_fit), resid(quad_fit), col = "grey", pch = 20,
+     xlab = "Ajustados", ylab = "Residuales", main = "Ajustados versus Residuales")
+abline(h = 0, col = "darkorange", lwd = 2)
+
+qqnorm(resid(quad_fit), main = "Normal Q-Q Plot", col = "darkgrey")
+qqline(resid(quad_fit), col = "dodgerblue", lwd = 2)
+```
+
+### Sobreajuste y extrapolación
+
+```{r}
+sim_for_perf = function() {
+  x = seq(0, 10)
+  y = 3 + x - 4 * x ^ 2 + rnorm(n = 11, mean = 0, sd = 25)
+  data.frame(x, y)
+}
+```
+
+```{r}
+set.seed(1234)
+data_for_perf = sim_for_perf()
+```
+
+```{r}
+fit_correct = lm(y ~ x + I(x ^ 2), data = data_for_perf)
+fit_perfect = lm(y ~ x + I(x ^ 2) + I(x ^ 3) + I(x ^ 4) + I(x ^ 5) + I(x ^ 6) + 
+                 I(x ^ 7) + I(x ^ 8) + I(x ^ 9) + I(x ^ 10), 
+                 data = data_for_perf)
+```
+
+```{r, fig.height=6, fig.width=8}
+x_plot = seq(-5, 15, by = 0.1)
+plot(y ~ x, data = data_for_perf, ylim = c(-450, 100), cex = 2, pch = 20)
+lines(x_plot, predict(fit_correct, newdata = data.frame(x = x_plot)),
+      col = "dodgerblue", lwd = 2, lty = 1)
+lines(x_plot, predict(fit_perfect, newdata = data.frame(x = x_plot)),
+      col = "darkorange", lwd = 2, lty = 2)
+```
+
+### Comparación de modelos polinomiales
+
+```{r}
+sim_higher = function(sample_size = 250) {
+  x = runif(n = sample_size, min = -1, max = 1) * 2
+  y = 3 + -6 * x ^ 2 + 1 * x ^ 4 + rnorm(n = sample_size, mean = 0, sd = 3)
+  data.frame(x, y)
+}
+```
+
+$$
+Y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \epsilon_i
+$$
+
+$$
+Y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \beta_3 x_i^3 + \beta_4 x_i^4 + \epsilon_i
+$$
+
+$$
+Y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \beta_3 x_i^3 + \beta_4 x_i^4 + \beta_5 x_i^5 + \beta_6 x_i^6 + \epsilon_i
+$$
+
+```{r}
+set.seed(42)
+data_higher = sim_higher()
+```
+
+```{r}
+plot(y ~ x, data = data_higher, col = "grey", pch = 20, cex = 1.5,
+     main = "Datos cuarticos simulados")
+```
+
+```{r}
+fit_2 = lm(y ~ poly(x, 2), data = data_higher)
+fit_4 = lm(y ~ poly(x, 4), data = data_higher)
+```
+
+```{r}
+plot(y ~ x, data = data_higher, col = "grey", pch = 20, cex = 1.5,
+     main = "Datos cuarticos simulados")
+x_plot = seq(-5, 5, by = 0.05)
+lines(x_plot, predict(fit_2, newdata = data.frame(x = x_plot)),
+      col = "dodgerblue", lwd = 2, lty = 1)
+lines(x_plot, predict(fit_4, newdata = data.frame(x = x_plot)),
+      col = "darkorange", lwd = 2, lty = 2)
+```
+
+```{r, fig.height=5, fig.width=10}
+par(mfrow = c(1, 2))
+
+plot(fitted(fit_2), resid(fit_2), col = "grey", pch = 20,
+     xlab = "Ajustados", ylab = "Residuales", main = "Ajustados versus Residuales")
+abline(h = 0, col = "darkorange", lwd = 2)
+
+qqnorm(resid(fit_2), main = "Normal Q-Q Plot", col = "darkgrey")
+qqline(resid(fit_2), col = "dodgerblue", lwd = 2)
+```
+
+```{r, fig.height=5, fig.width=10}
+par(mfrow = c(1, 2))
+
+plot(fitted(fit_4), resid(fit_4), col = "grey", pch = 20,
+     xlab = "Ajustados", ylab = "Residuales", main = "Ajustados versus Residuales")
+abline(h = 0, col = "darkorange", lwd = 2)
+
+qqnorm(resid(fit_4), main = "Normal Q-Q Plot", col = "darkgrey")
+qqline(resid(fit_4), col = "dodgerblue", lwd = 2)
+```
+
+```{r}
+anova(fit_2, fit_4)
+```
+
+```{r}
+fit_6 = lm(y ~ poly(x, 6), data = data_higher)
+```
+
+```{r}
+anova(fit_4, fit_6)
+```
+
+### `poly()` Función y polinomios ortogonales
+
+$$
+Y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \beta_3 x_i^3 + \beta_4 x_i^4 + \epsilon_i
+$$
+
+```{r}
+fit_4a = lm(y ~ poly(x, degree = 4), data = data_higher)
+fit_4b = lm(y ~ poly(x, degree = 4, raw = TRUE), data = data_higher)
+fit_4c = lm(y ~ x + I(x^2) + I(x^3) + I(x^4), data = data_higher)
+```
+
+```{r}
+coef(fit_4a)
+coef(fit_4b)
+coef(fit_4c)
+```
+
+```{r}
+unname(coef(fit_4a))
+unname(coef(fit_4b))
+unname(coef(fit_4c))
+```
+
+```{r}
+all.equal(fitted(fit_4a),
+          fitted(fit_4b))
+```
+
+```{r}
+all.equal(resid(fit_4a),
+          resid(fit_4b))
+```
+
+```{r}
+summary(fit_4a)
+```
+
+```{r}
+summary(fit_4c)
+```
+
+### Función de inhibición
+
+```{r}
+coef(lm(y ~ x + x ^ 2, data = quad_data))
+coef(lm(y ~ x + I(x ^ 2), data = quad_data))
+```
+
+```{r}
+coef(lm(y ~ x + x:x, data = quad_data))
+coef(lm(y ~ x * x, data = quad_data))
+coef(lm(y ~ x ^ 2, data = quad_data))
+coef(lm(y ~ x + x ^ 2, data = quad_data))
+```
+
+```{r}
+coef(lm(y ~ I(x + x), data = quad_data))
+coef(lm(y ~ x + x, data = quad_data))
+```
+
+### Ejemplo con datos
+
+```{r, echo = FALSE}
+
+autompg = read.table(
+  "http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data",
+  quote = "\"",
+  comment.char = "",
+  stringsAsFactors = FALSE)
+
+colnames(autompg) = c("mpg", "cyl", "disp", "hp", "wt", "acc", "year", "origin", "name")
+
+autompg = subset(autompg, autompg$hp != "?")
+
+autompg = subset(autompg, autompg$name != "plymouth reliant")
+
+rownames(autompg) = paste(autompg$cyl, "cylinder", autompg$year, autompg$name)
+
+autompg = subset(autompg, select = c("mpg", "cyl", "disp", "hp", "wt", "acc", "year", "origin"))
+
+autompg$hp = as.numeric(autompg$hp)
+
+autompg$domestic = as.numeric(autompg$origin == 1)
+
+autompg = autompg[autompg$cyl != 5,]
+autompg = autompg[autompg$cyl != 3,]
+
+autompg$cyl = as.factor(autompg$cyl)
+```
+
+```{r, fig.height=10, fig.width=10}
+pairs(autompg)
+```
+
+```{r, fig.height=5, fig.width=10}
+mpg_hp = lm(mpg ~ hp, data = autompg)
+
+par(mfrow = c(1, 2))
+
+plot(mpg ~ hp, data = autompg, col = "dodgerblue", pch = 20, cex = 1.5)
+abline(mpg_hp, col = "darkorange", lwd = 2)
+
+plot(fitted(mpg_hp), resid(mpg_hp), col = "dodgerblue",
+     pch = 20, cex = 1.5, xlab = "Ajustados", ylab = "Residuales")
+abline(h = 0, lty = 2, col = "darkorange", lwd = 2)
+```
+
+```{r, fig.height=5, fig.width=10}
+mpg_hp_log = lm(mpg ~ hp + I(hp ^ 2), data = autompg)
+
+par(mfrow = c(1, 2))
+
+plot(mpg ~ hp, data = autompg, col = "dodgerblue", pch = 20, cex = 1.5)
+xplot = seq(min(autompg$hp), max(autompg$hp), by = 0.1)
+lines(xplot, predict(mpg_hp_log, newdata = data.frame(hp = xplot)),
+      col = "darkorange", lwd = 2, lty = 1)
+
+plot(fitted(mpg_hp_log), resid(mpg_hp_log), col = "dodgerblue",
+     pch = 20, cex = 1.5, xlab = "Ajustados", ylab = "Residuales")
+abline(h = 0, lty = 2, col = "darkorange", lwd = 2)
+```
+
+```{r, fig.height=5, fig.width=10}
+mpg_hp_log = lm(log(mpg) ~ hp + I(hp ^ 2), data = autompg)
+
+par(mfrow = c(1, 2))
+
+plot(log(mpg) ~ hp, data = autompg, col = "dodgerblue", pch = 20, cex = 1.5)
+xplot = seq(min(autompg$hp), max(autompg$hp), by = 0.1)
+lines(xplot, predict(mpg_hp_log, newdata = data.frame(hp = xplot)),
+      col = "darkorange", lwd = 2, lty = 1)
+
+plot(fitted(mpg_hp_log), resid(mpg_hp_log), col = "dodgerblue",
+     pch = 20, cex = 1.5, xlab = "Ajustados", ylab = "Residuales")
+abline(h = 0, lty = 2, col = "darkorange", lwd = 2)
+```
+
+```{r, fig.height=5, fig.width=10}
+mpg_hp_loglog = lm(log(mpg) ~ log(hp), data = autompg)
+
+par(mfrow = c(1, 2))
+plot(log(mpg) ~ log(hp), data = autompg, col = "dodgerblue", pch = 20, cex = 1.5)
+abline(mpg_hp_loglog, col = "darkorange", lwd = 2)
+
+plot(fitted(mpg_hp_loglog), resid(mpg_hp_loglog), col = "dodgerblue",
+     pch = 20, cex = 1.5, xlab = "Ajustados", ylab = "Residuales")
+abline(h = 0, lty = 2, col = "darkorange", lwd = 2)
+```
+
+```{r}
+big_model = lm(mpg ~ disp * hp * domestic, data = autompg)
+```
+
+```{r}
+qqnorm(resid(big_model), col = "darkgrey")
+qqline(resid(big_model), col = "dodgerblue", lwd = 2)
+```
+
+```{r}
+bigger_model = lm(log(mpg) ~ disp * hp * domestic + 
+               I(disp ^ 2) + I(hp ^ 2), data = autompg)
+summary(bigger_model)
+```
+
+```{r}
+qqnorm(resid(bigger_model), col = "darkgrey")
+qqline(resid(bigger_model), col = "dodgerblue", lwd = 2)
+```
+

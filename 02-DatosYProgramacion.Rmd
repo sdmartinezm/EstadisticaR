@@ -1,0 +1,863 @@
+# Datos y programación
+
+## Tipos de datos
+
+`R` tiene varios tipos *de datos básicos*.
+
+- Numérico
+    - También conocido como Double. El tipo predeterminado cuando se trata de números.
+    - Ejemplos: `1`, `1.0`, `42.5`
+- Entero
+    - Ejemplos: `1L`, `2L`, `42L`
+- Complejo
+    - Ejemplos: `4 + 2i`
+- Lógico
+    - Dos valores posibles: `TRUE` y `FALSE`
+    - También puedes usar `T` y `F`, pero esto *no* se recomienda.
+    - `NA` También se considera lógico.
+- caracteres
+    - Ejemplos: `"a"`, `"Estadísticas"`, `"1 más 2."`
+
+## Estructuras de datos
+
+`R` también tiene varias *estructuras* de datos básicas. Una estructura de datos es homogénea (todos los elementos son del mismo tipo de datos) o heterogénea (los elementos pueden ser de más de un tipo de datos).
+
+
+| Dimensión | **Homogénea**   | **Heterogénea**   |
+|-----------|-----------------|-------------------|
+| 1         | Vector          | Lista             |
+| 2         | Matriz          | marco de datos        |
+| 3+        | Array           |                   |
+
+### Vectores
+
+Muchas operaciones en `R` hacen un uso intensivo de **vectores**. Los vectores en `R` se indexan comenzando en `1`. Eso es lo que indica el `[1]` en la salida, que el primer elemento de la fila que se muestra es el primer elemento del vector. Los vectores más grandes comenzarán filas adicionales con `[*]` donde `*` es el índice del primer elemento de la fila.
+
+Posiblemente la forma más común de crear un vector en `R` es usando la función `c()`, que es la abreviatura de "combinar". Como sugiere el nombre, combina una lista de elementos separados por comas.
+
+```{r}
+c(1, 3, 5, 7, 8, 9)
+```
+
+Aquí `R` simplemente genera este vector. Si quisiéramos almacenar este vector en una **variable** podemos hacerlo con el operador de **asignación** `=`. En este caso, la variable `x` ahora contiene el vector que acabamos de crear, y podemos acceder al vector escribiendo `x`.
+
+```{r}
+x = c(1, 3, 5, 7, 8, 9)
+x
+```
+
+Como acotación al margen, hay una larga historia del operador de asignación en "R", en parte debido a las teclas disponibles en los [teclados de los creadores del lenguaje "S".](https://twitter.com/kwbroman/status/747829864091127809){target="_blank"} (Que precedió a `R`.) Para simplificar, usaremos `=`, pero sepa que a menudo verá `<-` como el operador de asignación. 
+
+Los pros y los contras de estos dos están mucho más allá del alcance de este libro, pero sepa que para nuestros propósitos no tendrá ningún problema si simplemente usa `=`. Si está interesado en los casos extraños en los que la diferencia importa, consulte [The R Inferno](http://www.burns-stat.com/documents/books/the-r-inferno/){target="_blank"}.
+
+Si desea usar `<-`, aún necesitará usar `=`, sin embargo, solo para pasar argumentos. A algunos usuarios les gusta mantener la asignación (`<-`) y el paso de argumentos (`=`) separados. No importa lo que elija, lo más importante es que **se mantenga constante**. Además, si trabaja en un proyecto colaborativo más grande, debe usar cualquier estilo que ya esté implementado.
+
+Debido a que los vectores deben contener elementos que sean todos del mismo tipo,`R` automáticamente coaccionará a un solo tipo cuando intente crear un vector que combine varios tipos.
+
+```{r}
+c(42, "Statistics", TRUE)
+c(42, TRUE)
+```
+
+Con frecuencia, es posible que desee crear un vector basado en una secuencia de números. La forma más rápida y sencilla de hacer esto es con el operador `:`, que crea una secuencia de enteros entre dos enteros especificados.
+
+```{r}
+(y = 1:100)
+```
+
+Aquí vemos a `R` etiquetando las filas después de la primera ya que este es un vector grande. Además, vemos que al poner paréntesis alrededor de la asignación, `R` almacena el vector en una variable llamada` y` y automáticamente envía `y` a la consola.
+
+Tenga en cuenta que los escalares no existen en `R`. Son simplemente vectores de longitud `1`.
+
+```{r}
+2
+```
+
+Si queremos crear una secuencia que no se limite a números enteros y que aumente de uno en uno, podemos usar la función `seq ()`.
+
+```{r}
+seq(from = 1.5, to = 4.2, by = 0.1)
+```
+
+Discutiremos las funciones en detalle más adelante, pero tenga en cuenta que las etiquetas de entrada `from`,`to` y `by` son opcionales.
+
+```{r}
+seq(1.5, 4.2, 0.1)
+```
+
+Otra operación común para crear un vector es `rep ()`, que puede repetir un solo valor varias veces.
+
+```{r}
+rep("A", times = 10)
+```
+
+La función `rep ()` se puede usar para repetir un vector varias veces.
+
+```{r}
+rep(x, times = 3)
+```
+
+Ahora hemos visto cuatro formas diferentes de crear vectores:
+
+- `c()`
+- `:`
+- `seq()`
+- `rep()`
+
+Hasta ahora los hemos usado principalmente de forma aislada, pero a menudo se usan juntos.
+
+```{r}
+c(x, rep(seq(1, 9, 2), 3), c(1, 2, 3), 42, 2:4)
+```
+
+La longitud de un vector se puede obtener con la función `length()`.
+
+```{r}
+length(x)
+length(y)
+```
+
+#### Subconjunto
+
+Para crear un subconjunto de un vector, usamos corchetes, `[]`. 
+
+```{r}
+x
+x[1]
+x[3]
+```
+
+Vemos que `x[1]` devuelve el primer elemento, y `x[3]` devuelve el tercer elemento.
+
+```{r}
+x[-2]
+```
+
+También podemos excluir ciertos índices, en este caso el segundo elemento.
+
+```{r}
+x[1:3]
+x[c(1,3,4)]
+```
+
+Por último, vemos que podemos crear subconjuntos basados en un vector de índices.
+
+Todo lo anterior es un subconjunto de un vector usando un vector de índices. (Recuerde que un solo número sigue siendo un vector). En su lugar, podríamos usar un vector de valores lógicos.
+
+```{r}
+z = c(TRUE, TRUE, FALSE, TRUE, TRUE, FALSE)
+z
+```
+
+```{r}
+x[z]
+```
+
+### Vectorización
+
+Una de las mayores fortalezas de `R` es su uso de operaciones vectorizadas. (Con frecuencia, la falta de comprensión de este concepto conduce a la creencia de que `R` es *lento*. `R` no es el lenguaje más rápido, pero tiene la reputación de ser más lento de lo que realmente es).
+
+```{r}
+x = 1:10
+x + 1
+2 * x
+2 ^ x
+sqrt(x)
+log(x)
+```
+
+Vemos que cuando se llama a una función como `log()` en un vector `x`, se devuelve un vector que ha aplicado la función a cada elemento del vector `x`.
+
+### Operadores logicos
+
+| Operador | Resumen                 | Ejemplo                | Resultado                |
+|----------|-------------------------|------------------------|--------------------------|
+| `x < y`  | `x` menor a `y`         | `3 < 42`               | `r 3 < 42`               |
+| `x > y`  | `x` mayor a `y`         | `3 > 42`               | `r 3 > 42`               |
+| `x <= y` | `x` menor o igual a`y`  | `3 <= 42`              | `r 3 <= 42`              |
+| `x >= y` | `x` mayor o igual a `y` | `3 >= 42`              | `r 3 >= 42`              |
+| `x == y` | `x`igual a `y`          | `3 == 42`              | `r 3 == 42`              |
+| `x != y` | `x` diferente a `y`     | `3 != 42`              | `r 3 != 42`              |
+| `!x`     | diferente a `x`         | `!(3 > 42)`            | `r !(3 > 42)`            |
+| `x | y`  | `x` o `y`               | `(3 > 42) | TRUE`      | `r (3 > 42) | TRUE`      |
+| `x & y`  | `x` y `y`               | `(3 < 4) & ( 42 > 13)` | `r (3 < 4) & ( 42 > 13)` |
+
+En `R`, los operadores lógicos están vectorizados.
+
+```{r}
+x = c(1, 3, 5, 7, 8, 9)
+```
+
+```{r}
+x > 3
+x < 3
+x == 3
+x != 3
+```
+
+```{r}
+x == 3 & x != 3
+x == 3 | x != 3
+```
+
+Esto es extremadamente útil para crear subconjuntos.
+
+```{r}
+x[x > 3]
+x[x != 3]
+```
+
+- TODO: coercion
+
+```{r}
+sum(x > 3)
+as.numeric(x > 3)
+```
+
+Aquí vemos que el uso de la función `sum()` en un vector de valores lógicos `TRUE` y` FALSE` que es el resultado de `x>3` da como resultado un resultado numérico. `R` primero está convirtiendo automáticamente lo lógico en numérico, donde `TRUE` es `1` y `FALSE` es `0`. Esta coerción de lógica a numérica ocurre para la mayoría de las operaciones matemáticas.
+
+```{r}
+which(x > 3)
+x[which(x > 3)]
+
+max(x)
+which(x == max(x))
+which.max(x)
+```
+
+### Más vectorización
+
+```{r}
+x = c(1, 3, 5, 7, 8, 9)
+y = 1:100
+```
+
+```{r}
+x + 2
+x + rep(2, 6)
+```
+
+```{r}
+x > 3
+x > rep(3, 6)
+```
+
+```{r}
+x + y
+length(x)
+length(y)
+length(y) / length(x)
+(x + y) - y
+```
+
+```{r}
+y = 1:60
+x + y
+length(y) / length(x)
+```
+
+```{r}
+rep(x, 10) + y
+```
+
+```{r}
+all(x + y == rep(x, 10) + y)
+identical(x + y, rep(x, 10) + y)
+```
+
+```{r}
+# ?any
+# ?all.equal
+```
+
+### Matrices
+
+`R` también se puede utilizar para cálculos de **matriz**. Las matrices tienen filas y columnas que contienen un solo tipo de datos. En una matriz, el orden de filas y columnas es importante. (Esto no es cierto para *Marcos de datos*, que veremos más adelante).
+
+Las matrices se pueden crear usando la función `matrix`.
+
+```{r}
+x = 1:9
+x
+X = matrix(x, nrow = 3, ncol = 3)
+X
+```
+
+Observe aquí que estamos usando dos variables diferentes: `x` minúscula, que almacena un vector y `X` mayúscula, que almacena una matriz. (Siguiendo la convención matemática habitual). Podemos hacer esto porque `R` distingue entre mayúsculas y minúsculas.
+
+Por defecto, la función `matrix` reordena un vector en columnas, pero también podemos decirle a` R` que use filas en su lugar.
+
+```{r}
+Y = matrix(x, nrow = 3, ncol = 3, byrow = TRUE)
+Y
+```
+
+También podemos crear una matriz de una dimensión específica donde todos los elementos son iguales, en este caso `0`.
+
+```{r}
+Z = matrix(0, 2, 4)
+Z
+```
+
+Al igual que los vectores, las matrices se pueden subdividir utilizando corchetes, `[]`. Sin embargo, dado que las matrices son bidimensionales, necesitamos especificar tanto una fila como una columna al crear subconjuntos .
+
+```{r}
+X
+X[1, 2]
+```
+
+Aquí accedimos al elemento de la primera fila y la segunda columna. También podríamos crear subconjuntos de una fila o columna completa.
+
+```{r}
+X[1, ]
+X[, 2]
+```
+
+También podemos usar vectores para crear subconjuntos de más de una fila o columna a la vez. Aquí creamos un subconjunto de la primera y tercera columna de la segunda fila.
+
+```{r}
+X[2, c(1, 3)]
+```
+
+Las matrices también se pueden crear combinando vectores como columnas, usando `cbind`, o combinando vectores como filas, usando` rbind`.
+
+```{r}
+x = 1:9
+rev(x)
+rep(1, 9)
+```
+
+```{r}
+rbind(x, rev(x), rep(1, 9))
+```
+
+```{r}
+cbind(col_1 = x, col_2 = rev(x), col_3 = rep(1, 9))
+```
+
+Cuando use `rbind` y` cbind`, puede especificar nombres de "argumentos" que se usarán como nombres de columna.
+
+`R` se puede utilizar para realizar cálculos matriciales.
+
+```{r}
+x = 1:9
+y = 9:1
+X = matrix(x, 3, 3)
+Y = matrix(y, 3, 3)
+X
+Y
+```
+
+```{r}
+X + Y
+X - Y
+X * Y
+X / Y
+```
+
+Tenga en cuenta que `X*Y` no es una multiplicación de matrices. Es una multiplicación elemento por elemento. (Lo mismo para `X/Y`). En cambio, la multiplicación de matrices usa `%*%`. Otras funciones matriciales incluyen `t()` que da la transpuesta de una matriz y `solve()` que devuelve la inversa de una matriz cuadrada si es invertible.
+
+```{r}
+X %*% Y
+t(X)
+```
+
+```{r}
+Z = matrix(c(9, 2, -3, 2, 4, -2, -3, -2, 16), 3, byrow = TRUE)
+Z
+solve(Z)
+```
+
+Para verificar que `solve(Z)` devuelve el inverso, lo multiplicamos por `Z`. Es de esperar que esto devuelva la matriz de identidad, sin embargo, vemos que este no es el caso debido a algunos problemas de cálculo. Sin embargo, `R` también tiene la función `all.equal()` que verifica la igualdad, con una pequeña tolerancia que explica algunos problemas de cálculo. La función `identical()` se usa para verificar la igualdad exacta.
+
+```{r}
+solve(Z) %*% Z
+diag(3)
+all.equal(solve(Z) %*% Z, diag(3))
+```
+
+`R` tiene una serie de funciones específicas de matriz para obtener información de dimensión y resumen.
+
+```{r}
+X = matrix(1:6, 2, 3)
+X
+dim(X)
+rowSums(X)
+colSums(X)
+rowMeans(X)
+colMeans(X)
+```
+
+La función `diag()` se puede utilizar de varias formas. Podemos extraer la diagonal de una matriz.
+
+```{r}
+diag(Z)
+```
+
+O crear una matriz con elementos específicos de la diagonal. (Y `0` en lo que esta fuera de las diagonales).
+
+```{r}
+diag(1:5)
+```
+
+O, por último, crear una matriz cuadrada de cierta dimensión con `1` para cada elemento de la diagonal y `0` para cada elemento fuera de la diagonal.
+
+```{r}
+diag(5)
+```
+
+#### Cálculos con vectores y matrices {-}
+
+Ciertas operaciones en `R`, por ejemplo `%*%` tiene un comportamiento diferente en vectores y matrices. Para ilustrar esto, primero crearemos dos vectores.
+
+```{r}
+a_vec = c(1, 2, 3)
+b_vec = c(2, 2, 2)
+```
+
+Tenga en cuenta que estos son de hecho vectores. No son matrices.
+
+```{r}
+c(is.vector(a_vec), is.vector(b_vec))
+c(is.matrix(a_vec), is.matrix(b_vec))
+```
+
+Cuando este es el caso, el operador `% *%` se usa para calcular el **producto escalar**, también conocido como el **producto interno** de los dos vectores.
+
+
+El producto escalar de los vectores $\boldsymbol{a} = \lbrack a_1, a_2, \cdots a_n \rbrack$ y $\boldsymbol{b} = \lbrack b_1, b_2, \cdots b_n \rbrack$ esta definido por
+
+\[
+\boldsymbol{a} \cdot \boldsymbol{b} = \sum_{i = 1}^{n} a_i b_i = a_1 b_1 + a_2 b_2 + \cdots a_n b_n.
+\]
+
+```{r}
+a_vec %*% b_vec # inner product
+a_vec %o% b_vec # outer product
+```
+
+El operador `%o%` se utiliza para calcular el **producto exterior** de los dos vectores.
+
+Cuando los vectores se ven obligados a convertirse en matrices, son vectores columna. Entonces, un vector de longitud $n$ se convierte en una matriz $n\times1 $ después de la coerción.
+
+```{r}
+as.matrix(a_vec)
+```
+
+Si usamos el operador `%*%` en matrices, `%*%`` vuelve a realizar la multiplicación de matrices esperada. Por lo tanto, es de esperar que lo siguiente produzca un error, porque las dimensiones son incorrectas.
+
+```{r}
+as.matrix(a_vec) %*% b_vec
+```
+
+A simple vista, esta es una matriz de $3\times1$, multiplicada por una matriz de $3\times1$. Sin embargo, cuando `b_vec` se convierte automáticamente en una matriz,`R` decidió convertirlo en un "vector de fila", una matriz de $1\times3 $, de modo que la multiplicación tenga una dimensión conformable.
+
+Si hubiéramos coaccionado a ambos, entonces `R` produciría un error.
+
+```{r, eval = FALSE}
+as.matrix(a_vec) %*% as.matrix(b_vec)
+```
+
+Otra forma de calcular un * producto escalar * es con la función `crossprod()`. Dados dos vectores, la función `crossprod()` calcula su producto escalar. La función tiene un nombre bastante engañoso.
+
+```{r}
+crossprod(a_vec, b_vec)  # inner product
+tcrossprod(a_vec, b_vec)  # outer product
+```
+
+Estas funciones podrían resultar muy útiles más adelante. Cuando se usa con matrices $X$ y $Y$ como argumentos, calcula
+
+\[
+X^\top Y.
+\]
+
+Cuando se trata de modelos lineales, el cálculo
+
+\[
+X^\top X
+\]
+
+se utiliza repetidamente.
+
+```{r}
+C_mat = matrix(c(1, 2, 3, 4, 5, 6), 2, 3)
+D_mat = matrix(c(2, 2, 2, 2, 2, 2), 2, 3)
+```
+
+Esto es útil como atajo para un cálculo frecuente y como una implementación más eficiente que usar `t()` y `%*%`.
+
+```{r}
+crossprod(C_mat, D_mat)
+t(C_mat) %*% D_mat
+all.equal(crossprod(C_mat, D_mat), t(C_mat) %*% D_mat)
+```
+
+```{r}
+crossprod(C_mat, C_mat)
+t(C_mat) %*% C_mat
+all.equal(crossprod(C_mat, C_mat), t(C_mat) %*% C_mat)
+```
+
+### Listas
+
+Una lista es una estructura de datos heterogénea unidimensional. Por lo tanto, está indexado como un vector con un solo valor entero, pero cada elemento puede contener un elemento de cualquier tipo.
+
+```{r}
+# creación
+list(42, "Hola", TRUE)
+
+ex_list = list(
+  a = c(1, 2, 3, 4),
+  b = TRUE,
+  c = "Hola!",
+  d = function(arg = 42) {print("Hola mundo!")},
+  e = diag(5)
+)
+```
+
+Las listas pueden ser subconjuntos usando dos sintaxis, el operador `$` y corchetes `[]`. El operador `$` devuelve un **elemento** nombrado de una lista. La sintaxis `[]` devuelve una **lista**, mientras que `[[]]` devuelve un **elemento** de una lista.
+
+- `ex_list[1]` devuelve una lista que contiene el primer elemento.
+- `ex_list[[1]]` devuelve el primer elemento de la lista, en este caso, un vector.
+
+```{r}
+# subconjunto
+ex_list$e
+
+ex_list[1:2]
+ex_list[1]
+ex_list[[1]]
+ex_list[c("e", "a")]
+ex_list["e"]
+ex_list[["e"]]
+
+ex_list$d
+ex_list$d(arg = 1)
+```
+
+### Marcos de datos
+
+Anteriormente hemos visto vectores y matrices para almacenar datos. Ahora presentaremos un **marco de datos** que será la forma más común de almacenar e interactuar con los datos en este curso.
+
+```{r}
+example_data = data.frame(x = c(1, 3, 5, 7, 9, 1, 3, 5, 7, 9),
+                          y = c(rep("Hola", 9), "Adiós"),
+                          z = rep(c(TRUE, FALSE), 5))
+```
+
+A diferencia de una matriz, que se puede considerar como un vector reorganizado en filas y columnas, no se requiere que un marco de datos tenga el mismo tipo de datos para cada elemento. Un marco de datos es una **lista** de vectores. Entonces, cada vector debe contener el mismo tipo de datos, pero los diferentes vectores pueden almacenar diferentes tipos de datos.
+
+```{r}
+example_data
+```
+
+A diferencia de una lista que tiene más flexibilidad, los elementos de un marco de datos deben ser todos vectores y tener la misma longitud.
+
+```{r}
+example_data$x
+
+all.equal(length(example_data$x),
+          length(example_data$y),
+          length(example_data$z))
+
+str(example_data)
+
+nrow(example_data)
+ncol(example_data)
+dim(example_data)
+```
+
+La función `data.frame()` es una forma de crear un marco de datos. También podemos importar datos de varios tipos de archivos en `R`, así como utilizar datos almacenados en paquetes.
+
+```{r, echo = FALSE}
+write.csv(example_data, "data/example-data.csv", row.names = FALSE)
+```
+
+[Los datos de ejemplo anteriores también se pueden encontrar aquí como un archivo .csv.](data/example-data.csv) Para leer estos datos en `R`, usaríamos la función` read_csv() `del paquete `readr`. Tenga en cuenta que `R` tiene una función incorporada `read.csv()`que opera de manera muy similar. La función `read_csv()` de `readr` tiene varias ventajas. Por ejemplo, es mucho más rápido para leer datos grandes.
+
+```{r, message = FALSE, warning = FALSE}
+library(readr)
+example_data_from_csv = read_csv("data/example-data.csv")
+```
+
+Esta línea de código en particular asume que el archivo `example_data.csv` existe en una carpeta llamada `data` en su directorio de trabajo actual.
+
+```{r}
+example_data_from_csv
+```
+
+Un tibble es simplemente un marco de datos que se imprime con cordura. Observe en el resultado anterior que se nos proporciona información adicional, como dimensión y tipo de variable.
+
+La función `as_tibble()` se puede utilizar para convertir un marco de datos regular en un tibble.
+
+```{r}
+library(tibble)
+example_data = as_tibble(example_data)
+example_data
+```
+
+Alternativamente, podríamos usar la función "Import Dataset" en RStudio que se puede encontrar en la ventana del entorno. (De forma predeterminada, el panel superior derecho de RStudio). Una vez completado, este proceso generará automáticamente el código para importar un archivo. El código resultante se mostrará en la ventana de la consola. En versiones recientes de RStudio, `read_csv()` se usa por defecto, por lo tanto, se lee en un tibble.
+
+Anteriormente analizamos la instalación de paquetes, en particular el paquete `ggplot2`. (Un paquete para visualización. Si bien no es necesario para este curso, su popularidad está creciendo rápidamente).
+
+```{r, message = FALSE, warning = FALSE}
+library(ggplot2)
+```
+
+Dentro del paquete `ggplot2` hay un conjunto de datos llamado `mpg`. Al cargar el paquete usando la función `library()`, ahora podemos acceder a `mpg`.
+
+Cuando usamos datos desde dentro de un paquete, hay tres cosas que generalmente nos gustaría hacer:
+
+- Mira los datos sin procesar.
+- Comprender los datos. (¿De dónde vino? ¿Cuáles son las variables? Etc.)
+- Visualiza los datos.
+
+Para ver los datos, tenemos dos comandos útiles: `head()` y `str()`.
+
+```{r}
+head(mpg, n = 10)
+```
+
+La función `head()` mostrará las primeras `n` observaciones del marco de datos. La función `head()` era más útil antes que tibbles. Observe que `mpg` ya es un tibble, por lo que la salida de `head()` indica que solo hay `10` observaciones. Tenga en cuenta que esto se aplica a `head (mpg, n = 10)` y no a `mpg` en sí. También tenga en cuenta que tibbles imprime un número limitado de filas y columnas de forma predeterminada. La última línea de la salida impresa indica qué filas y columnas se omitieron.
+
+```{r}
+mpg
+```
+
+La función `str()` mostrará la "estructura" del marco de datos. Mostrará el número de **observaciones** y **variables**, enumerará las variables, dará el tipo de cada variable y mostrará algunos elementos de cada variable. Esta información también se puede encontrar en la ventana "Entorno" de RStudio.
+
+```{r}
+str(mpg)
+```
+
+Es importante notar que mientras las matrices tienen filas y columnas,los marcos de datos (tibbles) en cambio tienen observaciones y variables. Cuando se muestra en la consola o el visor, cada fila es una observación y cada columna es una variable. Sin embargo, en términos generales, su orden no importa, es simplemente un efecto secundario de cómo se ingresaron o almacenaron los datos.
+
+En este conjunto de datos, una observación es para un modelo-año particular de un automóvil, y las variables describen atributos del automóvil, por ejemplo, su eficiencia de combustible en la carretera.
+
+Para comprender más sobre el conjunto de datos, usamos el operador `?` Para abrir la documentación de los datos.
+
+```{r, eval = FALSE}
+?mpg
+```
+
+`R` tiene una serie de funciones para trabajar rápidamente y extraer información básica de Marcos de datos. Para obtener rápidamente un vector de los nombres de las variables, usamos la función `names()`.
+
+```{r}
+names(mpg)
+```
+
+Para acceder a una de las variables **como vector**, usamos el operador `$`.
+
+```{r}
+mpg$year
+mpg$hwy
+```
+
+Podemos utilizar las funciones `dim()`, `nrow()` y `ncol()` para obtener información sobre la dimensión del marco de datos.
+
+```{r}
+dim(mpg)
+nrow(mpg)
+ncol(mpg)
+```
+
+Aquí `nrow()` es también el número de observaciones, que en la mayoría de los casos es el *tamaño de la muestra*.
+
+Subconjuntos del marcos de datos puede funcionar de manera muy similar a subconjuntos de matrices usando corchetes, `[,]`. Aquí, encontramos vehículos de bajo consumo de combustible que recorren más de 35 millas por galón y solo se muestra `manufacturer`, `model` y `year`.
+
+```{r}
+mpg[mpg$hwy > 35, c("manufacturer", "model", "year")]
+```
+
+Una alternativa sería usar la función `subset()`, que tiene una sintaxis mucho más legible.
+
+```{r, eval = FALSE}
+subset(mpg, subset = hwy > 35, select = c("manufacturer", "model", "year"))
+```
+
+Por último, podríamos usar las funciones `filter` y `select` del paquete `dplyr` que introduce el operador `%>% ` del paquete `magrittr`. Esto no es necesario para este curso, sin embargo, el paquete `dplyr` es algo que se debe tener en cuenta ya que se está convirtiendo en una herramienta popular en el mundo` R`.
+
+```{r, eval = FALSE}
+library(dplyr)
+mpg %>% filter(hwy > 35) %>% select(manufacturer, model, year)
+```
+
+Los tres enfoques producen los mismos resultados. Lo que utilice se basará en gran medida en una situación determinada, así como en las preferencias del usuario.
+
+Al crear un subconjunto de un marco de datos, tenga en cuenta lo que se devuelve, ya que a veces puede ser un vector en lugar de un marco de datos. También tenga en cuenta que existen diferencias entre subconjuntos de un marco de datos y un tibble. Un marco de datos opera más como una matriz donde es posible reducir el subconjunto a un vector. Un tibble funciona más como una lista donde siempre se subconjunta a otro tibble.
+
+## Conceptos básicos de programación
+
+### Flujo de control
+
+En `R`, la sintaxis if/else es:
+
+```{r, eval = FALSE}
+if (...) {
+  some R code
+} else {
+  more R code
+}
+```
+
+Por ejemplo,
+
+```{r}
+x = 1
+y = 3
+if (x > y) {
+  z = x * y
+  print("x es mayor que y")
+} else {
+  z = x + 5 * y
+  print("x es menor o igual que y")
+}
+
+z
+```
+
+`R` también tiene una función especial `ifelse()` que es muy útil. Devuelve uno de los dos valores especificados en función de una declaración condicional.
+
+```{r}
+ifelse(4 > 3, 1, 0)
+```
+
+El verdadero poder de `ifelse()` proviene de su capacidad para ser aplicado a vectores.
+
+```{r}
+fib = c(1, 1, 2, 3, 5, 8, 13, 21)
+ifelse(fib > 6, "Foo", "Bar")
+```
+
+Ahora un ejemplo de bucle `for`,
+
+```{r}
+x = 11:15
+for (i in 1:5) {
+  x[i] = x[i] * 2
+}
+
+x
+```
+
+Tenga en cuenta que este bucle `for` es muy normal en muchos lenguajes de programación, pero no en `R`. En `R` no usaríamos un bucle, sino que simplemente usaríamos una operación vectorizada.
+
+```{r}
+x = 11:15
+x = x * 2
+x
+```
+
+### Funciones
+
+Hasta ahora hemos estado usando funciones, pero en realidad no hemos discutido algunos de sus detalles.
+
+```{r, eval = FALSE}
+function_name(arg1 = 10, arg2 = 20)
+```
+
+Para usar una función, simplemente escriba su nombre, seguido de un paréntesis abierto, luego especifique los valores de sus argumentos y luego termine con un paréntesis de cierre.
+
+Un **argumento** es una variable que se usa en el cuerpo de la función. Especificar los valores de los argumentos es esencialmente proporcionar las entradas a la función.
+
+También podemos escribir nuestras propias funciones en `R`. Por ejemplo, a menudo nos gusta "estandarizar" las variables, es decir, restar la media de la muestra y dividir por la desviación estándar de la muestra.
+
+\[
+\frac{x - \bar{x}}{s}
+\]
+
+En `R` escribiríamos una función para hacer esto. Al escribir una función, hay tres cosas que debe hacer.
+
+- Asigne un nombre a la función. Preferiblemente algo que sea breve, pero descriptivo.
+- Especifique los argumentos usando `function()`
+- Escriba el cuerpo de la función entre llaves, `{}`.
+
+```{r}
+standardize = function(x) {
+  m = mean(x)
+  std = sd(x)
+  result = (x - m) / std
+  result
+}
+```
+
+Aquí el nombre de la función es `standardize`, y la función tiene un solo argumento `x` que se usa en el cuerpo de la función. Tenga en cuenta que la salida de la línea final del cuerpo es lo que devuelve la función. En este caso, la función devuelve el vector almacenado en la variable `result`.
+
+Para probar nuestra función, tomaremos una muestra aleatoria de tamaño `n = 10` de una distribución normal con una media de `2` y una desviación estándar de `5`.
+
+```{r}
+(test_sample = rnorm(n = 10, mean = 2, sd = 5))
+standardize(x = test_sample)
+```
+
+Esta función podría escribirse de manera mucho más corta, simplemente realizando todas las operaciones en una línea y devolviendo inmediatamente el resultado, sin almacenar ninguno de los resultados intermedios.
+
+```{r}
+standardize = function(x) {
+  (x - mean(x)) / sd(x)
+}
+```
+
+Al especificar argumentos, puede proporcionar argumentos predeterminados.
+
+```{r}
+power_of_num = function(num, power = 2) {
+  num ^ power
+}
+```
+
+Veamos varias formas en las que podríamos ejecutar esta función para realizar la operación $10^2$ que da como resultado `100`.
+
+```{r}
+power_of_num(10)
+power_of_num(10, 2)
+power_of_num(num = 10, power = 2)
+power_of_num(power = 2, num = 10)
+
+```
+
+Tenga en cuenta que sin utilizar los nombres de los argumentos, el orden es importante. El siguiente código no se evaluará con el mismo resultado que el ejemplo anterior.
+
+```{r}
+power_of_num(2, 10)
+```
+
+Además, la siguiente línea de código produciría un error ya que se deben especificar argumentos sin un valor predeterminado.
+
+```{r, eval = FALSE}
+power_of_num(power = 5)
+```
+
+Para ilustrar más una función con un argumento predeterminado, escribiremos una función que calcula la varianza muestral de dos formas.
+
+De forma predeterminada, calculará la estimación imparcial de $\sigma^2$, que llamaremos $s^2$.
+
+\[
+s^2 = \frac{1}{n - 1}\sum_{i=1}^{n}(x - \bar{x})^2
+\]
+
+También tendrá la capacidad de devolver la estimación sesgada (basada en la máxima probabilidad) que llamaremos $\hat{\sigma}^2$.
+
+\[
+\hat{\sigma}^2 = \frac{1}{n}\sum_{i=1}^{n}(x - \bar{x})^2
+\]
+
+```{r}
+get_var = function(x, biased = FALSE) {
+  n = length(x) - 1 * !biased
+  (1 / n) * sum((x - mean(x)) ^ 2)
+}
+```
+
+```{r}
+get_var(test_sample)
+get_var(test_sample, biased = FALSE)
+var(test_sample)
+```
+
+Vemos que la función está funcionando como se esperaba, y cuando devuelve la estimación no sesgada coincide con la función incorporada de `R` `var() `. Finalmente, examinemos la estimación sesgada de $\sigma^2$.
+
+```{r}
+get_var(test_sample, biased = TRUE)
+```
+

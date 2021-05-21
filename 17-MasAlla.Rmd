@@ -1,0 +1,77 @@
+# Más allá
+
+> "¿Fin? No, el viaje no termina aquí."
+>
+> --- **J.R.R. Tolkien**
+
+Después de leer este capítulo, podrá:
+
+- Comprender la hoja de ruta para la educación continua sobre modelos y el lenguaje de programación `R`.
+
+## RStudio
+
+¡RStudio ha lanzado recientemente la versión 1.0! Esto es emocionante por varias razones, especialmente el lanzamiento de [`R` Notebooks](http://rmarkdown.rstudio.com/r_notebooks.html){target="_blank"}. Los Notebooks `R` combinan el RMarkdown que ya ha aprendido con la capacidad de trabajar de forma interactiva.
+
+## Tidy Data
+
+En este libro de texto, muchos de los datos que hemos visto han sido agradables y prolijos. Era rectangular donde cada fila es una observación y cada columna es una variable. ¡Este no es siempre el caso! Se han desarrollado muchos paquetes para manejar datos y forzarlos a un formato agradable, que se llama [tidy data](http://vita.had.co.nz/papers/tidy-data.pdf){target="_blank"}, que luego podemos usar para modelar. A menudo, durante el análisis, es aquí donde se dedicará una gran parte de su tiempo.
+
+La comunidad `R` ha comenzado a llamar a esta colección de paquetes [Tidyverse](http://tidyverse.org/){target="_blank"}. Una vez se llamó Hadleyverse, ya que [Hadley Wickham](http://hadley.nz/){target="_blank"} ha sido el autor de muchos de los paquetes. Hadley está escribiendo un libro llamado [`R` for Data Science](http://r4ds.had.co.nz/){target="_blank"} que describe el uso de muchos de estos paquetes. (¡Y también cómo usar algunos para mejorar el proceso de modelado!) Este libro es un excelente punto de partida para profundizar en la comunidad de `R`. Los dos paquetes principales son [`dplyr`](https://cran.r-project.org/web/packages/dplyr/vignettes/dplyr.html){target="_blank"} y [`tidyr`](https://blog.rstudio.org/2014/07/22/introducing-tidyr/){target="_blank"} los cuales se utilizan internamente en RStudio.
+
+## Visualización
+
+En este curso, hemos utilizado principalmente los métodos de graficación base en `R`. Cuando se trabaja con datos ordenados, muchos usuarios prefieren utilizar el paquete [`ggplot2`](http://ggplot2.org/){target="_blank"}, también desarrollado por Hadley Wickham. RStudio proporciona una ["hoja de trucos"](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf){target="_blank"} bastante detallada para trabajar con `ggplot2`. La comunidad mantiene una [galería de gráficos](http://www.r-graph-gallery.com/portfolio/ggplot2-package/){target="_blank"} de ejemplos.
+
+El uso del [paquete `manipulate`](https://support.rstudio.com/hc/en-us/articles/200551906-Interactive-Plotting-with-Manipulate){target="_blank"} con RStudio da la capacidad para cambiar rápidamente un gráfico estático para que sea interactivo.
+
+## Aplicaciones web
+
+RStudio ha hecho que sea increíblemente fácil crear productos de datos mediante el uso de [Shiny](https://shiny.rstudio.com/){target="_blank"}, que permite la creación de aplicaciones web con `R`. RStudio mantiene un  [tutorial](http://shiny.rstudio.com/tutorial/){target="_blank"} en constante crecimiento y una [galería](https://shiny.rstudio.com/gallery/){target="_blank"} de ejemplos.
+
+## Diseño experimental
+
+En el capítulo de ANOVA, discutimos brevemente el diseño experimental. Este tema fácilmente podría ser su propia clase y actualmente es un área de interés revitalizado con el aumento de las [pruebas A/B](https://en.wikipedia.org/wiki/A/B_testing){target="_blank"} Dos referencias estadísticas más clásicas incluyen *Statistics for Experimenters* de Box, Hunter y Hunter, así como *Design and Analysis of Experiments* de Douglas Montgomery. Hay varios paquetes en `R` para el diseño de experimentos, enumerados en la [Vista de tareas CRAN](https://cran.r-project.org/web/views/ExperimentalDesign.html){target="_blank"}.
+
+## Aprendizaje automático (Machine Learning)
+
+El uso de modelos para la predicción es el enfoque clave del aprendizaje automático. Hay muchos métodos, cada uno con su propio paquete, sin embargo, `R` tiene un paquete maravilloso llamado [`caret`, *Classification And REgression Training*,](http://topepo.github.io/caret/index.html){target="_blank"}  que proporciona una interfaz unificada para entrenar estos modelos. También contiene varias utilidades para el procesamiento y visualización de datos que son útiles para el modelado predictivo.
+
+*Applied Predictive Modeling* de Max Kuhn, el autor del paquete `caret` es un buen recurso general para el modelado predictivo, que obviamente utiliza `R`. [*Una introducción al aprendizaje estadístico*](http://www-bcf.usc.edu/~gareth/ISL/){target="_blank"} de James, Witten, Hastie y Tibshirani es una suave introducción al aprendizaje automáticodo desde una perspectiva estadística que usa `R` y retoma justo donde termina este curso. Esto se basa en [*The Elements of Statistical Learning*](https://web.stanford.edu/~hastie/Papers/ESLII.pdf){target="_blank"} al que se hace referencia a menudo de Hastie, Tibshirani y Friedman . Ambos están disponibles gratuitamente en línea.
+
+### Aprendizaje profundo (Deep Learning)
+
+Aunque probablemente no sea la mejor herramienta para el trabajo, `R` ahora tiene la capacidad de [entrenar redes neuronales profundas a través de TensorFlow](https://rstudio.github.io/tensorflow/){target="_blank"}.
+
+## Series de tiempo
+
+En esta clase solo hemos considerado datos independientes. ¿Qué pasa si los datos son dependientes? La serie temporal es el área de las estadísticas que se ocupa de este problema y podría abarcar fácilmente varios cursos.
+
+Un libro de texto: Análisis de series de tiempo de la Universidad de Illinois que es gratuito es:
+
+- [*Time Series Analysis and Its Applications: With R Examples*](http://www.stat.pitt.edu/stoffer/tsa4/){target="_blank"} by Shumway and Stoffer
+
+Algunos tutoriales:
+
+- [Little Book of R for Time Series](https://a-little-book-of-r-for-time-series.readthedocs.io/en/latest/){target="_blank"}
+- [Quick `R`: Time Series and Forecasting](http://www.statmethods.net/advstats/timeseries.html){target="_blank"}
+- [TSA: Start to Finish Examples](http://rpubs.com/ryankelly/ts6){target="_blank"}
+
+Al realizar un análisis de series de tiempo en `R`, debe tener en cuenta los [paquetes](https://cran.r-project.org/web/views/TimeSeries.html){target="_blank"} que son útiles para el análisis. Debería ser difícil evitar el [`forecast`](https://github.com/robjhyndman/forecast){target="_blank"} y [`zoo`](https://cran.r-project.org/web/packages/zoo/zoo.pdf){target="_blank"} paquetes. A menudo, la parte más difícil será lidiar con los datos de fecha y hora. Asegúrese de utilizar uno de los muchos paquetes que le ayudarán con esto.
+
+## Bayesiana
+
+En esta clase, hemos trabajado dentro de la visión frecuentista de la estadística. Existe todo un universo alternativo de estadística bayesiana.
+
+[*Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan*](https://sites.google.com/site/doingbayesiandataanalysis/){target="_blank"} de John Kruschke es una gran introducción al tema. Introduce el mundo de [probabilistic programming](https://www.cs.cornell.edu/Courses/cs4110/2016fa/lectures/lecture33.html){target="_blank"}, en particular [Stan](http://mc-stan.org/){target="_blank"}, que se puede utilizar tanto en `R` como en Python.
+
+## Computación de alto rendimiento.
+
+A menudo, `R` se llamará un lenguaje "lento", por dos razones. Uno, porque muchos no entienden `R`. Dos, porque a veces realmente lo es. Afortunadamente, es fácil extender `R` a través del [paquete `Rcpp`](http://www.rcpp.org/){target="_blank"} para permitir un código más rápido. Muchos paquetes de `R` modernos utilizan `Rcpp` para lograr un mejor rendimiento.
+
+## Recursos adicionales de `R`
+
+Además, no olvide que anteriormente en este libro hemos descrito una gran cantidad de [recursos `R`](http://daviddalpiaz.github.io/appliedstats/introduction-to-r.html#r-resources){target="_blank"}. Ahora que ha comenzado con `R`, muchos de estos serán mucho más útiles.
+
+Si alguno de estos temas le interesa y desea obtener más información, no dude en iniciar una discusión en los foros.
+
+:)

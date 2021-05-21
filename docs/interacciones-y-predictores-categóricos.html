@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 16 Interacciones y predictores categóricos | Estadística aplicada con R</title>
+  <meta name="description" content="Capítulo 16 Interacciones y predictores categóricos | Estadística aplicada con R" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 16 Interacciones y predictores categóricos | Estadística aplicada con R" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 16 Interacciones y predictores categóricos | Estadística aplicada con R" />
+  
+  
+  
+
+
+
+<meta name="date" content="2021-05-21" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  <link rel="shortcut icon" href="favicon.gif" type="image/x-icon" />
+<link rel="prev" href="construcción-del-modelo.html"/>
+<link rel="next" href="análisis-de-varianza.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Estadística aplicada con R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introducción</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#convenciones"><i class="fa fa-check"></i><b>1.1</b> Convenciones</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
+<li class="chapter" data-level="3" data-path="introducción-a-r.html"><a href="introducción-a-r.html"><i class="fa fa-check"></i><b>3</b> Introducción a <code>R</code></a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="introducción-a-r.html"><a href="introducción-a-r.html#primeros-pasos"><i class="fa fa-check"></i><b>3.1</b> Primeros pasos</a></li>
+<li class="chapter" data-level="3.2" data-path="introducción-a-r.html"><a href="introducción-a-r.html#cálculos-básicos"><i class="fa fa-check"></i><b>3.2</b> Cálculos básicos</a></li>
+<li class="chapter" data-level="3.3" data-path="introducción-a-r.html"><a href="introducción-a-r.html#obteniendo-ayuda"><i class="fa fa-check"></i><b>3.3</b> Obteniendo ayuda</a></li>
+<li class="chapter" data-level="3.4" data-path="introducción-a-r.html"><a href="introducción-a-r.html#instalación-de-paquetes"><i class="fa fa-check"></i><b>3.4</b> Instalación de paquetes</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="datos-y-programación.html"><a href="datos-y-programación.html"><i class="fa fa-check"></i><b>4</b> Datos y programación</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="datos-y-programación.html"><a href="datos-y-programación.html#tipos-de-datos"><i class="fa fa-check"></i><b>4.1</b> Tipos de datos</a></li>
+<li class="chapter" data-level="4.2" data-path="datos-y-programación.html"><a href="datos-y-programación.html#estructuras-de-datos"><i class="fa fa-check"></i><b>4.2</b> Estructuras de datos</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="datos-y-programación.html"><a href="datos-y-programación.html#vectores"><i class="fa fa-check"></i><b>4.2.1</b> Vectores</a></li>
+<li class="chapter" data-level="4.2.2" data-path="datos-y-programación.html"><a href="datos-y-programación.html#vectorización"><i class="fa fa-check"></i><b>4.2.2</b> Vectorización</a></li>
+<li class="chapter" data-level="4.2.3" data-path="datos-y-programación.html"><a href="datos-y-programación.html#operadores-logicos"><i class="fa fa-check"></i><b>4.2.3</b> Operadores logicos</a></li>
+<li class="chapter" data-level="4.2.4" data-path="datos-y-programación.html"><a href="datos-y-programación.html#más-vectorización"><i class="fa fa-check"></i><b>4.2.4</b> Más vectorización</a></li>
+<li class="chapter" data-level="4.2.5" data-path="datos-y-programación.html"><a href="datos-y-programación.html#matrices"><i class="fa fa-check"></i><b>4.2.5</b> Matrices</a></li>
+<li class="chapter" data-level="4.2.6" data-path="datos-y-programación.html"><a href="datos-y-programación.html#listas"><i class="fa fa-check"></i><b>4.2.6</b> Listas</a></li>
+<li class="chapter" data-level="4.2.7" data-path="datos-y-programación.html"><a href="datos-y-programación.html#marcos-de-datos"><i class="fa fa-check"></i><b>4.2.7</b> Marcos de datos</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="datos-y-programación.html"><a href="datos-y-programación.html#conceptos-básicos-de-programación"><i class="fa fa-check"></i><b>4.3</b> Conceptos básicos de programación</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="datos-y-programación.html"><a href="datos-y-programación.html#flujo-de-control"><i class="fa fa-check"></i><b>4.3.1</b> Flujo de control</a></li>
+<li class="chapter" data-level="4.3.2" data-path="datos-y-programación.html"><a href="datos-y-programación.html#funciones"><i class="fa fa-check"></i><b>4.3.2</b> Funciones</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>5</b> Literature</a></li>
+<li class="chapter" data-level="6" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>6</b> Methods</a></li>
+<li class="chapter" data-level="7" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html"><i class="fa fa-check"></i><b>7</b> Resumen de datos</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#resumen-estadístico"><i class="fa fa-check"></i><b>7.1</b> Resumen estadístico</a>
+<ul>
+<li class="chapter" data-level="" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#tendencia-central"><i class="fa fa-check"></i>Tendencia central</a></li>
+<li class="chapter" data-level="" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#dispersión"><i class="fa fa-check"></i>Dispersión</a></li>
+<li class="chapter" data-level="" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#categórica"><i class="fa fa-check"></i>Categórica</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#graficas"><i class="fa fa-check"></i><b>7.2</b> Graficas</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#histogramas"><i class="fa fa-check"></i><b>7.2.1</b> Histogramas</a></li>
+<li class="chapter" data-level="7.2.2" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#gráfico-de-barras"><i class="fa fa-check"></i><b>7.2.2</b> Gráfico de barras</a></li>
+<li class="chapter" data-level="7.2.3" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#diagramas-de-cajas"><i class="fa fa-check"></i><b>7.2.3</b> Diagramas de cajas</a></li>
+<li class="chapter" data-level="7.2.4" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#gráfico-de-dispersión"><i class="fa fa-check"></i><b>7.2.4</b> Gráfico de dispersión</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="applications.html"><a href="applications.html"><i class="fa fa-check"></i><b>8</b> Applications</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="applications.html"><a href="applications.html#example-one"><i class="fa fa-check"></i><b>8.1</b> Example one</a></li>
+<li class="chapter" data-level="8.2" data-path="applications.html"><a href="applications.html#example-two"><i class="fa fa-check"></i><b>8.2</b> Example two</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html"><i class="fa fa-check"></i><b>9</b> Probabilidad y estadística en <code>R</code></a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#probabilidad-en-r"><i class="fa fa-check"></i><b>9.1</b> Probabilidad en <code>R</code></a>
+<ul>
+<li class="chapter" data-level="9.1.1" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#distribuciones"><i class="fa fa-check"></i><b>9.1.1</b> Distribuciones</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#pruebas-de-hipótesis-en-r"><i class="fa fa-check"></i><b>9.2</b> Pruebas de hipótesis en <code>R</code></a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#prueba-t-de-una-muestra-revisión"><i class="fa fa-check"></i><b>9.2.1</b> Prueba t de una muestra: revisión</a></li>
+<li class="chapter" data-level="9.2.2" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#prueba-t-de-una-muestra-ejemplo"><i class="fa fa-check"></i><b>9.2.2</b> Prueba t de una muestra: ejemplo</a></li>
+<li class="chapter" data-level="9.2.3" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#prueba-t-de-dos-muestras-revisión"><i class="fa fa-check"></i><b>9.2.3</b> Prueba t de dos muestras: revisión</a></li>
+<li class="chapter" data-level="9.2.4" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#prueba-t-de-dos-muestras-ejemplo"><i class="fa fa-check"></i><b>9.2.4</b> Prueba t de dos muestras: Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#simulación"><i class="fa fa-check"></i><b>9.3</b> Simulación</a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#diferencias-emparejadas"><i class="fa fa-check"></i><b>9.3.1</b> Diferencias emparejadas</a></li>
+<li class="chapter" data-level="9.3.2" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#distribución-de-una-media-muestral"><i class="fa fa-check"></i><b>9.3.2</b> Distribución de una media muestral</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="recursos-r.html"><a href="recursos-r.html"><i class="fa fa-check"></i><b>10</b> Recursos <code>R</code></a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="recursos-r.html"><a href="recursos-r.html#referencias-y-tutoriales-para-principiantes"><i class="fa fa-check"></i><b>10.1</b> Referencias y tutoriales para principiantes</a></li>
+<li class="chapter" data-level="10.2" data-path="recursos-r.html"><a href="recursos-r.html#referencias-intermedias"><i class="fa fa-check"></i><b>10.2</b> Referencias intermedias</a></li>
+<li class="chapter" data-level="10.3" data-path="recursos-r.html"><a href="recursos-r.html#referencias-avanzadas"><i class="fa fa-check"></i><b>10.3</b> Referencias avanzadas</a></li>
+<li class="chapter" data-level="10.4" data-path="recursos-r.html"><a href="recursos-r.html#comparaciones-rápidas-con-otros-lenguajes"><i class="fa fa-check"></i><b>10.4</b> Comparaciones rápidas con otros lenguajes</a></li>
+<li class="chapter" data-level="10.5" data-path="recursos-r.html"><a href="recursos-r.html#vídeos-de-rstudio-y-rmarkdown"><i class="fa fa-check"></i><b>10.5</b> Vídeos de RStudio y RMarkdown</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>11</b> Final Words</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="12" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html"><i class="fa fa-check"></i><b>12</b> Regresión lineal simple</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#modelado"><i class="fa fa-check"></i><b>12.1</b> Modelado</a>
+<ul>
+<li class="chapter" data-level="12.1.1" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#modelo-de-regresión-lineal-simple"><i class="fa fa-check"></i><b>12.1.1</b> Modelo de regresión lineal simple</a></li>
+</ul></li>
+<li class="chapter" data-level="12.2" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#enfoque-de-mínimos-cuadrados"><i class="fa fa-check"></i><b>12.2</b> Enfoque de mínimos cuadrados</a>
+<ul>
+<li class="chapter" data-level="12.2.1" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#haciendo-predicciones"><i class="fa fa-check"></i><b>12.2.1</b> Haciendo predicciones</a></li>
+<li class="chapter" data-level="12.2.2" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#residuales"><i class="fa fa-check"></i><b>12.2.2</b> Residuales</a></li>
+<li class="chapter" data-level="12.2.3" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#estimación-de-la-varianza"><i class="fa fa-check"></i><b>12.2.3</b> Estimación de la varianza</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#descomposición-de-variación"><i class="fa fa-check"></i><b>12.3</b> Descomposición de variación</a>
+<ul>
+<li class="chapter" data-level="12.3.1" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#coeficiente-de-determinación"><i class="fa fa-check"></i><b>12.3.1</b> Coeficiente de determinación</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#la-función-lm"><i class="fa fa-check"></i><b>12.4</b> La función <code>lm</code></a></li>
+<li class="chapter" data-level="12.5" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#enfoque-de-estimación-de-máxima-verosimilitud-mle"><i class="fa fa-check"></i><b>12.5</b> Enfoque de estimación de máxima verosimilitud (MLE)</a></li>
+<li class="chapter" data-level="12.6" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#simulando-slr"><i class="fa fa-check"></i><b>12.6</b> Simulando SLR</a></li>
+<li class="chapter" data-level="12.7" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#historia"><i class="fa fa-check"></i><b>12.7</b> Historia</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html"><i class="fa fa-check"></i><b>13</b> Inferencia para regresión lineal simple</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#teorema-de-gauss-markov"><i class="fa fa-check"></i><b>13.1</b> Teorema de Gauss-Markov</a></li>
+<li class="chapter" data-level="13.2" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#distribuciones-muestrales"><i class="fa fa-check"></i><b>13.2</b> Distribuciones muestrales</a>
+<ul>
+<li class="chapter" data-level="13.2.1" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#simular-distribuciones-muestrales"><i class="fa fa-check"></i><b>13.2.1</b> Simular distribuciones muestrales</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#errores-estándar"><i class="fa fa-check"></i><b>13.3</b> Errores estándar</a></li>
+<li class="chapter" data-level="13.4" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#intervalos-de-confianza-para-pendiente-e-intercepto"><i class="fa fa-check"></i><b>13.4</b> Intervalos de confianza para pendiente e Intercepto</a></li>
+<li class="chapter" data-level="13.5" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#pruebas-de-hipótesis"><i class="fa fa-check"></i><b>13.5</b> Pruebas de hipótesis</a></li>
+<li class="chapter" data-level="13.6" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#ejemplo-cars"><i class="fa fa-check"></i><b>13.6</b> Ejemplo <code>cars</code></a>
+<ul>
+<li class="chapter" data-level="13.6.1" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#pruebas-en-r"><i class="fa fa-check"></i><b>13.6.1</b> Pruebas en <code>R</code></a></li>
+<li class="chapter" data-level="13.6.2" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#significancia-de-la-regresión-prueba-t."><i class="fa fa-check"></i><b>13.6.2</b> Significancia de la regresión, prueba t.</a></li>
+<li class="chapter" data-level="13.6.3" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#intervalos-de-confianza-en-r"><i class="fa fa-check"></i><b>13.6.3</b> Intervalos de confianza en <code>R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="13.7" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#intervalo-de-confianza-para-la-respuesta-promedio"><i class="fa fa-check"></i><b>13.7</b> Intervalo de confianza para la respuesta Promedio</a></li>
+<li class="chapter" data-level="13.8" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#intervalo-de-predicción-para-nuevas-observaciones"><i class="fa fa-check"></i><b>13.8</b> Intervalo de predicción para nuevas observaciones</a></li>
+<li class="chapter" data-level="13.9" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#bandas-de-confianza-y-predicción"><i class="fa fa-check"></i><b>13.9</b> Bandas de confianza y predicción</a></li>
+<li class="chapter" data-level="13.10" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#significancia-de-la-regresión-prueba-f"><i class="fa fa-check"></i><b>13.10</b> Significancia de la regresión, prueba F</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html"><i class="fa fa-check"></i><b>14</b> Regresión lineal múltiple</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#enfoque-matricial-para-la-regresión"><i class="fa fa-check"></i><b>14.1</b> Enfoque matricial para la regresión</a></li>
+<li class="chapter" data-level="14.2" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#distribución-muestral"><i class="fa fa-check"></i><b>14.2</b> Distribución muestral</a>
+<ul>
+<li class="chapter" data-level="14.2.1" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#pruebas-de-un-solo-parámetro"><i class="fa fa-check"></i><b>14.2.1</b> Pruebas de un solo parámetro</a></li>
+<li class="chapter" data-level="14.2.2" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#intervalos-de-confianza"><i class="fa fa-check"></i><b>14.2.2</b> Intervalos de confianza</a></li>
+<li class="chapter" data-level="14.2.3" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#intervalos-de-confianza-para-la-respuesta-media"><i class="fa fa-check"></i><b>14.2.3</b> Intervalos de confianza para la respuesta media</a></li>
+<li class="chapter" data-level="14.2.4" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#intervalos-de-predicción"><i class="fa fa-check"></i><b>14.2.4</b> Intervalos de predicción</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#significancia-de-la-regresión"><i class="fa fa-check"></i><b>14.3</b> Significancia de la regresión</a></li>
+<li class="chapter" data-level="14.4" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#modelos-anidados"><i class="fa fa-check"></i><b>14.4</b> Modelos anidados</a></li>
+<li class="chapter" data-level="14.5" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#simulación-1"><i class="fa fa-check"></i><b>14.5</b> Simulación</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html"><i class="fa fa-check"></i><b>15</b> Construcción del modelo</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#familia-forma-y-ajuste."><i class="fa fa-check"></i><b>15.1</b> Familia, forma, y ajuste.</a>
+<ul>
+<li class="chapter" data-level="15.1.1" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#ajuste."><i class="fa fa-check"></i><b>15.1.1</b> Ajuste.</a></li>
+<li class="chapter" data-level="15.1.2" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#forma"><i class="fa fa-check"></i><b>15.1.2</b> Forma</a></li>
+<li class="chapter" data-level="15.1.3" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#familia"><i class="fa fa-check"></i><b>15.1.3</b> Familia</a></li>
+<li class="chapter" data-level="15.1.4" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#modelo-asumido-modelo-ajustado"><i class="fa fa-check"></i><b>15.1.4</b> Modelo asumido, modelo ajustado</a></li>
+</ul></li>
+<li class="chapter" data-level="15.2" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#explicación-versus-predicción"><i class="fa fa-check"></i><b>15.2</b> Explicación versus predicción</a>
+<ul>
+<li class="chapter" data-level="15.2.1" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#explicación"><i class="fa fa-check"></i><b>15.2.1</b> Explicación</a></li>
+<li class="chapter" data-level="15.2.2" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#predicción"><i class="fa fa-check"></i><b>15.2.2</b> Predicción</a></li>
+</ul></li>
+<li class="chapter" data-level="15.3" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#resumen"><i class="fa fa-check"></i><b>15.3</b> Resumen</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html"><i class="fa fa-check"></i><b>16</b> Interacciones y predictores categóricos</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#variables-ficticias-dummy"><i class="fa fa-check"></i><b>16.1</b> Variables ficticias (Dummy)</a></li>
+<li class="chapter" data-level="16.2" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#interacciones"><i class="fa fa-check"></i><b>16.2</b> Interacciones</a></li>
+<li class="chapter" data-level="16.3" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#variables-factor"><i class="fa fa-check"></i><b>16.3</b> Variables factor</a>
+<ul>
+<li class="chapter" data-level="16.3.1" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#factores-con-más-de-dos-niveles"><i class="fa fa-check"></i><b>16.3.1</b> Factores con más de dos niveles</a></li>
+</ul></li>
+<li class="chapter" data-level="16.4" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#parametrización"><i class="fa fa-check"></i><b>16.4</b> Parametrización</a></li>
+<li class="chapter" data-level="16.5" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#construcción-de-modelos-más-grandes"><i class="fa fa-check"></i><b>16.5</b> Construcción de modelos más grandes</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html"><i class="fa fa-check"></i><b>17</b> Análisis de varianza</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#experimentos"><i class="fa fa-check"></i><b>17.1</b> Experimentos</a></li>
+<li class="chapter" data-level="17.2" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#prueba-t-de-dos-muestras"><i class="fa fa-check"></i><b>17.2</b> Prueba t de dos muestras</a></li>
+<li class="chapter" data-level="17.3" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#anova-de-una-vía"><i class="fa fa-check"></i><b>17.3</b> ANOVA de una vía</a>
+<ul>
+<li class="chapter" data-level="17.3.1" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#variables-factor-1"><i class="fa fa-check"></i><b>17.3.1</b> Variables factor</a></li>
+<li class="chapter" data-level="17.3.2" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#algo-de-simulación"><i class="fa fa-check"></i><b>17.3.2</b> Algo de simulación</a></li>
+<li class="chapter" data-level="17.3.3" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#potencia"><i class="fa fa-check"></i><b>17.3.3</b> Potencia</a></li>
+</ul></li>
+<li class="chapter" data-level="17.4" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#pruebas-post-hoc"><i class="fa fa-check"></i><b>17.4</b> Pruebas Post Hoc</a></li>
+<li class="chapter" data-level="17.5" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#anova-de-dos-vías"><i class="fa fa-check"></i><b>17.5</b> ANOVA de dos vías</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html"><i class="fa fa-check"></i><b>18</b> Diagnóstico de modelos</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#supuestos-del-modelo"><i class="fa fa-check"></i><b>18.1</b> Supuestos del modelo</a></li>
+<li class="chapter" data-level="18.2" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#comprobación-de-supuestos"><i class="fa fa-check"></i><b>18.2</b> Comprobación de supuestos</a>
+<ul>
+<li class="chapter" data-level="18.2.1" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#gráfica-de-ajustados-versus-residuos"><i class="fa fa-check"></i><b>18.2.1</b> Gráfica de ajustados versus residuos</a></li>
+<li class="chapter" data-level="18.2.2" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#prueba-de-breusch-pagan"><i class="fa fa-check"></i><b>18.2.2</b> Prueba de Breusch-Pagan</a></li>
+<li class="chapter" data-level="18.2.3" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#histogramas-1"><i class="fa fa-check"></i><b>18.2.3</b> Histogramas</a></li>
+<li class="chapter" data-level="18.2.4" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#gráficos-q-q"><i class="fa fa-check"></i><b>18.2.4</b> Gráficos Q-Q</a></li>
+<li class="chapter" data-level="18.2.5" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#prueba-de-shapiro-wilk"><i class="fa fa-check"></i><b>18.2.5</b> Prueba de Shapiro-Wilk</a></li>
+</ul></li>
+<li class="chapter" data-level="18.3" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#observaciones-inusuales"><i class="fa fa-check"></i><b>18.3</b> Observaciones inusuales</a>
+<ul>
+<li class="chapter" data-level="18.3.1" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#apalancamiento"><i class="fa fa-check"></i><b>18.3.1</b> Apalancamiento</a></li>
+<li class="chapter" data-level="18.3.2" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#valores-atípicos"><i class="fa fa-check"></i><b>18.3.2</b> Valores atípicos</a></li>
+<li class="chapter" data-level="18.3.3" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#influencia"><i class="fa fa-check"></i><b>18.3.3</b> Influencia</a></li>
+</ul></li>
+<li class="chapter" data-level="18.4" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#ejemplos-de-análisis-de-datos"><i class="fa fa-check"></i><b>18.4</b> Ejemplos de análisis de datos</a>
+<ul>
+<li class="chapter" data-level="18.4.1" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#buenos-diagnósticos"><i class="fa fa-check"></i><b>18.4.1</b> Buenos diagnósticos</a></li>
+<li class="chapter" data-level="18.4.2" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#diagnóstico-sospechoso"><i class="fa fa-check"></i><b>18.4.2</b> Diagnóstico sospechoso</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="transformaciones.html"><a href="transformaciones.html"><i class="fa fa-check"></i><b>19</b> Transformaciones</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="transformaciones.html"><a href="transformaciones.html#transformación-de-respuesta"><i class="fa fa-check"></i><b>19.1</b> Transformación de respuesta</a>
+<ul>
+<li class="chapter" data-level="19.1.1" data-path="transformaciones.html"><a href="transformaciones.html#transformaciones-estabilizadoras-de-varianza"><i class="fa fa-check"></i><b>19.1.1</b> Transformaciones estabilizadoras de varianza</a></li>
+<li class="chapter" data-level="19.1.2" data-path="transformaciones.html"><a href="transformaciones.html#transformaciones-de-box-cox"><i class="fa fa-check"></i><b>19.1.2</b> Transformaciones de Box-Cox</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="transformaciones.html"><a href="transformaciones.html#transformación-del-predictor"><i class="fa fa-check"></i><b>19.2</b> Transformación del predictor</a>
+<ul>
+<li class="chapter" data-level="19.2.1" data-path="transformaciones.html"><a href="transformaciones.html#polinomios"><i class="fa fa-check"></i><b>19.2.1</b> Polinomios</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="transformaciones.html"><a href="transformaciones.html#transformaciones-de-respuesta"><i class="fa fa-check"></i>Transformaciones de respuesta</a></li>
+<li class="chapter" data-level="" data-path="transformaciones.html"><a href="transformaciones.html#transformaciones-de-predictores"><i class="fa fa-check"></i>Transformaciones de predictores</a>
+<ul>
+<li class="chapter" data-level="19.2.2" data-path="transformaciones.html"><a href="transformaciones.html#un-modelo-cuadrático"><i class="fa fa-check"></i><b>19.2.2</b> Un modelo cuadrático</a></li>
+<li class="chapter" data-level="19.2.3" data-path="transformaciones.html"><a href="transformaciones.html#sobreajuste-y-extrapolación"><i class="fa fa-check"></i><b>19.2.3</b> Sobreajuste y extrapolación</a></li>
+<li class="chapter" data-level="19.2.4" data-path="transformaciones.html"><a href="transformaciones.html#comparación-de-modelos-polinomiales"><i class="fa fa-check"></i><b>19.2.4</b> Comparación de modelos polinomiales</a></li>
+<li class="chapter" data-level="19.2.5" data-path="transformaciones.html"><a href="transformaciones.html#poly-función-y-polinomios-ortogonales"><i class="fa fa-check"></i><b>19.2.5</b> <code>poly()</code> Función y polinomios ortogonales</a></li>
+<li class="chapter" data-level="19.2.6" data-path="transformaciones.html"><a href="transformaciones.html#función-de-inhibición"><i class="fa fa-check"></i><b>19.2.6</b> Función de inhibición</a></li>
+<li class="chapter" data-level="19.2.7" data-path="transformaciones.html"><a href="transformaciones.html#ejemplo-con-datos"><i class="fa fa-check"></i><b>19.2.7</b> Ejemplo con datos</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="colinealidad.html"><a href="colinealidad.html"><i class="fa fa-check"></i><b>20</b> Colinealidad</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="colinealidad.html"><a href="colinealidad.html#colinealidad-exacta"><i class="fa fa-check"></i><b>20.1</b> Colinealidad exacta</a></li>
+<li class="chapter" data-level="20.2" data-path="colinealidad.html"><a href="colinealidad.html#colinealidad-1"><i class="fa fa-check"></i><b>20.2</b> Colinealidad</a>
+<ul>
+<li class="chapter" data-level="20.2.1" data-path="colinealidad.html"><a href="colinealidad.html#factor-de-inflación-de-la-varianza."><i class="fa fa-check"></i><b>20.2.1</b> Factor de inflación de la varianza.</a></li>
+</ul></li>
+<li class="chapter" data-level="20.3" data-path="colinealidad.html"><a href="colinealidad.html#simulación-2"><i class="fa fa-check"></i><b>20.3</b> Simulación</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html"><i class="fa fa-check"></i><b>21</b> Selección de variables y construcción de modelos</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#criterio-de-calidad"><i class="fa fa-check"></i><b>21.1</b> Criterio de calidad</a>
+<ul>
+<li class="chapter" data-level="21.1.1" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#criterio-de-información-de-akaike"><i class="fa fa-check"></i><b>21.1.1</b> Criterio de información de Akaike</a></li>
+<li class="chapter" data-level="21.1.2" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#criterio-de-información-bayesiano"><i class="fa fa-check"></i><b>21.1.2</b> Criterio de información Bayesiano</a></li>
+<li class="chapter" data-level="21.1.3" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#r-cuadrado-ajustado"><i class="fa fa-check"></i><b>21.1.3</b> R cuadrado ajustado</a></li>
+<li class="chapter" data-level="21.1.4" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#rmse-con-validación-cruzada"><i class="fa fa-check"></i><b>21.1.4</b> RMSE con validación cruzada</a></li>
+</ul></li>
+<li class="chapter" data-level="21.2" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#procedimientos-de-selección"><i class="fa fa-check"></i><b>21.2</b> Procedimientos de selección</a>
+<ul>
+<li class="chapter" data-level="21.2.1" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#búsqueda-hacia-atrás-backward"><i class="fa fa-check"></i><b>21.2.1</b> Búsqueda hacia atrás (Backward)</a></li>
+<li class="chapter" data-level="21.2.2" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#búsqueda-hacia-adelante-forward"><i class="fa fa-check"></i><b>21.2.2</b> Búsqueda hacia adelante (Forward)</a></li>
+<li class="chapter" data-level="21.2.3" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#búsqueda-por-pasos-stepwise"><i class="fa fa-check"></i><b>21.2.3</b> Búsqueda por pasos (Stepwise)</a></li>
+<li class="chapter" data-level="21.2.4" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#búsqueda-exhaustiva"><i class="fa fa-check"></i><b>21.2.4</b> Búsqueda exhaustiva</a></li>
+</ul></li>
+<li class="chapter" data-level="21.3" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#términos-de-orden-superior"><i class="fa fa-check"></i><b>21.3</b> Términos de orden superior</a></li>
+<li class="chapter" data-level="21.4" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#explicación-versus-predicción-1"><i class="fa fa-check"></i><b>21.4</b> Explicación versus predicción</a>
+<ul>
+<li class="chapter" data-level="21.4.1" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#explicación-1"><i class="fa fa-check"></i><b>21.4.1</b> Explicación</a></li>
+<li class="chapter" data-level="21.4.2" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#predicción-1"><i class="fa fa-check"></i><b>21.4.2</b> Predicción</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="regresión-logística.html"><a href="regresión-logística.html"><i class="fa fa-check"></i><b>22</b> Regresión logística</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="regresión-logística.html"><a href="regresión-logística.html#modelos-lineales-generalizados"><i class="fa fa-check"></i><b>22.1</b> Modelos lineales generalizados</a></li>
+<li class="chapter" data-level="22.2" data-path="regresión-logística.html"><a href="regresión-logística.html#respuesta-binaria"><i class="fa fa-check"></i><b>22.2</b> Respuesta binaria</a>
+<ul>
+<li class="chapter" data-level="22.2.1" data-path="regresión-logística.html"><a href="regresión-logística.html#ajuste-de-la-regresión-logística"><i class="fa fa-check"></i><b>22.2.1</b> Ajuste de la regresión logística</a></li>
+<li class="chapter" data-level="22.2.2" data-path="regresión-logística.html"><a href="regresión-logística.html#problemas-de-ajuste"><i class="fa fa-check"></i><b>22.2.2</b> Problemas de ajuste</a></li>
+<li class="chapter" data-level="22.2.3" data-path="regresión-logística.html"><a href="regresión-logística.html#ejemplos-de-simulación"><i class="fa fa-check"></i><b>22.2.3</b> Ejemplos de simulación</a></li>
+</ul></li>
+<li class="chapter" data-level="22.3" data-path="regresión-logística.html"><a href="regresión-logística.html#trabajar-con-regresión-logística"><i class="fa fa-check"></i><b>22.3</b> Trabajar con regresión logística</a>
+<ul>
+<li class="chapter" data-level="22.3.1" data-path="regresión-logística.html"><a href="regresión-logística.html#pruebas-con-glms"><i class="fa fa-check"></i><b>22.3.1</b> Pruebas con GLMs</a></li>
+<li class="chapter" data-level="22.3.2" data-path="regresión-logística.html"><a href="regresión-logística.html#prueba-de-wald"><i class="fa fa-check"></i><b>22.3.2</b> Prueba de Wald</a></li>
+<li class="chapter" data-level="22.3.3" data-path="regresión-logística.html"><a href="regresión-logística.html#prueba-de-razón-de-verosimilitud"><i class="fa fa-check"></i><b>22.3.3</b> Prueba de razón de verosimilitud</a></li>
+<li class="chapter" data-level="22.3.4" data-path="regresión-logística.html"><a href="regresión-logística.html#ejemplo-saheart"><i class="fa fa-check"></i><b>22.3.4</b> Ejemplo <code>SAheart</code></a></li>
+<li class="chapter" data-level="22.3.5" data-path="regresión-logística.html"><a href="regresión-logística.html#intervalos-de-confianza-1"><i class="fa fa-check"></i><b>22.3.5</b> Intervalos de confianza</a></li>
+<li class="chapter" data-level="22.3.6" data-path="regresión-logística.html"><a href="regresión-logística.html#intervalos-de-confianza-para-la-respuesta-promedio"><i class="fa fa-check"></i><b>22.3.6</b> Intervalos de confianza para la respuesta promedio</a></li>
+<li class="chapter" data-level="22.3.7" data-path="regresión-logística.html"><a href="regresión-logística.html#sintaxis-de-la-fórmula"><i class="fa fa-check"></i><b>22.3.7</b> Sintaxis de la fórmula</a></li>
+<li class="chapter" data-level="22.3.8" data-path="regresión-logística.html"><a href="regresión-logística.html#desviación"><i class="fa fa-check"></i><b>22.3.8</b> Desviación</a></li>
+</ul></li>
+<li class="chapter" data-level="22.4" data-path="regresión-logística.html"><a href="regresión-logística.html#clasificación"><i class="fa fa-check"></i><b>22.4</b> Clasificación</a>
+<ul>
+<li class="chapter" data-level="22.4.1" data-path="regresión-logística.html"><a href="regresión-logística.html#ejemplo-spam"><i class="fa fa-check"></i><b>22.4.1</b> Ejemplo <code>spam</code></a></li>
+<li class="chapter" data-level="22.4.2" data-path="regresión-logística.html"><a href="regresión-logística.html#evaluar-clasificadores"><i class="fa fa-check"></i><b>22.4.2</b> Evaluar clasificadores</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="más-allá.html"><a href="más-allá.html"><i class="fa fa-check"></i><b>23</b> Más allá</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="más-allá.html"><a href="más-allá.html#rstudio"><i class="fa fa-check"></i><b>23.1</b> RStudio</a></li>
+<li class="chapter" data-level="23.2" data-path="más-allá.html"><a href="más-allá.html#tidy-data"><i class="fa fa-check"></i><b>23.2</b> Tidy Data</a></li>
+<li class="chapter" data-level="23.3" data-path="más-allá.html"><a href="más-allá.html#visualización"><i class="fa fa-check"></i><b>23.3</b> Visualización</a></li>
+<li class="chapter" data-level="23.4" data-path="más-allá.html"><a href="más-allá.html#aplicaciones-web"><i class="fa fa-check"></i><b>23.4</b> Aplicaciones web</a></li>
+<li class="chapter" data-level="23.5" data-path="más-allá.html"><a href="más-allá.html#diseño-experimental"><i class="fa fa-check"></i><b>23.5</b> Diseño experimental</a></li>
+<li class="chapter" data-level="23.6" data-path="más-allá.html"><a href="más-allá.html#aprendizaje-automático-machine-learning"><i class="fa fa-check"></i><b>23.6</b> Aprendizaje automático (Machine Learning)</a>
+<ul>
+<li class="chapter" data-level="23.6.1" data-path="más-allá.html"><a href="más-allá.html#aprendizaje-profundo-deep-learning"><i class="fa fa-check"></i><b>23.6.1</b> Aprendizaje profundo (Deep Learning)</a></li>
+</ul></li>
+<li class="chapter" data-level="23.7" data-path="más-allá.html"><a href="más-allá.html#series-de-tiempo"><i class="fa fa-check"></i><b>23.7</b> Series de tiempo</a></li>
+<li class="chapter" data-level="23.8" data-path="más-allá.html"><a href="más-allá.html#bayesiana"><i class="fa fa-check"></i><b>23.8</b> Bayesiana</a></li>
+<li class="chapter" data-level="23.9" data-path="más-allá.html"><a href="más-allá.html#computación-de-alto-rendimiento."><i class="fa fa-check"></i><b>23.9</b> Computación de alto rendimiento.</a></li>
+<li class="chapter" data-level="23.10" data-path="más-allá.html"><a href="más-allá.html#recursos-adicionales-de-r"><i class="fa fa-check"></i><b>23.10</b> Recursos adicionales de <code>R</code></a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/daviddalpiaz/appliedstats" target="blank">&copy; 2020 Adapatado de David Dalpiaz</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Estadística aplicada con R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="interacciones-y-predictores-categóricos" class="section level1" number="16">
+<h1><span class="header-section-number">Capítulo 16</span> Interacciones y predictores categóricos</h1>
+<blockquote>
+<p>“El mayor valor de una imagen es cuando nos obliga a notar lo que nunca esperábamos ver.”</p>
+<p>— <strong>John Tukey</strong></p>
+</blockquote>
+<p>Después de leer este capítulo, podrá:</p>
+<ul>
+<li>Incluir e interpretar variables categóricas en un modelo de regresión lineal mediante variables ficticias.</li>
+<li>Comprender las implicaciones de usar un modelo con una variable categórica de dos maneras: niveles que sirven como predictores únicos versus niveles que sirven como comparación con una línea de base.</li>
+<li>Construir e interpretar modelos de regresión lineal con términos de interacción.</li>
+<li>Identificar variables categóricas en un conjunto de datos y convertirlas en variables factor, si es necesario, utilizando <code>R</code>.</li>
+</ul>
+<p>Hasta ahora, en cada uno de nuestros análisis, solo hemos utilizado variables numéricas como predictores. También hemos utilizado solo <em>modelos aditivos</em>, lo que significa que el efecto que cualquier predictor tuvo en la respuesta no dependió de los otros predictores. En este capítulo, eliminaremos ambas restricciones. Ajustaremos modelos con predictores categóricos y usaremos modelos que permitan a los predictores <em>interactuar</em>. Las matemáticas de la regresión múltiple permanecerán en gran parte sin cambios, sin embargo, prestaremos mucha atención a la interpretación, así como a algunas diferencias en el uso de <code>R</code>.</p>
+<div id="variables-ficticias-dummy" class="section level2" number="16.1">
+<h2><span class="header-section-number">16.1</span> Variables ficticias (Dummy)</h2>
+<p>Para este capítulo, usaremos brevemente el conjunto de datos integrado <code>mtcars</code> antes de regresar a nuestro conjunto de datos <code>autompg</code> que creamos en el último capítulo. El conjunto de datos <code>mtcars</code> es algo más pequeño, por lo que rápidamente veremos todo el conjunto de datos.</p>
+<div class="sourceCode" id="cb701"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb701-1"><a href="interacciones-y-predictores-categóricos.html#cb701-1" aria-hidden="true" tabindex="-1"></a>mtcars</span></code></pre></div>
+<pre><code>##                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+## Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+## Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+## Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+## Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+## Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
+## Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
+## Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
+## Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+## Merc 230            22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
+## Merc 280            19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
+## Merc 280C           17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
+## Merc 450SE          16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
+## Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
+## Merc 450SLC         15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
+## Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4
+## Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
+## Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
+## Fiat 128            32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+## Honda Civic         30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+## Toyota Corolla      33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
+## Toyota Corona       21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1
+## Dodge Challenger    15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2
+## AMC Javelin         15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2
+## Camaro Z28          13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4
+## Pontiac Firebird    19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2
+## Fiat X1-9           27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+## Porsche 914-2       26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+## Lotus Europa        30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
+## Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
+## Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
+## Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
+## Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></pre>
+<p>Nos interesarán tres de las variables: <code>mpg</code>, <code>hp</code> y<code>am</code>.</p>
+<ul>
+<li><code>mpg</code>: eficiencia de combustible, en millas por galón.</li>
+<li><code>hp</code>: caballos de fuerza, en libras-pie por segundo.</li>
+<li><code>am</code>: transmisión. Automática o manual.</li>
+</ul>
+<p>Como hacemos a menudo, comenzaremos graficando los datos. Estamos interesados en <code>mpg</code> como variable respuesta y <code>hp</code> como predictor.</p>
+<div class="sourceCode" id="cb703"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb703-1"><a href="interacciones-y-predictores-categóricos.html#cb703-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mpg <span class="sc">~</span> hp, <span class="at">data =</span> mtcars, <span class="at">cex =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-290-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Dado que también estamos interesados en el tipo de transmisión, también podríamos etiquetar los puntos,</p>
+<div class="sourceCode" id="cb704"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb704-1"><a href="interacciones-y-predictores-categóricos.html#cb704-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mpg <span class="sc">~</span> hp, <span class="at">data =</span> mtcars, <span class="at">col =</span> am <span class="sc">+</span> <span class="dv">1</span>, <span class="at">pch =</span> am <span class="sc">+</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="dv">2</span>)</span>
+<span id="cb704-2"><a href="interacciones-y-predictores-categóricos.html#cb704-2" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;Automática&quot;</span>, <span class="st">&quot;Manual&quot;</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">pch =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-291-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Usamos un “truco” común de <code>R</code> al graficar estos datos. La variable <code>am</code> toma dos valores posibles; <code>0</code> para transmisión automática y <code>1</code> para transmisiones manuales. <code>R</code> puede usar números para representar colores, sin embargo, el color de <code>0</code> es blanco. Así que tomamos el vector <code>am</code> y le agregamos <code>1</code>. Entonces, las observaciones con transmisiones automáticas ahora se representan con <code>1</code>, que es negro en <code>R</code>, y la transmisión manual se representa con <code>2</code>, que es rojo en <code>R</code>. (Tenga en cuenta que solo estamos agregando <code>1</code> dentro de la llamada a <code>plot()</code>, en realidad no estamos modificando los valores almacenados en <code>am</code>).</p>
+<p>Ahora ajustamos el modelo SLR</p>
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1 x_1 + \epsilon,
+\]</span></p>
+<p>donde <span class="math inline">\(Y\)</span> es <code>mpg</code> y <span class="math inline">\(x_1\)</span> es <code>hp</code>. Para abreviar la notación, descartamos el índice <span class="math inline">\(i\)</span> para las observaciones.</p>
+<div class="sourceCode" id="cb705"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb705-1"><a href="interacciones-y-predictores-categóricos.html#cb705-1" aria-hidden="true" tabindex="-1"></a>mpg_hp_slr <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp, <span class="at">data =</span> mtcars)</span></code></pre></div>
+<p>Luego volvemos a graficar los datos y agregamos la línea ajustada</p>
+<div class="sourceCode" id="cb706"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb706-1"><a href="interacciones-y-predictores-categóricos.html#cb706-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mpg <span class="sc">~</span> hp, <span class="at">data =</span> mtcars, <span class="at">col =</span> am <span class="sc">+</span> <span class="dv">1</span>, <span class="at">pch =</span> am <span class="sc">+</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="dv">2</span>)</span>
+<span id="cb706-2"><a href="interacciones-y-predictores-categóricos.html#cb706-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(mpg_hp_slr, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>)</span>
+<span id="cb706-3"><a href="interacciones-y-predictores-categóricos.html#cb706-3" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;Automática&quot;</span>, <span class="st">&quot;Manual&quot;</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">pch =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-293-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Deberíamos notar un patrón. Las observaciones manuales rojas están en gran parte por encima de la línea, mientras que las observaciones automáticas negras están en su mayoría por debajo de la línea. Esto significa que nuestro modelo subestima la eficiencia de combustible de las transmisiones manuales y sobreestima la eficiencia de combustible de las transmisiones automáticas. Para corregir esto, agregaremos un predictor a nuestro modelo, a saber, <code>am</code> como <span class="math inline">\(x_2\)</span>.</p>
+<p>Nuestro nuevo modelo es</p>
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \epsilon,
+\]</span></p>
+<p>donde <span class="math inline">\(x_1\)</span> y <span class="math inline">\(Y\)</span> siguen siendo los mismos, pero ahora</p>
+<p><span class="math display">\[
+x_2 =
+  \begin{cases}
+   1 &amp; \text{transmisión manual} \\
+   0       &amp; \text{transmisión automática}
+  \end{cases}.
+\]</span></p>
+<p>En este caso, llamamos <span class="math inline">\(x_2\)</span> una <strong>variable ficticia</strong>. Una variable ficticia tiene un nombre algo desafortunado, ya que de ninguna manera es “tonta”. De hecho, en realidad es algo inteligente. Una variable ficticia es una variable numérica que se utiliza en un análisis de regresión para “codificar” una variable categórica binaria. Veamos cómo funciona esto.</p>
+<p>Primero, tenga en cuenta que <code>am</code> ya es una variable ficticia, ya que usa los valores <code>0</code> y <code>1</code> para representar transmisiones automáticas y manuales. A menudo, una variable como <code>am</code> almacenaría los valores de los caracteres <code>auto</code> y <code>man</code> y tendríamos que convertirlos en <code>0</code> y <code>1</code> o, como veremos más adelante,<code>R</code> prestará cuidado de crear variables ficticias por nosotros.</p>
+<p>Entonces, para ajustar el modelo anterior, lo hacemos como cualquier otro modelo de regresión múltiple que hayamos visto antes.</p>
+<div class="sourceCode" id="cb707"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb707-1"><a href="interacciones-y-predictores-categóricos.html#cb707-1" aria-hidden="true" tabindex="-1"></a>mpg_hp_add <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> am, <span class="at">data =</span> mtcars)</span></code></pre></div>
+<p>Comprobando brevemente la salida, vemos que <code>R</code> ha estimado los tres parámetros <span class="math inline">\(\beta\)</span>.</p>
+<div class="sourceCode" id="cb708"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb708-1"><a href="interacciones-y-predictores-categóricos.html#cb708-1" aria-hidden="true" tabindex="-1"></a>mpg_hp_add</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ hp + am, data = mtcars)
+## 
+## Coefficients:
+## (Intercept)           hp           am  
+##    26.58491     -0.05889      5.27709</code></pre>
+<p>Dado que <span class="math inline">\(x_2\)</span> solo puede tomar valores <code>0</code> y <code>1</code>, podemos escribir efectivamente dos modelos diferentes, uno para transmisiones manuales y otro para transmisiones automáticas.</p>
+<p>Para transmisiones automáticas, <span class="math inline">\(x_2 = 0\)</span>, tenemos,</p>
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1 x_1 + \epsilon.
+\]</span></p>
+<p>Luego, para las transmisiones manuales, <span class="math inline">\(x_2=1\)</span>, tenemos,</p>
+<p><span class="math display">\[
+Y = (\beta_0 + \beta_2) + \beta_1 x_1 + \epsilon.
+\]</span></p>
+<p>Observe que estos modelos comparten la misma pendiente, <span class="math inline">\(\beta_1\)</span>, pero tienen intersecciones diferentes, que difieren en <span class="math inline">\(\beta_2\)</span>. Entonces, el cambio en <code>mpg</code> es el mismo para ambos modelos, pero en promedio,<code>mpg</code> difiere en <span class="math inline">\(\beta_2\)</span> entre los dos tipos de transmisión.</p>
+<p>Ahora calcularemos la pendiente estimada y el intercepto de estos dos modelos para que podamos agregarlos a una gráfica. Tenga en cuenta que:</p>
+<ul>
+<li><span class="math inline">\(\hat{\beta}_0\)</span> = <code>coef(mpg_hp_add)[1]</code> = 26.5849137</li>
+<li><span class="math inline">\(\hat{\beta}_1\)</span> = <code>coef(mpg_hp_add)[2]</code> = -0.0588878</li>
+<li><span class="math inline">\(\hat{\beta}_2\)</span> = <code>coef(mpg_hp_add)[3]</code> = 5.2770853</li>
+</ul>
+<p>Luego, podemos combinarlos para calcular la pendiente y las intersecciones estimadas.</p>
+<div class="sourceCode" id="cb710"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb710-1"><a href="interacciones-y-predictores-categóricos.html#cb710-1" aria-hidden="true" tabindex="-1"></a>int_auto <span class="ot">=</span> <span class="fu">coef</span>(mpg_hp_add)[<span class="dv">1</span>]</span>
+<span id="cb710-2"><a href="interacciones-y-predictores-categóricos.html#cb710-2" aria-hidden="true" tabindex="-1"></a>int_manu <span class="ot">=</span> <span class="fu">coef</span>(mpg_hp_add)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(mpg_hp_add)[<span class="dv">3</span>]</span>
+<span id="cb710-3"><a href="interacciones-y-predictores-categóricos.html#cb710-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb710-4"><a href="interacciones-y-predictores-categóricos.html#cb710-4" aria-hidden="true" tabindex="-1"></a>slope_auto <span class="ot">=</span> <span class="fu">coef</span>(mpg_hp_add)[<span class="dv">2</span>]</span>
+<span id="cb710-5"><a href="interacciones-y-predictores-categóricos.html#cb710-5" aria-hidden="true" tabindex="-1"></a>slope_manu <span class="ot">=</span> <span class="fu">coef</span>(mpg_hp_add)[<span class="dv">2</span>]</span></code></pre></div>
+<p>Al volver a graficar los datos, usamos estas pendientes e intersecciones para agregar los “dos” modelos ajustados a la gráfica.</p>
+<div class="sourceCode" id="cb711"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb711-1"><a href="interacciones-y-predictores-categóricos.html#cb711-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mpg <span class="sc">~</span> hp, <span class="at">data =</span> mtcars, <span class="at">col =</span> am <span class="sc">+</span> <span class="dv">1</span>, <span class="at">pch =</span> am <span class="sc">+</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="dv">2</span>)</span>
+<span id="cb711-2"><a href="interacciones-y-predictores-categóricos.html#cb711-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(int_auto, slope_auto, <span class="at">col =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">lwd =</span> <span class="dv">2</span>) <span class="co"># agregar línea para auto</span></span>
+<span id="cb711-3"><a href="interacciones-y-predictores-categóricos.html#cb711-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(int_manu, slope_manu, <span class="at">col =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>) <span class="co"># agregar línea para manual</span></span>
+<span id="cb711-4"><a href="interacciones-y-predictores-categóricos.html#cb711-4" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;Automática&quot;</span>, <span class="st">&quot;Manual&quot;</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">pch =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-297-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Notamos de inmediato que los puntos ya no son sistemáticamente incorrectos. Las observaciones manuales rojas varían alrededor de la línea roja sin un patrón en particular sin subestimar las observaciones como antes. Los puntos negros automáticos varían alrededor de la línea negra, también sin un patrón obvio.</p>
+<p>Dicen que una imagen vale más que mil palabras, pero como estadístico, vale la pena realizar un análisis completo. La imagen de arriba hace claramente obvio que <span class="math inline">\(\beta_2\)</span> es significativo, pero verifiquémoslo matemáticamente. Básicamente nos gustaría probar:</p>
+<p><span class="math display">\[
+H_0: \beta_2 = 0 \quad \text{vs} \quad H_1: \beta_2 \neq 0.
+\]</span></p>
+<p>Esto no es nada nuevo. Nuevamente, las matemáticas son las mismas que las de los análisis de regresión múltiple que hemos visto antes. Podríamos realizar una prueba <span class="math inline">\(t\)</span> o <span class="math inline">\(F\)</span>. La única diferencia es un ligero cambio de interpretación. Podríamos pensar en esto como probar un modelo con una sola línea (<span class="math inline">\(H_0\)</span>) contra un modelo que permite dos líneas (<span class="math inline">\(H_1\)</span>).</p>
+<p>Para obtener el estadístico de prueba y el valor p para la prueba <span class="math inline">\(t\)</span>, usaríamos</p>
+<div class="sourceCode" id="cb712"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb712-1"><a href="interacciones-y-predictores-categóricos.html#cb712-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mpg_hp_add)<span class="sc">$</span>coefficients[<span class="st">&quot;am&quot;</span>,]</span></code></pre></div>
+<pre><code>##     Estimate   Std. Error      t value     Pr(&gt;|t|) 
+## 5.277085e+00 1.079541e+00 4.888270e+00 3.460318e-05</code></pre>
+<p>Para hacer lo mismo con la prueba <span class="math inline">\(F\)</span>, usaríamos</p>
+<div class="sourceCode" id="cb714"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb714-1"><a href="interacciones-y-predictores-categóricos.html#cb714-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(mpg_hp_slr, mpg_hp_add)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: mpg ~ hp
+## Model 2: mpg ~ hp + am
+##   Res.Df    RSS Df Sum of Sq      F   Pr(&gt;F)    
+## 1     30 447.67                                 
+## 2     29 245.44  1    202.24 23.895 3.46e-05 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Tenga en cuenta que estos de hecho están probando lo mismo, ya que los valores p son exactamente iguales. (Y el estadístico de prueba <span class="math inline">\(F\)</span> es el estadístico de prueba <span class="math inline">\(t\)</span> al cuadrado).</p>
+<p>Recapitulando algunas interpretaciones:</p>
+<ul>
+<li><span class="math inline">\(\hat{\beta}_0 = 26.5849137\)</span> es el promedio estimado de <code>mpg</code> para un automóvil con transmisión automática y <strong>0</strong> <code>hp</code>.</li>
+<li><span class="math inline">\(\hat{\beta}_0 + \hat{\beta}_2 = 31.8619991\)</span> es el promedio estimado de <code>mpg</code> para un automóvil con transmisión manual y <strong>0</strong> <code>hp</code>.</li>
+<li><span class="math inline">\(\hat{\beta}_2 = 5.2770853\)</span> es la <strong>diferencia</strong> estimada en el promedio de <code>mpg</code> para automóviles con transmisión manual en comparación con aquellos con transmisión automática, para <strong>cualquier</strong> <code>hp</code>.</li>
+<li><span class="math inline">\(\hat{\beta}_1 = -0.0588878\)</span> es el cambio estimado en el promedio de <code>mpg</code> para un aumento en un <code>hp</code>, para <strong>cualquiera de los</strong> tipos de transmisión.</li>
+</ul>
+<p>Deberíamos prestar especial atención a esos dos últimos. En el modelo,</p>
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \epsilon,
+\]</span></p>
+<p>vemos que <span class="math inline">\(\beta_1\)</span> es el cambio promedio en <span class="math inline">\(Y\)</span> para un aumento en <span class="math inline">\(x_1\)</span>, <em>sin importar</em> el valor de <span class="math inline">\(x_2\)</span>. Además, <span class="math inline">\(\beta_2\)</span> es siempre la diferencia en el promedio de <span class="math inline">\(Y\)</span> para <em>cualquier</em> valor de <span class="math inline">\(x_1\)</span>. Estas son dos restricciones que no siempre querremos, por lo que necesitamos una forma de especificar un modelo más flexible.</p>
+<p>Aquí nos limitamos a un solo predictor numérico <span class="math inline">\(x_1\)</span> y una variable ficticia <span class="math inline">\(x_2\)</span>. Sin embargo, el concepto de variable ficticia se puede utilizar con modelos de regresión múltiple más grandes. Aquí solo usamos un único predictor numérico para facilitar la visualización, ya que podemos pensar en la interpretación de “dos líneas”. Pero, en general, podemos pensar en una variable ficticia como la creación de “dos modelos”, uno para cada categoría de una variable categórica binaria.</p>
+</div>
+<div id="interacciones" class="section level2" number="16.2">
+<h2><span class="header-section-number">16.2</span> Interacciones</h2>
+<p>Para eliminar la restricción de la “misma pendiente”, ahora discutiremos la <strong>interacción</strong>. Para ilustrar este concepto, regresaremos al conjunto de datos <code>autompg</code> que creamos en el último capítulo, con algunas modificaciones más.</p>
+<div class="sourceCode" id="cb716"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb716-1"><a href="interacciones-y-predictores-categóricos.html#cb716-1" aria-hidden="true" tabindex="-1"></a><span class="co"># leer el marco de datos de la web</span></span>
+<span id="cb716-2"><a href="interacciones-y-predictores-categóricos.html#cb716-2" aria-hidden="true" tabindex="-1"></a>autompg <span class="ot">=</span> <span class="fu">read.table</span>(</span>
+<span id="cb716-3"><a href="interacciones-y-predictores-categóricos.html#cb716-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data&quot;</span>,</span>
+<span id="cb716-4"><a href="interacciones-y-predictores-categóricos.html#cb716-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">quote =</span> <span class="st">&quot;</span><span class="sc">\&quot;</span><span class="st">&quot;</span>,</span>
+<span id="cb716-5"><a href="interacciones-y-predictores-categóricos.html#cb716-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">comment.char =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb716-6"><a href="interacciones-y-predictores-categóricos.html#cb716-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb716-7"><a href="interacciones-y-predictores-categóricos.html#cb716-7" aria-hidden="true" tabindex="-1"></a><span class="co"># dar los encabezados del marco de datos</span></span>
+<span id="cb716-8"><a href="interacciones-y-predictores-categóricos.html#cb716-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(autompg) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;mpg&quot;</span>, <span class="st">&quot;cyl&quot;</span>, <span class="st">&quot;disp&quot;</span>, <span class="st">&quot;hp&quot;</span>, <span class="st">&quot;wt&quot;</span>, <span class="st">&quot;acc&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;origin&quot;</span>, <span class="st">&quot;name&quot;</span>)</span>
+<span id="cb716-9"><a href="interacciones-y-predictores-categóricos.html#cb716-9" aria-hidden="true" tabindex="-1"></a><span class="co"># eliminar los datos que faltan, que se almacenan como &quot;?&quot;</span></span>
+<span id="cb716-10"><a href="interacciones-y-predictores-categóricos.html#cb716-10" aria-hidden="true" tabindex="-1"></a>autompg <span class="ot">=</span> <span class="fu">subset</span>(autompg, autompg<span class="sc">$</span>hp <span class="sc">!=</span> <span class="st">&quot;?&quot;</span>)</span>
+<span id="cb716-11"><a href="interacciones-y-predictores-categóricos.html#cb716-11" aria-hidden="true" tabindex="-1"></a><span class="co"># eliminar plymouth reliant, ya que causa algunos problemas</span></span>
+<span id="cb716-12"><a href="interacciones-y-predictores-categóricos.html#cb716-12" aria-hidden="true" tabindex="-1"></a>autompg <span class="ot">=</span> <span class="fu">subset</span>(autompg, autompg<span class="sc">$</span>name <span class="sc">!=</span> <span class="st">&quot;plymouth reliant&quot;</span>)</span>
+<span id="cb716-13"><a href="interacciones-y-predictores-categóricos.html#cb716-13" aria-hidden="true" tabindex="-1"></a><span class="co"># dar los nombres de las filas del conjunto de datos, según el motor, el año y el nombre</span></span>
+<span id="cb716-14"><a href="interacciones-y-predictores-categóricos.html#cb716-14" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(autompg) <span class="ot">=</span> <span class="fu">paste</span>(autompg<span class="sc">$</span>cyl, <span class="st">&quot;cylinder&quot;</span>, autompg<span class="sc">$</span>year, autompg<span class="sc">$</span>name)</span>
+<span id="cb716-15"><a href="interacciones-y-predictores-categóricos.html#cb716-15" aria-hidden="true" tabindex="-1"></a><span class="co"># eliminar la variable de nombre</span></span>
+<span id="cb716-16"><a href="interacciones-y-predictores-categóricos.html#cb716-16" aria-hidden="true" tabindex="-1"></a>autompg <span class="ot">=</span> <span class="fu">subset</span>(autompg, <span class="at">select =</span> <span class="fu">c</span>(<span class="st">&quot;mpg&quot;</span>, <span class="st">&quot;cyl&quot;</span>, <span class="st">&quot;disp&quot;</span>, <span class="st">&quot;hp&quot;</span>, <span class="st">&quot;wt&quot;</span>, <span class="st">&quot;acc&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;origin&quot;</span>))</span>
+<span id="cb716-17"><a href="interacciones-y-predictores-categóricos.html#cb716-17" aria-hidden="true" tabindex="-1"></a><span class="co"># cambiar caballos de fuerza de carácter a numérico</span></span>
+<span id="cb716-18"><a href="interacciones-y-predictores-categóricos.html#cb716-18" aria-hidden="true" tabindex="-1"></a>autompg<span class="sc">$</span>hp <span class="ot">=</span> <span class="fu">as.numeric</span>(autompg<span class="sc">$</span>hp)</span>
+<span id="cb716-19"><a href="interacciones-y-predictores-categóricos.html#cb716-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Cree una variable ficticia para automóviles nacionales y extranjeros. nacionales = 1.</span></span>
+<span id="cb716-20"><a href="interacciones-y-predictores-categóricos.html#cb716-20" aria-hidden="true" tabindex="-1"></a>autompg<span class="sc">$</span>domestic <span class="ot">=</span> <span class="fu">as.numeric</span>(autompg<span class="sc">$</span>origin <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb716-21"><a href="interacciones-y-predictores-categóricos.html#cb716-21" aria-hidden="true" tabindex="-1"></a><span class="co"># quitar los carros de 3 y 5 cilindros (que son muy raros).</span></span>
+<span id="cb716-22"><a href="interacciones-y-predictores-categóricos.html#cb716-22" aria-hidden="true" tabindex="-1"></a>autompg <span class="ot">=</span> autompg[autompg<span class="sc">$</span>cyl <span class="sc">!=</span> <span class="dv">5</span>,]</span>
+<span id="cb716-23"><a href="interacciones-y-predictores-categóricos.html#cb716-23" aria-hidden="true" tabindex="-1"></a>autompg <span class="ot">=</span> autompg[autompg<span class="sc">$</span>cyl <span class="sc">!=</span> <span class="dv">3</span>,]</span>
+<span id="cb716-24"><a href="interacciones-y-predictores-categóricos.html#cb716-24" aria-hidden="true" tabindex="-1"></a><span class="co"># la siguiente línea verificaría que las posibilidades restantes del cilindro son 4, 6, 8</span></span>
+<span id="cb716-25"><a href="interacciones-y-predictores-categóricos.html#cb716-25" aria-hidden="true" tabindex="-1"></a><span class="co">#unique(autompg$cyl)</span></span>
+<span id="cb716-26"><a href="interacciones-y-predictores-categóricos.html#cb716-26" aria-hidden="true" tabindex="-1"></a><span class="co"># cambiar cyl a una variable de factor</span></span>
+<span id="cb716-27"><a href="interacciones-y-predictores-categóricos.html#cb716-27" aria-hidden="true" tabindex="-1"></a>autompg<span class="sc">$</span>cyl <span class="ot">=</span> <span class="fu">as.factor</span>(autompg<span class="sc">$</span>cyl)</span></code></pre></div>
+<div class="sourceCode" id="cb717"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb717-1"><a href="interacciones-y-predictores-categóricos.html#cb717-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(autompg)</span></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    383 obs. of  9 variables:
+##  $ mpg     : num  18 15 18 16 17 15 14 14 14 15 ...
+##  $ cyl     : Factor w/ 3 levels &quot;4&quot;,&quot;6&quot;,&quot;8&quot;: 3 3 3 3 3 3 3 3 3 3 ...
+##  $ disp    : num  307 350 318 304 302 429 454 440 455 390 ...
+##  $ hp      : num  130 165 150 150 140 198 220 215 225 190 ...
+##  $ wt      : num  3504 3693 3436 3433 3449 ...
+##  $ acc     : num  12 11.5 11 12 10.5 10 9 8.5 10 8.5 ...
+##  $ year    : int  70 70 70 70 70 70 70 70 70 70 ...
+##  $ origin  : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ domestic: num  1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+<p>Hemos eliminado los automóviles con cilindros <code>3</code> y<code>5</code>, y hemos creado una nueva variable <code>domestic</code> que indica si un automóvil se fabricó o no en los Estados Unidos. Quitar los cilindros <code>3</code> y<code>5</code> es simplemente para facilitar la demostración más adelante en el capítulo y no se haría en la práctica. La nueva variable <code>domestic</code> toma el valor<code>1</code> si el automóvil se fabricó en los Estados Unidos, y <code>0</code> en caso contrario, al que nos referiremos como “extranjero”. (Estamos usando arbitrariamente los Estados Unidos como punto de referencia.) También hemos convertido <code>cyl</code> y <code>origin</code> en variables de factor, que discutiremos más adelante.</p>
+<p>Ahora nos ocuparemos de tres variables: <code>mpg</code>, <code>disp</code> y <code>domestic</code>. Usaremos <code>mpg</code> como respuesta. Podemos ajustar un modelo,</p>
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \epsilon,
+\]</span></p>
+<p>donde</p>
+<ul>
+<li><span class="math inline">\(Y\)</span> es <code>mpg</code>, la eficiencia del combustible en millas por galón,</li>
+<li><span class="math inline">\(x_1\)</span> es <code>disp</code>, el desplazamiento en pulgadas cúbicas,</li>
+<li><span class="math inline">\(x_2\)</span> es <code>domestic</code> como se describió anteriormente, es una variable ficticia.</li>
+</ul>
+<p><span class="math display">\[
+x_2 =
+  \begin{cases}
+   1 &amp; \text{Nacional} \\
+   0 &amp; \text{Extranjero}
+  \end{cases}
+\]</span></p>
+<p>Ajustaremos este modelo, extraeremos la pendiente y el intercepto de las “dos líneas”, graficaremos los datos y sumaremos las líneas.</p>
+<div class="sourceCode" id="cb719"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb719-1"><a href="interacciones-y-predictores-categóricos.html#cb719-1" aria-hidden="true" tabindex="-1"></a>mpg_disp_add <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> disp <span class="sc">+</span> domestic, <span class="at">data =</span> autompg)</span>
+<span id="cb719-2"><a href="interacciones-y-predictores-categóricos.html#cb719-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb719-3"><a href="interacciones-y-predictores-categóricos.html#cb719-3" aria-hidden="true" tabindex="-1"></a>int_for <span class="ot">=</span> <span class="fu">coef</span>(mpg_disp_add)[<span class="dv">1</span>]</span>
+<span id="cb719-4"><a href="interacciones-y-predictores-categóricos.html#cb719-4" aria-hidden="true" tabindex="-1"></a>int_dom <span class="ot">=</span> <span class="fu">coef</span>(mpg_disp_add)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(mpg_disp_add)[<span class="dv">3</span>]</span>
+<span id="cb719-5"><a href="interacciones-y-predictores-categóricos.html#cb719-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb719-6"><a href="interacciones-y-predictores-categóricos.html#cb719-6" aria-hidden="true" tabindex="-1"></a>slope_for <span class="ot">=</span> <span class="fu">coef</span>(mpg_disp_add)[<span class="dv">2</span>]</span>
+<span id="cb719-7"><a href="interacciones-y-predictores-categóricos.html#cb719-7" aria-hidden="true" tabindex="-1"></a>slope_dom <span class="ot">=</span> <span class="fu">coef</span>(mpg_disp_add)[<span class="dv">2</span>]</span>
+<span id="cb719-8"><a href="interacciones-y-predictores-categóricos.html#cb719-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb719-9"><a href="interacciones-y-predictores-categóricos.html#cb719-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mpg <span class="sc">~</span> disp, <span class="at">data =</span> autompg, <span class="at">col =</span> domestic <span class="sc">+</span> <span class="dv">1</span>, <span class="at">pch =</span> domestic <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb719-10"><a href="interacciones-y-predictores-categóricos.html#cb719-10" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(int_for, slope_for, <span class="at">col =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">lwd =</span> <span class="dv">2</span>) <span class="co"># agregar línea para autos extranjeros</span></span>
+<span id="cb719-11"><a href="interacciones-y-predictores-categóricos.html#cb719-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(int_dom, slope_dom, <span class="at">col =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>) <span class="co"># agregar línea para autos nacionales</span></span>
+<span id="cb719-12"><a href="interacciones-y-predictores-categóricos.html#cb719-12" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;Extranjero&quot;</span>, <span class="st">&quot;Nacional&quot;</span>), <span class="at">pch =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-302-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Este es un modelo que muestra dos líneas <em>paralelas</em>, lo que significa que el <code>mpg</code> puede ser diferente en promedio entre los automóviles nacionales y extranjeros del mismo desplazamiento del motor, pero el cambio en el<code>mpg</code> promedio para un aumento en el desplazamiento es el mismo para ambos. Podemos ver que este modelo no está funcionando muy bien. La línea roja se ajusta bastante bien a los puntos rojos, pero a la línea negra no le va muy bien con los puntos negros, claramente debería tener una pendiente más negativa. Básicamente, nos gustaría un modelo que muestre dos pendientes diferentes.</p>
+<p>Considere el siguiente modelo,</p>
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_1 x_2 + \epsilon,
+\]</span></p>
+<p>donde <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span> y <span class="math inline">\(Y\)</span> son los mismos que antes, pero hemos agregado un nuevo <strong>término de interacción</strong> <span class="math inline">\(x_1x_2\)</span> que multiplica <span class="math inline">\(x_1\)</span> y <span class="math inline">\(x_2\)</span>, por lo que también tenemos un parámetro adicional <span class="math inline">\(\beta\)</span> <span class="math inline">\(\beta_3\)</span>.</p>
+<p>Este modelo esencialmente crea dos pendientes y dos intersecciones, siendo <span class="math inline">\(\beta_2\)</span> la diferencia en las intersecciones y <span class="math inline">\(\beta_3\)</span> la diferencia en las pendientes. Para ver esto, dividiremos el modelo en dos “submodelos” para automóviles nacionales y extranjeros.</p>
+<p>Para autos extranjeros, <span class="math inline">\(x_2=0\)</span>, tenemos</p>
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1 x_1 + \epsilon.
+\]</span></p>
+<p>Para autos nacionales, <span class="math inline">\(x_2=1\)</span>, tenemos</p>
+<p><span class="math display">\[
+Y = (\beta_0 + \beta_2) + (\beta_1 + \beta_3) x_1 + \epsilon.
+\]</span></p>
+<p>Estos modelos tienen pendientes e intersecciones diferentes.</p>
+<ul>
+<li><span class="math inline">\(\beta_0\)</span> es el <code>mpg</code> promedio para un automóvil extranjero con <strong>0</strong> <code>disp</code>.</li>
+<li><span class="math inline">\(\beta_1\)</span> es el cambio en el <code>mpg</code> promedio para un aumento de un <code>disp</code>, para vehículos <strong>extranjeros</strong>.</li>
+<li><span class="math inline">\(\beta_0+\beta_2\)</span> es el <code>mpg</code> promedio para un automóvil nacional con <strong>0</strong><code>disp</code>.</li>
+<li><span class="math inline">\(\beta_1+\beta_3\)</span> es el cambio en el promedio de <code>mpg</code> para un aumento de un <code>disp</code>, para autos <strong>nacionales</strong>.</li>
+</ul>
+<p>¿Cómo ajustamos este modelo en <code>R</code>? Hay diferentes maneras.</p>
+<p>Un método sería simplemente crear una nueva variable y luego ajustar un modelo como cualquier otro.</p>
+<div class="sourceCode" id="cb720"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb720-1"><a href="interacciones-y-predictores-categóricos.html#cb720-1" aria-hidden="true" tabindex="-1"></a>autompg<span class="sc">$</span>x3 <span class="ot">=</span> autompg<span class="sc">$</span>disp <span class="sc">*</span> autompg<span class="sc">$</span>domestic <span class="co"># ¡ESTE CÓDIGO NO FUNCIONA!</span></span>
+<span id="cb720-2"><a href="interacciones-y-predictores-categóricos.html#cb720-2" aria-hidden="true" tabindex="-1"></a>do_not_do_this <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> disp <span class="sc">+</span> domestic <span class="sc">+</span> x3, <span class="at">data =</span> autompg) <span class="co"># ¡ESTE CÓDIGO NO FUNCIONA!</span></span></code></pre></div>
+<p>Solo debe hacer esto como último recurso. Preferimos no tener que modificar nuestros datos simplemente para ajustarlos a un modelo. En su lugar, podemos decirle a <code>R</code> que nos gustaría usar los datos existentes con un término de interacción, que creará automáticamente cuando usemos el operador <code>:</code>.</p>
+<div class="sourceCode" id="cb721"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb721-1"><a href="interacciones-y-predictores-categóricos.html#cb721-1" aria-hidden="true" tabindex="-1"></a>mpg_disp_int <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> disp <span class="sc">+</span> domestic <span class="sc">+</span> disp<span class="sc">:</span>domestic, <span class="at">data =</span> autompg)</span></code></pre></div>
+<p>Un método alternativo, que se ajustará exactamente al mismo modelo anterior, sería utilizar el operador <code>*</code>. Este método crea automáticamente el término de interacción, así como cualquier “término de orden inferior”, que en este caso son los términos de primer orden para <code>disp</code> y <code>domestic</code></p>
+<div class="sourceCode" id="cb722"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb722-1"><a href="interacciones-y-predictores-categóricos.html#cb722-1" aria-hidden="true" tabindex="-1"></a>mpg_disp_int2 <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> disp <span class="sc">*</span> domestic, <span class="at">data =</span> autompg)</span></code></pre></div>
+<p>Podemos verificar rápidamente que estos están haciendo lo mismo.</p>
+<div class="sourceCode" id="cb723"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb723-1"><a href="interacciones-y-predictores-categóricos.html#cb723-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(mpg_disp_int)</span></code></pre></div>
+<pre><code>##   (Intercept)          disp      domestic disp:domestic 
+##    46.0548423    -0.1569239   -12.5754714     0.1025184</code></pre>
+<div class="sourceCode" id="cb725"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb725-1"><a href="interacciones-y-predictores-categóricos.html#cb725-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(mpg_disp_int2)</span></code></pre></div>
+<pre><code>##   (Intercept)          disp      domestic disp:domestic 
+##    46.0548423    -0.1569239   -12.5754714     0.1025184</code></pre>
+<p>Vemos que tanto las variables como las estimaciones de sus coeficientes son, de hecho, las mismas para ambos modelos.</p>
+<div class="sourceCode" id="cb727"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb727-1"><a href="interacciones-y-predictores-categóricos.html#cb727-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mpg_disp_int)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ disp + domestic + disp:domestic, data = autompg)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -10.8332  -2.8956  -0.8332   2.2828  18.7749 
+## 
+## Coefficients:
+##                Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)    46.05484    1.80582  25.504  &lt; 2e-16 ***
+## disp           -0.15692    0.01668  -9.407  &lt; 2e-16 ***
+## domestic      -12.57547    1.95644  -6.428 3.90e-10 ***
+## disp:domestic   0.10252    0.01692   6.060 3.29e-09 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 4.308 on 379 degrees of freedom
+## Multiple R-squared:  0.7011, Adjusted R-squared:  0.6987 
+## F-statistic: 296.3 on 3 and 379 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Vemos que el uso de <code>summary()</code> da el resultado habitual para un modelo de regresión múltiple. Prestamos mucha atención a la fila de <code>disp:domestic</code> que prueba,</p>
+<p><span class="math display">\[
+H_0: \beta_3 = 0.
+\]</span></p>
+<p>En este caso, la prueba de <span class="math inline">\(\beta_3=0\)</span> está probando dos líneas con pendientes paralelas frente a dos líneas con pendientes posiblemente diferentes. La línea <code>disp:domestic</code> en la salida de <code>summary()</code> usa una prueba <span class="math inline">\(t\)</span> para realizar la prueba.</p>
+<p>También podríamos usar una prueba ANOVA <span class="math inline">\(F\)</span>. El modelo aditivo, sin interacción es nuestro modelo nulo, y el modelo de interacción es el alternativo.</p>
+<div class="sourceCode" id="cb729"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb729-1"><a href="interacciones-y-predictores-categóricos.html#cb729-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(mpg_disp_add, mpg_disp_int)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: mpg ~ disp + domestic
+## Model 2: mpg ~ disp + domestic + disp:domestic
+##   Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+## 1    380 7714.0                                  
+## 2    379 7032.6  1    681.36 36.719 3.294e-09 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Nuevamente vemos que esta prueba tiene el mismo valor p que la prueba <span class="math inline">\(t\)</span>. Además, el valor p es extremadamente bajo, por lo que entre los dos, elegimos el modelo de interacción.</p>
+<div class="sourceCode" id="cb731"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb731-1"><a href="interacciones-y-predictores-categóricos.html#cb731-1" aria-hidden="true" tabindex="-1"></a>int_for <span class="ot">=</span> <span class="fu">coef</span>(mpg_disp_int)[<span class="dv">1</span>]</span>
+<span id="cb731-2"><a href="interacciones-y-predictores-categóricos.html#cb731-2" aria-hidden="true" tabindex="-1"></a>int_dom <span class="ot">=</span> <span class="fu">coef</span>(mpg_disp_int)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(mpg_disp_int)[<span class="dv">3</span>]</span>
+<span id="cb731-3"><a href="interacciones-y-predictores-categóricos.html#cb731-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb731-4"><a href="interacciones-y-predictores-categóricos.html#cb731-4" aria-hidden="true" tabindex="-1"></a>slope_for <span class="ot">=</span> <span class="fu">coef</span>(mpg_disp_int)[<span class="dv">2</span>]</span>
+<span id="cb731-5"><a href="interacciones-y-predictores-categóricos.html#cb731-5" aria-hidden="true" tabindex="-1"></a>slope_dom <span class="ot">=</span> <span class="fu">coef</span>(mpg_disp_int)[<span class="dv">2</span>] <span class="sc">+</span> <span class="fu">coef</span>(mpg_disp_int)[<span class="dv">4</span>]</span></code></pre></div>
+<p>Aquí calculamos nuevamente la pendiente y las intersecciones de las dos líneas para su uso en la gráfica.</p>
+<div class="sourceCode" id="cb732"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb732-1"><a href="interacciones-y-predictores-categóricos.html#cb732-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mpg <span class="sc">~</span> disp, <span class="at">data =</span> autompg, <span class="at">col =</span> domestic <span class="sc">+</span> <span class="dv">1</span>, <span class="at">pch =</span> domestic <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb732-2"><a href="interacciones-y-predictores-categóricos.html#cb732-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(int_for, slope_for, <span class="at">col =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">lwd =</span> <span class="dv">2</span>) <span class="co"># line for foreign cars</span></span>
+<span id="cb732-3"><a href="interacciones-y-predictores-categóricos.html#cb732-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(int_dom, slope_dom, <span class="at">col =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>) <span class="co"># line for domestic cars</span></span>
+<span id="cb732-4"><a href="interacciones-y-predictores-categóricos.html#cb732-4" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;Extranjero&quot;</span>, <span class="st">&quot;Nacionl&quot;</span>), <span class="at">pch =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-310-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Vemos que estas líneas se ajustan mucho mejor a los datos, lo que coincide con el resultado de nuestras pruebas.</p>
+<p>Hasta ahora solo hemos visto interacción entre una variable categórica (<code>domestic</code>) y una variable numérica (<code>disp</code>). Si bien esto es fácil de visualizar, dado que permite diferentes pendientes para dos líneas, no es el único tipo de interacción que podemos usar en un modelo. También podemos considerar interacciones entre dos variables numéricas.</p>
+<p>Considere el modelo,</p>
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_1 x_2 + \epsilon,
+\]</span></p>
+<p>donde</p>
+<ul>
+<li><span class="math inline">\(Y\)</span> es <code>mpg</code>, la eficiencia de combustible en millas por galón,</li>
+<li><span class="math inline">\(x_1\)</span> es <code>disp</code>, el desplazamiento en pulgadas cúbicas,</li>
+<li><span class="math inline">\(x_2\)</span> es <code>hp</code>, los caballos de fuerza, en pies-libras por segundo.</li>
+</ul>
+<p>¿Cómo cambia <code>mpg</code> basado en <code>disp</code> en este modelo? Podemos reorganizar algunos términos para ver cómo.</p>
+<p><span class="math display">\[
+Y = \beta_0 + (\beta_1 + \beta_3 x_2) x_1 + \beta_2 x_2 + \epsilon
+\]</span></p>
+<p>Entonces, para un aumento de una unidad en <span class="math inline">\(x_1\)</span> (<code>disp</code>), la media de <span class="math inline">\(Y\)</span> (<code>mpg</code>) aumenta <span class="math inline">\(\beta_1 + \beta_3 x_2\)</span>, que es un valor diferente dependiendo del valor de <span class="math inline">\(x_2\)</span> (<code>hp</code>)!</p>
+<p>Dado que ahora estamos trabajando en tres dimensiones, este modelo no se puede justificar fácilmente mediante visualizaciones como el ejemplo anterior. En cambio, tendremos que confiar en una prueba.</p>
+<div class="sourceCode" id="cb733"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb733-1"><a href="interacciones-y-predictores-categóricos.html#cb733-1" aria-hidden="true" tabindex="-1"></a>mpg_disp_add_hp <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> disp <span class="sc">+</span> hp, <span class="at">data =</span> autompg)</span>
+<span id="cb733-2"><a href="interacciones-y-predictores-categóricos.html#cb733-2" aria-hidden="true" tabindex="-1"></a>mpg_disp_int_hp <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> disp <span class="sc">*</span> hp, <span class="at">data =</span> autompg)</span>
+<span id="cb733-3"><a href="interacciones-y-predictores-categóricos.html#cb733-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mpg_disp_int_hp)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ disp * hp, data = autompg)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -10.7849  -2.3104  -0.5699   2.1453  17.9211 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  5.241e+01  1.523e+00   34.42   &lt;2e-16 ***
+## disp        -1.002e-01  6.638e-03  -15.09   &lt;2e-16 ***
+## hp          -2.198e-01  1.987e-02  -11.06   &lt;2e-16 ***
+## disp:hp      5.658e-04  5.165e-05   10.96   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.896 on 379 degrees of freedom
+## Multiple R-squared:  0.7554, Adjusted R-squared:  0.7535 
+## F-statistic: 390.2 on 3 and 379 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Usando <code>summary()</code> nos enfocamos en la fila de <code>disp:hp</code> que prueba,</p>
+<p><span class="math display">\[
+H_0: \beta_3 = 0.
+\]</span></p>
+<p>Nuevamente, vemos un valor p muy bajo, por lo que rechazamos el nulo (modelo aditivo) a favor del modelo de interacción. Nuevamente, hay una prueba <span class="math inline">\(F\)</span> equivalente.</p>
+<div class="sourceCode" id="cb735"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb735-1"><a href="interacciones-y-predictores-categóricos.html#cb735-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(mpg_disp_add_hp, mpg_disp_int_hp)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: mpg ~ disp + hp
+## Model 2: mpg ~ disp * hp
+##   Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+## 1    380 7576.6                                  
+## 2    379 5754.2  1    1822.3 120.03 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Podemos echar un vistazo más de cerca a los coeficientes de nuestro modelo de interacción ajustado.</p>
+<div class="sourceCode" id="cb737"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb737-1"><a href="interacciones-y-predictores-categóricos.html#cb737-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(mpg_disp_int_hp)</span></code></pre></div>
+<pre><code>##   (Intercept)          disp            hp       disp:hp 
+## 52.4081997848 -0.1001737655 -0.2198199720  0.0005658269</code></pre>
+<ul>
+<li><span class="math inline">\(\hat{\beta}_0 = 52.4081998\)</span> es el promedio estimado de <code>mpg</code> para un automóvil con 0 <code>disp</code> y 0 <code>hp</code>.</li>
+<li><span class="math inline">\(\hat{\beta}_1 = -0.1001738\)</span> es el cambio estimado en el promedio de <code>mpg</code> para un aumento de 1 <code>disp</code>, <strong>para un automóvil con 0 <code>hp</code></strong>.</li>
+<li><span class="math inline">\(\hat{\beta}_2 = -0.21982\)</span> es el cambio estimado en el promedio de <code>mpg</code> para un aumento de 1 <code>hp</code>, <strong>para un automóvil con 0 <code>disp</code></strong>.</li>
+<li><span class="math inline">\(\hat{\beta}_3 = 5.658269\times 10^{-4}\)</span> es una estimación de la modificación del cambio en el promedio de <code>mpg</code> para un aumento en <code>disp</code>, para un automóvil de cierto <code>hp</code> (o viceversa).</li>
+</ul>
+<p>Ese último coeficiente necesita más explicación. Recuerda el reordenamiento que hicimos antes.</p>
+<p><span class="math display">\[
+Y = \beta_0 + (\beta_1 + \beta_3 x_2) x_1 + \beta_2 x_2 + \epsilon.
+\]</span></p>
+<p>Entonces, nuestra estimación de <span class="math inline">\(\beta_1+\beta_3x_2\)</span>, es $_1+_3x_2 $, que en este caso es</p>
+<p><span class="math display">\[
+-0.1001738 + 5.658269\times 10^{-4} x_2.
+\]</span></p>
+<p>Esto dice que, para un aumento de un <code>disp</code>, vemos un cambio estimado en el <code>mpg</code> promedio de <span class="math inline">\(-0.1001738 + 5.658269\times 10^{-4} x_2\)</span>. Entonces, la relación entre <code>disp</code> y <code>mpg</code> depende de los <code>hp</code> del automóvil.</p>
+<p>Entonces, para un automóvil con 50 <code>hp</code>, el cambio estimado en el promedio de <code>mpg</code> para un aumento de un <code>disp</code> es</p>
+<p><span class="math display">\[
+-0.1001738 + 5.658269\times 10^{-4} \cdot 50 = -0.0718824
+\]</span></p>
+<p>Y para un automóvil con 350 <code>hp</code>, el cambio estimado en el promedio de<code>mpg</code> para un aumento de un <code>disp</code> es</p>
+<p><span class="math display">\[
+-0.1001738 + 5.658269\times 10^{-4} \cdot 350 = 0.0978657
+\]</span></p>
+<p>¡Observe que el signo cambió!</p>
+</div>
+<div id="variables-factor" class="section level2" number="16.3">
+<h2><span class="header-section-number">16.3</span> Variables factor</h2>
+<p>Hasta ahora en este capítulo, hemos limitado nuestro uso de variables categóricas a variables categóricas binarias. Específicamente, nos hemos limitado a variables ficticias que toman un valor de <code>0</code> o <code>1</code> y representan una variable categórica numéricamente.</p>
+<p>Ahora discutiremos las variables <strong>factor</strong>, que es una forma especial en la que <code>R</code> trata las variables categóricas. Con las variables factor, un usuario puede simplemente pensar en las categorías de una variable, y <code>R</code> se encargará de las variables ficticias necesarias sin que el usuario realice ninguna asignación 0/1.</p>
+<div class="sourceCode" id="cb739"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb739-1"><a href="interacciones-y-predictores-categóricos.html#cb739-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is.factor</span>(autompg<span class="sc">$</span>domestic)</span></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+<p>Anteriormente, cuando usamos la variable <code>domestic</code>, <strong>no</strong> era una variable factor. Era simplemente una variable numérica que solo tomaba dos valores posibles, “1” para nacionales y “0” para extranjeros. Creemos una nueva variable <code>origin</code> que almacene la misma información, pero de una manera diferente.</p>
+<div class="sourceCode" id="cb741"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb741-1"><a href="interacciones-y-predictores-categóricos.html#cb741-1" aria-hidden="true" tabindex="-1"></a>autompg<span class="sc">$</span>origin[autompg<span class="sc">$</span>domestic <span class="sc">==</span> <span class="dv">1</span>] <span class="ot">=</span> <span class="st">&quot;domestic&quot;</span></span>
+<span id="cb741-2"><a href="interacciones-y-predictores-categóricos.html#cb741-2" aria-hidden="true" tabindex="-1"></a>autompg<span class="sc">$</span>origin[autompg<span class="sc">$</span>domestic <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">=</span> <span class="st">&quot;foreign&quot;</span></span>
+<span id="cb741-3"><a href="interacciones-y-predictores-categóricos.html#cb741-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(autompg<span class="sc">$</span>origin)</span></code></pre></div>
+<pre><code>## [1] &quot;domestic&quot; &quot;domestic&quot; &quot;domestic&quot; &quot;domestic&quot; &quot;domestic&quot; &quot;domestic&quot;</code></pre>
+<p>Ahora, la variable <code>origin</code> almacena<code>"domestic"</code>para automóviles nacionales y <code>"foreign"</code> para automóviles extranjeros.</p>
+<div class="sourceCode" id="cb743"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb743-1"><a href="interacciones-y-predictores-categóricos.html#cb743-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is.factor</span>(autompg<span class="sc">$</span>origin)</span></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+<p>Sin embargo, esto es simplemente un vector de valores de caracteres. Un vector de modelos de automóviles es una variable de carácter en <code>R</code>. Un vector de números de identificación de vehículos (VIN) también es una variable de carácter. Pero esos no representan una lista corta de niveles que podrían influir en una variable respuesta. Querremos <strong>coaccionar</strong> esta variable origin para que sea algo más: una variable factor.</p>
+<div class="sourceCode" id="cb745"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb745-1"><a href="interacciones-y-predictores-categóricos.html#cb745-1" aria-hidden="true" tabindex="-1"></a>autompg<span class="sc">$</span>origin <span class="ot">=</span> <span class="fu">as.factor</span>(autompg<span class="sc">$</span>origin)</span></code></pre></div>
+<p>Ahora, cuando comprobamos la estructura del conjunto de datos <code>autompg</code>, vemos que el <code>origin</code> es una variable de factor.</p>
+<div class="sourceCode" id="cb746"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb746-1"><a href="interacciones-y-predictores-categóricos.html#cb746-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(autompg)</span></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    383 obs. of  9 variables:
+##  $ mpg     : num  18 15 18 16 17 15 14 14 14 15 ...
+##  $ cyl     : Factor w/ 3 levels &quot;4&quot;,&quot;6&quot;,&quot;8&quot;: 3 3 3 3 3 3 3 3 3 3 ...
+##  $ disp    : num  307 350 318 304 302 429 454 440 455 390 ...
+##  $ hp      : num  130 165 150 150 140 198 220 215 225 190 ...
+##  $ wt      : num  3504 3693 3436 3433 3449 ...
+##  $ acc     : num  12 11.5 11 12 10.5 10 9 8.5 10 8.5 ...
+##  $ year    : int  70 70 70 70 70 70 70 70 70 70 ...
+##  $ origin  : Factor w/ 2 levels &quot;domestic&quot;,&quot;foreign&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ domestic: num  1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+<p>Las variables factor tienen <strong>niveles</strong> que son los posibles valores (categorías) que puede tomar la variable, en este caso extranjera o nacional.</p>
+<div class="sourceCode" id="cb748"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb748-1"><a href="interacciones-y-predictores-categóricos.html#cb748-1" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(autompg<span class="sc">$</span>origin)</span></code></pre></div>
+<pre><code>## [1] &quot;domestic&quot; &quot;foreign&quot;</code></pre>
+<p>Recordemos que previamente hemos ajustado el modelo</p>
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_1 x_2 + \epsilon,
+\]</span></p>
+<p>donde</p>
+<ul>
+<li><span class="math inline">\(Y\)</span> es <code>mpg</code>, la eficiencia de combustible en millas por galón,</li>
+<li><span class="math inline">\(x_1\)</span> es <code>disp</code>, el desplazamiento en pulgadas cúbicas,</li>
+<li><span class="math inline">\(x_2\)</span> es <code>domestic</code> una variable ficticia donde <code>1</code> indica un automóvil nacional</li>
+</ul>
+<div class="sourceCode" id="cb750"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb750-1"><a href="interacciones-y-predictores-categóricos.html#cb750-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">mod_dummy =</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> disp <span class="sc">*</span> domestic, <span class="at">data =</span> autompg))</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ disp * domestic, data = autompg)
+## 
+## Coefficients:
+##   (Intercept)           disp       domestic  disp:domestic  
+##       46.0548        -0.1569       -12.5755         0.1025</code></pre>
+<p>Entonces aquí vemos</p>
+<p><span class="math display">\[
+\hat{\beta}_0 + \hat{\beta}_2 = 46.0548423 + -12.5754714 = 33.4793709
+\]</span></p>
+<p>es el <code>mpg</code> promedio estimado para un automóvil <strong>nacional</strong> con 0 <code>disp</code>.</p>
+<p>Ahora intentemos hacer lo mismo, pero usando nuestra nueva variable factor.</p>
+<div class="sourceCode" id="cb752"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb752-1"><a href="interacciones-y-predictores-categóricos.html#cb752-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">mod_factor =</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> disp <span class="sc">*</span> origin, <span class="at">data =</span> autompg))</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ disp * origin, data = autompg)
+## 
+## Coefficients:
+##        (Intercept)                disp       originforeign  disp:originforeign  
+##           33.47937            -0.05441            12.57547            -0.10252</code></pre>
+<p>Parece que no produce los mismos resultados. Inmediatamente notamos que el intercepto es diferente, al igual que el coeficiente delante de <code>disp</code>. También notamos que los dos coeficientes restantes son de la misma magnitud que sus respectivas contrapartes usando la variable domestic, pero con un signo diferente. ¿Por qué está pasando esto?</p>
+<p>Resulta que al usar una variable de factor, <code>R</code> está creando automáticamente una variable ficticia para nosotros. Sin embargo, no es la variable ficticia que usamos originalmente.</p>
+<p><code>R</code> esta ajustando el modelo</p>
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_1 x_2 + \epsilon,
+\]</span></p>
+<p>donde</p>
+<ul>
+<li><span class="math inline">\(Y\)</span> es <code>mpg</code>, la eficiencia de combustible en millas por galón,</li>
+<li><span class="math inline">\(x_1\)</span> es <code>disp</code>, el desplazamiento en pulgadas cúbicas,</li>
+<li><span class="math inline">\(x_2\)</span> <strong>es una variable ficticia creada por <code>R</code>.</strong> Utiliza <code>1</code> para representar un <strong>auto extranjero</strong>.</li>
+</ul>
+<p>Y ahora,</p>
+<p><span class="math display">\[
+\hat{\beta}_0 = 33.4793709
+\]</span></p>
+<p>es el <code>mpg</code> promedio estimado para un automóvil <strong>doméstico</strong> con 0 <code>disp</code>, que de hecho es el mismo que antes.</p>
+<p>Cuando <code>R</code> creó <span class="math inline">\(x_2\)</span>, la variable ficticia, utilizó automóviles nacionales como el nivel de <strong>referencia</strong>, que es el valor predeterminado de la variable factor. Entonces, cuando la variable ficticia es <code>0</code>, el modelo representa este nivel de referencia, que es nacional. (<code>R</code> hace esta elección porque domestic viene antes que foreing en orden alfabético).</p>
+<p>Entonces, los dos modelos tienen coeficientes estimados diferentes, pero debido a las diferentes representaciones, en realidad son el mismo modelo.</p>
+<div id="factores-con-más-de-dos-niveles" class="section level3" number="16.3.1">
+<h3><span class="header-section-number">16.3.1</span> Factores con más de dos niveles</h3>
+<p>Consideremos ahora una variable factor con más de dos niveles. En este conjunto de datos, <code>cyl</code> es un ejemplo.</p>
+<div class="sourceCode" id="cb754"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb754-1"><a href="interacciones-y-predictores-categóricos.html#cb754-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is.factor</span>(autompg<span class="sc">$</span>cyl)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb756"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb756-1"><a href="interacciones-y-predictores-categóricos.html#cb756-1" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(autompg<span class="sc">$</span>cyl)</span></code></pre></div>
+<pre><code>## [1] &quot;4&quot; &quot;6&quot; &quot;8&quot;</code></pre>
+<p>Aquí la variable <code>cyl</code> tiene tres niveles posibles: <code>4</code>, <code>6</code> y <code>8</code>. Quizás se pregunte, ¿por qué no usar simplemente <code>cyl</code> como variable numérica? Ciertamente podría.</p>
+<p>Sin embargo, eso obligaría a que la diferencia de <code>mpg</code> promedio entre los cilindros 4 y 6 sea la misma que la diferencia de <code>mpg</code> promedio entre los cilindros 6 y 8. Eso suele tener sentido para una variable continua, pero no para una variable discreta con tan pocos valores posibles. En el caso de esta variable, no existe un motor de 7 cilindros o un motor de 6.23 cilindros en los vehículos personales. Por estas razones, simplemente consideraremos que <code>cyl</code> es categórica. Esta es una decisión que normalmente deberá tomarse con variables ordinales. A menudo, con un gran número de categorías, la decisión de tratarlas como variables numéricas es apropiada porque, de lo contrario, se necesita una gran cantidad de variables ficticias para representarlas.</p>
+<p>Definamos tres variables ficticias relacionadas con la variable del factor <code>cyl</code>.</p>
+<p><span class="math display">\[
+v_1 =
+  \begin{cases}
+   1 &amp; \text{4 cilindros} \\
+   0       &amp; \text{no 4 cilindros}
+  \end{cases}
+\]</span></p>
+<p><span class="math display">\[
+v_2 =
+  \begin{cases}
+   1 &amp; \text{6 cilindros} \\
+   0       &amp; \text{no 6 cilindros}
+  \end{cases}
+\]</span></p>
+<p><span class="math display">\[
+v_3 =
+  \begin{cases}
+   1 &amp; \text{8 cilindros} \\
+   0       &amp; \text{no 8 cilindros}
+  \end{cases}
+\]</span></p>
+<p>Ahora, ajustemos un modelo aditivo en <code>R</code>, usando <code>mpg</code> como respuesta y <code>disp</code> y <code>cyl</code> como predictores. Este debe ser un modelo que use “tres líneas de regresión” para modelar <code>mpg</code>, una para cada uno de los posibles niveles de <code>cyl</code>. Todos tendrán la misma pendiente (ya que es un modelo aditivo), pero cada uno tendrá su propio intercepto</p>
+<div class="sourceCode" id="cb758"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb758-1"><a href="interacciones-y-predictores-categóricos.html#cb758-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">mpg_disp_add_cyl =</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> disp <span class="sc">+</span> cyl, <span class="at">data =</span> autompg))</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ disp + cyl, data = autompg)
+## 
+## Coefficients:
+## (Intercept)         disp         cyl6         cyl8  
+##    34.99929     -0.05217     -3.63325     -2.03603</code></pre>
+<p>La pregunta es, ¿cuál es el modelo que <code>R</code> ha ajustado? Ha optado por utilizar el modelo</p>
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1 x + \beta_2 v_2 + \beta_3 v_3 + \epsilon,
+\]</span></p>
+<p>donde</p>
+<ul>
+<li><span class="math inline">\(Y\)</span> es <code>mpg</code>, la eficiencia de combustible en millas por galón,</li>
+<li><span class="math inline">\(x\)</span> es <code>disp</code>, el desplazamiento en pulgadas cúbicas,</li>
+<li><span class="math inline">\(v_2\)</span> y <span class="math inline">\(v_3\)</span> son las variables ficticias definidas anteriormente.</li>
+</ul>
+<p>¿Por qué <code>R</code> no usa <span class="math inline">\(v_1\)</span>? Básicamente porque no es necesario. Para crear tres líneas, solo necesita dos variables ficticias ya que está usando un nivel de referencia, que en este caso es un automóvil de 4 cilindros. Los tres “submodelos” son entonces:</p>
+<ul>
+<li>4 Cilindros: <span class="math inline">\(Y = \beta_0 + \beta_1 x + \epsilon\)</span></li>
+<li>6 Cilindros: <span class="math inline">\(Y = (\beta_0 + \beta_2) + \beta_1 x + \epsilon\)</span></li>
+<li>8 Cilindros: <span class="math inline">\(Y = (\beta_0 + \beta_3) + \beta_1 x + \epsilon\)</span></li>
+</ul>
+<p>Observe que todos tienen la misma pendiente. Sin embargo, usando las dos variables ficticias, logramos los tres interceptos.</p>
+<ul>
+<li><span class="math inline">\(\beta_0\)</span> es el <code>mpg</code> promedio para un automóvil de 4 cilindros con 0 <code>disp</code>.</li>
+<li><span class="math inline">\(\beta_0+\beta_2\)</span> es el <code>mpg</code> promedio para un automóvil de 6 cilindros con 0 <code>disp</code>.</li>
+<li><span class="math inline">\(\beta_0+\beta_3\)</span> es el <code>mpg</code> promedio para un automóvil de 8 cilindros con 0 <code>disp</code>.</li>
+</ul>
+<p>Entonces, debido a que 4 cilindros es el nivel de referencia, <span class="math inline">\(\beta_0\)</span> es específico de 4 cilindros, pero <span class="math inline">\(\beta_2\)</span> y <span class="math inline">\(\beta_3\)</span> se utilizan para representar cantidades relativas a 4 cilindros.</p>
+<p>Como hemos hecho antes, podemos extraer estos interceptos y pendientes para las tres líneas y graficarlas.</p>
+<div class="sourceCode" id="cb760"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb760-1"><a href="interacciones-y-predictores-categóricos.html#cb760-1" aria-hidden="true" tabindex="-1"></a>int_4cyl <span class="ot">=</span> <span class="fu">coef</span>(mpg_disp_add_cyl)[<span class="dv">1</span>]</span>
+<span id="cb760-2"><a href="interacciones-y-predictores-categóricos.html#cb760-2" aria-hidden="true" tabindex="-1"></a>int_6cyl <span class="ot">=</span> <span class="fu">coef</span>(mpg_disp_add_cyl)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(mpg_disp_add_cyl)[<span class="dv">3</span>]</span>
+<span id="cb760-3"><a href="interacciones-y-predictores-categóricos.html#cb760-3" aria-hidden="true" tabindex="-1"></a>int_8cyl <span class="ot">=</span> <span class="fu">coef</span>(mpg_disp_add_cyl)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(mpg_disp_add_cyl)[<span class="dv">4</span>]</span>
+<span id="cb760-4"><a href="interacciones-y-predictores-categóricos.html#cb760-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb760-5"><a href="interacciones-y-predictores-categóricos.html#cb760-5" aria-hidden="true" tabindex="-1"></a>slope_all_cyl <span class="ot">=</span> <span class="fu">coef</span>(mpg_disp_add_cyl)[<span class="dv">2</span>]</span>
+<span id="cb760-6"><a href="interacciones-y-predictores-categóricos.html#cb760-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb760-7"><a href="interacciones-y-predictores-categóricos.html#cb760-7" aria-hidden="true" tabindex="-1"></a>plot_colors <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;Darkorange&quot;</span>, <span class="st">&quot;Darkgrey&quot;</span>, <span class="st">&quot;Dodgerblue&quot;</span>)</span>
+<span id="cb760-8"><a href="interacciones-y-predictores-categóricos.html#cb760-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mpg <span class="sc">~</span> disp, <span class="at">data =</span> autompg, <span class="at">col =</span> plot_colors[cyl], <span class="at">pch =</span> <span class="fu">as.numeric</span>(cyl))</span>
+<span id="cb760-9"><a href="interacciones-y-predictores-categóricos.html#cb760-9" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(int_4cyl, slope_all_cyl, <span class="at">col =</span> plot_colors[<span class="dv">1</span>], <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb760-10"><a href="interacciones-y-predictores-categóricos.html#cb760-10" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(int_6cyl, slope_all_cyl, <span class="at">col =</span> plot_colors[<span class="dv">2</span>], <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb760-11"><a href="interacciones-y-predictores-categóricos.html#cb760-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(int_8cyl, slope_all_cyl, <span class="at">col =</span> plot_colors[<span class="dv">3</span>], <span class="at">lty =</span> <span class="dv">3</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb760-12"><a href="interacciones-y-predictores-categóricos.html#cb760-12" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;4 Cilindros&quot;</span>, <span class="st">&quot;6 Cilindros&quot;</span>, <span class="st">&quot;8 Cilindros&quot;</span>),</span>
+<span id="cb760-13"><a href="interacciones-y-predictores-categóricos.html#cb760-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> plot_colors, <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="at">pch =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>))</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-324-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>En esta gráfica, tenemos</p>
+<ul>
+<li>4 cilindros: puntos naranjas, línea naranja continua.</li>
+<li>6 cilindros: puntos grises, línea gris discontinua.</li>
+<li>8 cilindros: puntos azules, línea azul punteada.</li>
+</ul>
+<p>Un resultado extraño es que estamos estimando que los autos de 8 cilindros tienen una mejor eficiencia de combustible que los autos de 6 cilindros en <strong>cualquier</strong> desplazamiento. La línea azul punteada siempre está por encima de la línea gris punteada. Eso no parece correcto. Tal vez para motores de cilindrada muy grande eso podría ser cierto, pero parece incorrecto para motores de cilindrada media a baja.</p>
+<p>Para intentar arreglar esto, intentaremos usar un modelo de interacción, es decir, en lugar de simplemente tres interceptos y una pendiente, permitiremos tres pendientes. Nuevamente, dejaremos que <code>R</code> tome el volante, (sin juego de palabras) y luego averiguaremos qué modelo ha aplicado.</p>
+<div class="sourceCode" id="cb761"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb761-1"><a href="interacciones-y-predictores-categóricos.html#cb761-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">mpg_disp_int_cyl =</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> disp <span class="sc">*</span> cyl, <span class="at">data =</span> autompg))</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ disp * cyl, data = autompg)
+## 
+## Coefficients:
+## (Intercept)         disp         cyl6         cyl8    disp:cyl6    disp:cyl8  
+##    43.59052     -0.13069    -13.20026    -20.85706      0.08299      0.10817</code></pre>
+<div class="sourceCode" id="cb763"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb763-1"><a href="interacciones-y-predictores-categóricos.html#cb763-1" aria-hidden="true" tabindex="-1"></a><span class="co"># también podría usar mpg ~ disp + cyl + disp:cyl</span></span></code></pre></div>
+<p><code>R</code> ha vuelto a optar por utilizar coches de 4 cilindros como nivel de referencia, pero ahora esto también tiene un efecto en los términos de interacción. <code>R</code> se ajusta al modelo.</p>
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1 x + \beta_2 v_2 + \beta_3 v_3 + \gamma_2 x v_2 + \gamma_3 x v_3 + \epsilon
+\]</span></p>
+<p>Estamos usando <span class="math inline">\(\gamma\)</span> como un parámetro <span class="math inline">\(\beta\)</span> para simplificar, de modo que, por ejemplo, <span class="math inline">\(\beta_2\)</span> y <span class="math inline">\(\gamma_2\)</span> están asociados con <span class="math inline">\(v_2\)</span>.</p>
+<p>Ahora, los tres “submodelos” son:</p>
+<ul>
+<li>4 cilindros: <span class="math inline">\(Y = \beta_0 + \beta_1 x + \epsilon\)</span>.</li>
+<li>6 cilindros: <span class="math inline">\(Y = (\beta_0 + \beta_2) + (\beta_1 + \gamma_2) x + \epsilon\)</span>.</li>
+<li>8 cilindros: <span class="math inline">\(Y = (\beta_0 + \beta_3) + (\beta_1 + \gamma_3) x + \epsilon\)</span>.</li>
+</ul>
+<p>Interpretando algunos parámetros y coeficientes:</p>
+<ul>
+<li><span class="math inline">\((\beta_0 + \beta_2)\)</span> es el <code>mpg</code> promedio de un automóvil de 6 cilindros con 0 <code>disp</code></li>
+<li><span class="math inline">\((\hat{\beta}_1 + \hat{\gamma}_3) = -0.1306935 + 0.1081714 = -0.0225221\)</span> es el cambio estimado en el promedio de <code>mpg</code> para un aumento de un <code>disp</code>, en un automóvil de 8 cilindros.</li>
+</ul>
+<p>Entonces, como hemos visto antes, <span class="math inline">\(\beta_2\)</span> y <span class="math inline">\(\beta_3\)</span> cambian los interceptos para autos de 6 y 8 cilindros en relación con el nivel de referencia de <span class="math inline">\(\beta_0\)</span> para autos de 4 cilindros.</p>
+<p>Ahora, de manera similar <span class="math inline">\(\gamma_2\)</span> y <span class="math inline">\(\gamma_3\)</span> cambian las pendientes para autos de 6 y 8 cilindros en relación con el nivel de referencia de <span class="math inline">\(\beta_1\)</span> para autos de 4 cilindros.</p>
+<p>Una vez más, extraemos los coeficientes y graficamos los resultados.</p>
+<div class="sourceCode" id="cb764"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb764-1"><a href="interacciones-y-predictores-categóricos.html#cb764-1" aria-hidden="true" tabindex="-1"></a>int_4cyl <span class="ot">=</span> <span class="fu">coef</span>(mpg_disp_int_cyl)[<span class="dv">1</span>]</span>
+<span id="cb764-2"><a href="interacciones-y-predictores-categóricos.html#cb764-2" aria-hidden="true" tabindex="-1"></a>int_6cyl <span class="ot">=</span> <span class="fu">coef</span>(mpg_disp_int_cyl)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(mpg_disp_int_cyl)[<span class="dv">3</span>]</span>
+<span id="cb764-3"><a href="interacciones-y-predictores-categóricos.html#cb764-3" aria-hidden="true" tabindex="-1"></a>int_8cyl <span class="ot">=</span> <span class="fu">coef</span>(mpg_disp_int_cyl)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(mpg_disp_int_cyl)[<span class="dv">4</span>]</span>
+<span id="cb764-4"><a href="interacciones-y-predictores-categóricos.html#cb764-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb764-5"><a href="interacciones-y-predictores-categóricos.html#cb764-5" aria-hidden="true" tabindex="-1"></a>slope_4cyl <span class="ot">=</span> <span class="fu">coef</span>(mpg_disp_int_cyl)[<span class="dv">2</span>]</span>
+<span id="cb764-6"><a href="interacciones-y-predictores-categóricos.html#cb764-6" aria-hidden="true" tabindex="-1"></a>slope_6cyl <span class="ot">=</span> <span class="fu">coef</span>(mpg_disp_int_cyl)[<span class="dv">2</span>] <span class="sc">+</span> <span class="fu">coef</span>(mpg_disp_int_cyl)[<span class="dv">5</span>]</span>
+<span id="cb764-7"><a href="interacciones-y-predictores-categóricos.html#cb764-7" aria-hidden="true" tabindex="-1"></a>slope_8cyl <span class="ot">=</span> <span class="fu">coef</span>(mpg_disp_int_cyl)[<span class="dv">2</span>] <span class="sc">+</span> <span class="fu">coef</span>(mpg_disp_int_cyl)[<span class="dv">6</span>]</span>
+<span id="cb764-8"><a href="interacciones-y-predictores-categóricos.html#cb764-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb764-9"><a href="interacciones-y-predictores-categóricos.html#cb764-9" aria-hidden="true" tabindex="-1"></a>plot_colors <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;Darkorange&quot;</span>, <span class="st">&quot;Darkgrey&quot;</span>, <span class="st">&quot;Dodgerblue&quot;</span>)</span>
+<span id="cb764-10"><a href="interacciones-y-predictores-categóricos.html#cb764-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mpg <span class="sc">~</span> disp, <span class="at">data =</span> autompg, <span class="at">col =</span> plot_colors[cyl], <span class="at">pch =</span> <span class="fu">as.numeric</span>(cyl))</span>
+<span id="cb764-11"><a href="interacciones-y-predictores-categóricos.html#cb764-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(int_4cyl, slope_4cyl, <span class="at">col =</span> plot_colors[<span class="dv">1</span>], <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb764-12"><a href="interacciones-y-predictores-categóricos.html#cb764-12" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(int_6cyl, slope_6cyl, <span class="at">col =</span> plot_colors[<span class="dv">2</span>], <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb764-13"><a href="interacciones-y-predictores-categóricos.html#cb764-13" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(int_8cyl, slope_8cyl, <span class="at">col =</span> plot_colors[<span class="dv">3</span>], <span class="at">lty =</span> <span class="dv">3</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb764-14"><a href="interacciones-y-predictores-categóricos.html#cb764-14" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;4 cilindros&quot;</span>, <span class="st">&quot;6 cilindros&quot;</span>, <span class="st">&quot;8 cilindros&quot;</span>),</span>
+<span id="cb764-15"><a href="interacciones-y-predictores-categóricos.html#cb764-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> plot_colors, <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="at">pch =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>))</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-326-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>¡Esto se ve mucho mejor! Podemos ver que para los coches de cilindrada media, los coches de 6 cilindros ahora funcionan mejor que los de 8 cilindros, lo que parece mucho más razonable que antes.</p>
+<p>Para justificar completamente el modelo de interacción (es decir, una pendiente única para cada nivel <code>cyl</code>) en comparación con el modelo aditivo (pendiente única), podemos realizar una prueba <span class="math inline">\(F\)</span>. Observe primero que no hay una prueba <span class="math inline">\(t\)</span> que pueda hacer esto, ya que la diferencia entre los dos modelos no es un solo parámetro.</p>
+<p>Nosotros probaremos,</p>
+<p><span class="math display">\[
+H_0: \gamma_2 = \gamma_3 = 0
+\]</span></p>
+<p>que representa las líneas de regresión paralelas que vimos antes,</p>
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1 x + \beta_2 v_2 + \beta_3 v_3 + \epsilon.
+\]</span></p>
+<p>Nuevamente, esta es una diferencia de dos parámetros, por lo que ninguna prueba <span class="math inline">\(t\)</span> será útil.</p>
+<div class="sourceCode" id="cb765"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb765-1"><a href="interacciones-y-predictores-categóricos.html#cb765-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(mpg_disp_add_cyl, mpg_disp_int_cyl)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: mpg ~ disp + cyl
+## Model 2: mpg ~ disp * cyl
+##   Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+## 1    379 7299.5                                  
+## 2    377 6551.7  2    747.79 21.515 1.419e-09 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Como era de esperar, vemos un valor p muy bajo y, por lo tanto, rechazamos la Hipótesis nula. Preferimos el modelo de interacción sobre el modelo aditivo.</p>
+<p>Recapitulando un poco:</p>
+<ul>
+<li>Modelo nulo: <span class="math inline">\(Y = \beta_0 + \beta_1 x + \beta_2 v_2 + \beta_3 v_3 + \epsilon\)</span>
+<ul>
+<li>Número de parámetros: <span class="math inline">\(q=4\)</span></li>
+</ul></li>
+<li>Modelo completo: <span class="math inline">\(Y = \beta_0 + \beta_1 x + \beta_2 v_2 + \beta_3 v_3 + \gamma_2 x v_2 + \gamma_3 x v_3 + \epsilon\)</span>
+<ul>
+<li>Número de parámetros: <span class="math inline">\(p=6\)</span></li>
+</ul></li>
+</ul>
+<div class="sourceCode" id="cb767"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb767-1"><a href="interacciones-y-predictores-categóricos.html#cb767-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">coef</span>(mpg_disp_int_cyl)) <span class="sc">-</span> <span class="fu">length</span>(<span class="fu">coef</span>(mpg_disp_add_cyl))</span></code></pre></div>
+<pre><code>## [1] 2</code></pre>
+<p>Vemos que hay una diferencia de dos parámetros, que también se muestra en la tabla ANOVA resultante de <code>R</code>. Observe que los siguientes dos valores también aparecen en la tabla ANOVA.</p>
+<div class="sourceCode" id="cb769"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb769-1"><a href="interacciones-y-predictores-categóricos.html#cb769-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(autompg) <span class="sc">-</span> <span class="fu">length</span>(<span class="fu">coef</span>(mpg_disp_int_cyl))</span></code></pre></div>
+<pre><code>## [1] 377</code></pre>
+<div class="sourceCode" id="cb771"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb771-1"><a href="interacciones-y-predictores-categóricos.html#cb771-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(autompg) <span class="sc">-</span> <span class="fu">length</span>(<span class="fu">coef</span>(mpg_disp_add_cyl))</span></code></pre></div>
+<pre><code>## [1] 379</code></pre>
+</div>
+</div>
+<div id="parametrización" class="section level2" number="16.4">
+<h2><span class="header-section-number">16.4</span> Parametrización</h2>
+<p>Hasta ahora, simplemente hemos dejado que <code>R</code> decida cómo crear las variables ficticias y, por lo tanto, <code>R</code> ha estado decidiendo la parametrización de los modelos. Para ilustrar la capacidad de usar parametrizaciones alternativas, recrearemos los datos, pero creando directamente las variables ficticias nosotros mismos.</p>
+<div class="sourceCode" id="cb773"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb773-1"><a href="interacciones-y-predictores-categóricos.html#cb773-1" aria-hidden="true" tabindex="-1"></a>new_param_data <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
+<span id="cb773-2"><a href="interacciones-y-predictores-categóricos.html#cb773-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> autompg<span class="sc">$</span>mpg,</span>
+<span id="cb773-3"><a href="interacciones-y-predictores-categóricos.html#cb773-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> autompg<span class="sc">$</span>disp,</span>
+<span id="cb773-4"><a href="interacciones-y-predictores-categóricos.html#cb773-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">v1 =</span> <span class="dv">1</span> <span class="sc">*</span> <span class="fu">as.numeric</span>(autompg<span class="sc">$</span>cyl <span class="sc">==</span> <span class="dv">4</span>),</span>
+<span id="cb773-5"><a href="interacciones-y-predictores-categóricos.html#cb773-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">v2 =</span> <span class="dv">1</span> <span class="sc">*</span> <span class="fu">as.numeric</span>(autompg<span class="sc">$</span>cyl <span class="sc">==</span> <span class="dv">6</span>),</span>
+<span id="cb773-6"><a href="interacciones-y-predictores-categóricos.html#cb773-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">v3 =</span> <span class="dv">1</span> <span class="sc">*</span> <span class="fu">as.numeric</span>(autompg<span class="sc">$</span>cyl <span class="sc">==</span> <span class="dv">8</span>))</span>
+<span id="cb773-7"><a href="interacciones-y-predictores-categóricos.html#cb773-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb773-8"><a href="interacciones-y-predictores-categóricos.html#cb773-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(new_param_data, <span class="dv">20</span>)</span></code></pre></div>
+<pre><code>##     y   x v1 v2 v3
+## 1  18 307  0  0  1
+## 2  15 350  0  0  1
+## 3  18 318  0  0  1
+## 4  16 304  0  0  1
+## 5  17 302  0  0  1
+## 6  15 429  0  0  1
+## 7  14 454  0  0  1
+## 8  14 440  0  0  1
+## 9  14 455  0  0  1
+## 10 15 390  0  0  1
+## 11 15 383  0  0  1
+## 12 14 340  0  0  1
+## 13 15 400  0  0  1
+## 14 14 455  0  0  1
+## 15 24 113  1  0  0
+## 16 22 198  0  1  0
+## 17 18 199  0  1  0
+## 18 21 200  0  1  0
+## 19 27  97  1  0  0
+## 20 26  97  1  0  0</code></pre>
+<p>Ahora,</p>
+<ul>
+<li><code>y</code> es <code>mpg</code></li>
+<li><code>x</code> es <code>disp</code>, el desplazamiento en pulgadas cúbicas,</li>
+<li><code>v1</code>,<code>v2</code> y <code>v3</code> son variables ficticias como se definieron anteriormente.</li>
+</ul>
+<p>Primero intentemos ajustar un modelo aditivo usando <code>x</code> así como las tres variables ficticias.</p>
+<div class="sourceCode" id="cb775"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb775-1"><a href="interacciones-y-predictores-categóricos.html#cb775-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(y <span class="sc">~</span> x <span class="sc">+</span> v1 <span class="sc">+</span> v2 <span class="sc">+</span> v3, <span class="at">data =</span> new_param_data)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = y ~ x + v1 + v2 + v3, data = new_param_data)
+## 
+## Coefficients:
+## (Intercept)            x           v1           v2           v3  
+##    32.96326     -0.05217      2.03603     -1.59722           NA</code></pre>
+<p>¿Que está sucediendo aquí? Observe que <code>R</code> esencialmente ignora <code>v3</code>, pero ¿por qué? Bueno, debido a que <code>R</code> usa un intercepto, no puede usar también <code>v3</code>. Esto es porque</p>
+<p><span class="math display">\[
+\boldsymbol{1} = v_1 + v_2 + v_3
+\]</span></p>
+<p>lo que significa que <span class="math inline">\(\boldsymbol{1}\)</span>, <span class="math inline">\(v_1\)</span>, <span class="math inline">\(v_2\)</span> y <span class="math inline">\(v_3\)</span> son linealmente dependientes. Esto haría que la matriz <span class="math inline">\(X^\top X\)</span> sea singular, pero necesitamos poder invertirla para resolver las ecuaciones normales y obtener <span class="math inline">\(\hat{\beta}.\)</span> Con el intercepto, <code>v1</code> y <code>v2</code>, <code>R</code> puede hacer los “tres interceptos” necesarips. Entonces, en este caso, <code>v3</code> es el nivel de referencia.</p>
+<p>Si eliminamos el intercepto, podemos obtener directamente los “tres interceptos” sin un nivel de referencia.</p>
+<div class="sourceCode" id="cb777"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb777-1"><a href="interacciones-y-predictores-categóricos.html#cb777-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> x <span class="sc">+</span> v1 <span class="sc">+</span> v2 <span class="sc">+</span> v3, <span class="at">data =</span> new_param_data)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = y ~ 0 + x + v1 + v2 + v3, data = new_param_data)
+## 
+## Coefficients:
+##        x        v1        v2        v3  
+## -0.05217  34.99929  31.36604  32.96326</code></pre>
+<p>Aquí, estamos ajustando el modelo.</p>
+<p><span class="math display">\[
+Y = \mu_1 v_1 + \mu_2 v_2 + \mu_3 v_3 + \beta x +\epsilon.
+\]</span></p>
+<p>Así tenemos:</p>
+<ul>
+<li>4 Cilindros: <span class="math inline">\(Y = \mu_1 + \beta x + \epsilon\)</span></li>
+<li>6 Cilindros: <span class="math inline">\(Y = \mu_2 + \beta x + \epsilon\)</span></li>
+<li>8 Cilindros: <span class="math inline">\(Y = \mu_3 + \beta x + \epsilon\)</span></li>
+</ul>
+<p>También podríamos hacer algo similar con el modelo de interacción y darle a cada línea un intercepto y una pendiente, sin la necesidad de un nivel de referencia.</p>
+<div class="sourceCode" id="cb779"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb779-1"><a href="interacciones-y-predictores-categóricos.html#cb779-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> v1 <span class="sc">+</span> v2 <span class="sc">+</span> v3 <span class="sc">+</span> x<span class="sc">:</span>v1 <span class="sc">+</span> x<span class="sc">:</span>v2 <span class="sc">+</span> x<span class="sc">:</span>v3, <span class="at">data =</span> new_param_data)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = y ~ 0 + v1 + v2 + v3 + x:v1 + x:v2 + x:v3, data = new_param_data)
+## 
+## Coefficients:
+##       v1        v2        v3      v1:x      v2:x      v3:x  
+## 43.59052  30.39026  22.73346  -0.13069  -0.04770  -0.02252</code></pre>
+<p><span class="math display">\[
+Y = \mu_1 v_1 + \mu_2 v_2 + \mu_3 v_3 + \beta_1 x v_1 + \beta_2 x v_2 + \beta_3 x v_3 +\epsilon
+\]</span></p>
+<ul>
+<li>4 Cilindros: <span class="math inline">\(Y = \mu_1 + \beta_1 x + \epsilon\)</span></li>
+<li>6 Cilindros: <span class="math inline">\(Y = \mu_2 + \beta_2 x + \epsilon\)</span></li>
+<li>8 Cilindros: <span class="math inline">\(Y = \mu_3 + \beta_3 x + \epsilon\)</span></li>
+</ul>
+<p>Usando los datos originales, tenemos (al menos) tres formas equivalentes de especificar el modelo de interacción con <code>R</code>.</p>
+<div class="sourceCode" id="cb781"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb781-1"><a href="interacciones-y-predictores-categóricos.html#cb781-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(mpg <span class="sc">~</span> disp <span class="sc">*</span> cyl, <span class="at">data =</span> autompg)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ disp * cyl, data = autompg)
+## 
+## Coefficients:
+## (Intercept)         disp         cyl6         cyl8    disp:cyl6    disp:cyl8  
+##    43.59052     -0.13069    -13.20026    -20.85706      0.08299      0.10817</code></pre>
+<div class="sourceCode" id="cb783"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb783-1"><a href="interacciones-y-predictores-categóricos.html#cb783-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> cyl <span class="sc">+</span> disp <span class="sc">:</span> cyl, <span class="at">data =</span> autompg)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ 0 + cyl + disp:cyl, data = autompg)
+## 
+## Coefficients:
+##      cyl4       cyl6       cyl8  cyl4:disp  cyl6:disp  cyl8:disp  
+##  43.59052   30.39026   22.73346   -0.13069   -0.04770   -0.02252</code></pre>
+<div class="sourceCode" id="cb785"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb785-1"><a href="interacciones-y-predictores-categóricos.html#cb785-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> disp <span class="sc">+</span> cyl <span class="sc">+</span> disp <span class="sc">:</span> cyl, <span class="at">data =</span> autompg)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ 0 + disp + cyl + disp:cyl, data = autompg)
+## 
+## Coefficients:
+##      disp       cyl4       cyl6       cyl8  disp:cyl6  disp:cyl8  
+##  -0.13069   43.59052   30.39026   22.73346    0.08299    0.10817</code></pre>
+<p>Todos se ajustan al mismo modelo, y lo que es más importante, cada uno utiliza seis parámetros, pero los coeficientes significan cosas ligeramente diferentes en cada uno. Sin embargo, una vez que se interpreten como pendientes e interceptos para las “tres líneas”, tendrán el mismo resultado.</p>
+<p>Utilice <code>?All.equal</code> para aprender sobre la función <code>all.equal()</code> y piense en cómo el siguiente código verifica que los residuos de los dos modelos son iguales.</p>
+<div class="sourceCode" id="cb787"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb787-1"><a href="interacciones-y-predictores-categóricos.html#cb787-1" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(<span class="fu">fitted</span>(<span class="fu">lm</span>(mpg <span class="sc">~</span> disp <span class="sc">*</span> cyl, <span class="at">data =</span> autompg)), </span>
+<span id="cb787-2"><a href="interacciones-y-predictores-categóricos.html#cb787-2" aria-hidden="true" tabindex="-1"></a>          <span class="fu">fitted</span>(<span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> cyl <span class="sc">+</span> disp <span class="sc">:</span> cyl, <span class="at">data =</span> autompg)))</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+</div>
+<div id="construcción-de-modelos-más-grandes" class="section level2" number="16.5">
+<h2><span class="header-section-number">16.5</span> Construcción de modelos más grandes</h2>
+<p>Ahora que hemos visto cómo incorporar predictores categóricos, así como términos de interacción, podemos comenzar a construir modelos mucho más grandes y flexibles que potencialmente pueden ajustarse mejor a los datos.</p>
+<p>Definamos un modelo “grande”,</p>
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \beta_4 x_1 x_2 + \beta_5 x_1 x_3 + \beta_6 x_2 x_3 + \beta_7 x_1 x_2 x_3 + \epsilon.
+\]</span></p>
+<p>Aquí,</p>
+<ul>
+<li><span class="math inline">\(Y\)</span> es <code>mpg</code>.</li>
+<li><span class="math inline">\(x_1\)</span> es <code>disp</code>.</li>
+<li><span class="math inline">\(x_2\)</span> es <code>hp</code>.</li>
+<li><span class="math inline">\(x_3\)</span> es <code>domestic</code>, que es una variable ficticia que definimos, donde <code>1</code> es un vehículo nacional.</li>
+</ul>
+<p>Lo primero a tener en cuenta, hemos incluido un nuevo término <span class="math inline">\(x_1x_2x_3\)</span> que es una interacción de tres vías. Los términos de interacción pueden ser cada vez mayores, hasta el número de predictores del modelo.</p>
+<p>Dado que usamos el término de interacción de tres vías, también usamos todas las interacciones de dos vías posibles, así como cada uno de los términos de primer orden (<strong>efecto principal</strong>). Este es el concepto de una <strong>jerarquía</strong>. Siempre que haya un término de “orden superior” en un modelo, también deben incluirse los términos relacionados de “orden inferior”. Matemáticamente, su inclusión o exclusión a veces es irrelevante, pero desde el punto de vista de la interpretación, es mejor seguir las reglas de la jerarquía.</p>
+<p>Hagamos un reordenamiento para obtener un “coeficiente” delante de <span class="math inline">\(x_1\)</span>.</p>
+<p><span class="math display">\[
+Y = \beta_0 + \beta_2 x_2 + \beta_3 x_3 + \beta_6 x_2 x_3 + (\beta_1 + \beta_4 x_2 + \beta_5 x_3 + \beta_7 x_2 x_3)x_1 + \epsilon.
+\]</span></p>
+<p>Específicamente, el “coeficiente” delante de <span class="math inline">\(x_1\)</span> es</p>
+<p><span class="math display">\[
+(\beta_1 + \beta_4 x_2 + \beta_5 x_3 + \beta_7 x_2 x_3).
+\]</span></p>
+<p>Analicemos este “coeficiente” para ayudarnos a comprender la idea de la <em>flexibilidad</em> de un modelo. Recordemos que,</p>
+<ul>
+<li><span class="math inline">\(\beta_1\)</span> es el coeficiente para un término de primer orden,</li>
+<li><span class="math inline">\(\beta_4\)</span> y <span class="math inline">\(\beta_5\)</span> son coeficientes para interacciones bidireccionales,</li>
+<li><span class="math inline">\(\beta_7\)</span> es el coeficiente de la interacción de tres vías.</li>
+</ul>
+<p>Si las interacciones de dos y tres vías no estuvieran en el modelo, todo el “coeficiente” sería simplemente</p>
+<p><span class="math display">\[
+\beta_1. 
+\]</span></p>
+<p>Por lo tanto, sin importar los valores de <span class="math inline">\(x_2\)</span> y <span class="math inline">\(x_3\)</span>, <span class="math inline">\(\beta_1\)</span> determinaría la relación entre <span class="math inline">\(x_1\)</span> (<code>disp</code>) y <span class="math inline">\(Y\)</span> (<code>mpg</code>).</p>
+<p>Con la adición de las interacciones bidireccionales, ahora el “coeficiente” sería</p>
+<p><span class="math display">\[
+(\beta_1 + \beta_4 x_2 + \beta_5 x_3).
+\]</span></p>
+<p>Ahora, cambiar <span class="math inline">\(x_1\)</span> (<code>disp</code>) tiene un efecto diferente en <span class="math inline">\(Y\)</span> (<code>mpg</code>), dependiendo de los valores de <span class="math inline">\(x_2\)</span> y <span class="math inline">\(x_3\)</span>.</p>
+<p>Por último, agregar la interacción de tres vías da el “coeficiente” completo</p>
+<p><span class="math display">\[
+(\beta_1 + \beta_4 x_2 + \beta_5 x_3 + \beta_7 x_2 x_3)
+\]</span></p>
+<p>que es aún más flexible. Ahora cambiar <span class="math inline">\(x_1\)</span> (<code>disp</code>) tiene un efecto diferente en <span class="math inline">\(Y\)</span> (<code>mpg</code>), dependiendo de los valores de <span class="math inline">\(x_2\)</span> y <span class="math inline">\(x_3\)</span>, pero de una manera más flexible que podemos ver con algunos reordenamientos más. Ahora, el “coeficiente” delante de <span class="math inline">\(x_3\)</span> depende de <span class="math inline">\(x_2\)</span>.</p>
+<p><span class="math display">\[
+(\beta_1 + \beta_4 x_2 + (\beta_5 + \beta_7 x_2) x_3)
+\]</span></p>
+<p>¡Es tan flexible que se está volviendo difícil de interpretar!</p>
+<p>Ajustemos este modelo de interacción de tres vías en <code>R</code>.</p>
+<div class="sourceCode" id="cb789"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb789-1"><a href="interacciones-y-predictores-categóricos.html#cb789-1" aria-hidden="true" tabindex="-1"></a>big_model <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> disp <span class="sc">*</span> hp <span class="sc">*</span> domestic, <span class="at">data =</span> autompg)</span>
+<span id="cb789-2"><a href="interacciones-y-predictores-categóricos.html#cb789-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(big_model)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ disp * hp * domestic, data = autompg)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -11.9410  -2.2147  -0.4008   1.9430  18.4094 
+## 
+## Coefficients:
+##                    Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)       6.065e+01  6.600e+00   9.189  &lt; 2e-16 ***
+## disp             -1.416e-01  6.344e-02  -2.232   0.0262 *  
+## hp               -3.545e-01  8.123e-02  -4.364 1.65e-05 ***
+## domestic         -1.257e+01  7.064e+00  -1.780   0.0759 .  
+## disp:hp           1.369e-03  6.727e-04   2.035   0.0426 *  
+## disp:domestic     4.933e-02  6.400e-02   0.771   0.4414    
+## hp:domestic       1.852e-01  8.709e-02   2.126   0.0342 *  
+## disp:hp:domestic -9.163e-04  6.768e-04  -1.354   0.1766    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.88 on 375 degrees of freedom
+## Multiple R-squared:   0.76,  Adjusted R-squared:  0.7556 
+## F-statistic: 169.7 on 7 and 375 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>¿Realmente necesitamos un modelo tan grande? Primero probemos la necesidad del término de interacción de tres vías. Es decir,</p>
+<p><span class="math display">\[
+H_0: \beta_7 = 0.
+\]</span></p>
+<p>Entonces,</p>
+<ul>
+<li>Modelo completo: <span class="math inline">\(Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \beta_4 x_1 x_2 + \beta_5 x_1 x_3 + \beta_6 x_2 x_3 + \beta_7 x_1 x_2 x_3 + \epsilon\)</span></li>
+<li>Modelo nulo: <span class="math inline">\(Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \beta_4 x_1 x_2 + \beta_5 x_1 x_3 + \beta_6 x_2 x_3 + \epsilon\)</span></li>
+</ul>
+<p>Ajustamos el modelo nulo en <code>R</code> como <code>two_way_int_mod</code>, luego usamos <code>anova()</code> para realizar una prueba <span class="math inline">\(F\)</span> como de costumbre.</p>
+<div class="sourceCode" id="cb791"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb791-1"><a href="interacciones-y-predictores-categóricos.html#cb791-1" aria-hidden="true" tabindex="-1"></a>two_way_int_mod <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> disp <span class="sc">*</span> hp <span class="sc">+</span> disp <span class="sc">*</span> domestic <span class="sc">+</span> hp <span class="sc">*</span> domestic, <span class="at">data =</span> autompg)</span>
+<span id="cb791-2"><a href="interacciones-y-predictores-categóricos.html#cb791-2" aria-hidden="true" tabindex="-1"></a><span class="co">#two_way_int_mod = lm(mpg ~ (disp + hp + domestic) ^ 2, data = autompg)</span></span>
+<span id="cb791-3"><a href="interacciones-y-predictores-categóricos.html#cb791-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(two_way_int_mod, big_model)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: mpg ~ disp * hp + disp * domestic + hp * domestic
+## Model 2: mpg ~ disp * hp * domestic
+##   Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)
+## 1    376 5673.2                           
+## 2    375 5645.6  1    27.599 1.8332 0.1766</code></pre>
+<p>Vemos que el valor p es algo grande, por lo que no lo rechazaríamos. Preferimos el modelo nulo más pequeño, menos flexible, sin la interacción de tres vías.</p>
+<p>Una nota rápida: el modelo completo todavía “ajusta mejor”. Tenga en cuenta que tiene un RMSE más pequeño que el modelo nulo, lo que significa que el modelo completo comete errores (cuadrados) más pequeños en promedio.</p>
+<div class="sourceCode" id="cb793"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb793-1"><a href="interacciones-y-predictores-categóricos.html#cb793-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">resid</span>(big_model) <span class="sc">^</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 14.74053</code></pre>
+<div class="sourceCode" id="cb795"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb795-1"><a href="interacciones-y-predictores-categóricos.html#cb795-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">resid</span>(two_way_int_mod) <span class="sc">^</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 14.81259</code></pre>
+<p>Sin embargo, no es mucho más pequeño. Incluso podríamos decir que la diferencia es insignificante. Esta es una idea a la que volveremos más adelante con mayor detalle.</p>
+<p>Ahora que hemos elegido el modelo sin la interacción de tres vías, ¿podemos ir más lejos? ¿Necesitamos las interacciones bidireccionales? Vamos a probar</p>
+<p><span class="math display">\[
+H_0: \beta_4 = \beta_5 = \beta_6 = 0.
+\]</span></p>
+<p>Recuerde que ya elegimos <span class="math inline">\(\beta_7=0\)</span>, entonces,</p>
+<ul>
+<li>Modelo completo: <span class="math inline">\(Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \beta_4 x_1 x_2 + \beta_5 x_1 x_3 + \beta_6 x_2 x_3 + \epsilon\)</span></li>
+<li>Modelo nulo: <span class="math inline">\(Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \epsilon\)</span></li>
+</ul>
+<p>Ajustamos el modelo nulo en <code>R</code> como <code>additive_mod</code>, luego usamos <code>anova()</code> para realizar una prueba <span class="math inline">\(F\)</span> como de costumbre.</p>
+<div class="sourceCode" id="cb797"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb797-1"><a href="interacciones-y-predictores-categóricos.html#cb797-1" aria-hidden="true" tabindex="-1"></a>additive_mod <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> disp <span class="sc">+</span> hp <span class="sc">+</span> domestic, <span class="at">data =</span> autompg)</span>
+<span id="cb797-2"><a href="interacciones-y-predictores-categóricos.html#cb797-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(additive_mod, two_way_int_mod)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: mpg ~ disp + hp + domestic
+## Model 2: mpg ~ disp * hp + disp * domestic + hp * domestic
+##   Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+## 1    379 7369.7                                  
+## 2    376 5673.2  3    1696.5 37.478 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Aquí el valor p es pequeño, por lo que rechazamos el nulo y preferimos el modelo completo (alternativo). De los modelos que hemos considerado, nuestra preferencia final es por</p>
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \beta_4 x_1 x_2 + \beta_5 x_1 x_3 + \beta_6 x_2 x_3 + \epsilon.
+\]</span></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="construcción-del-modelo.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="análisis-de-varianza.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 18 Diagnóstico de modelos | Estadística aplicada con R</title>
+  <meta name="description" content="Capítulo 18 Diagnóstico de modelos | Estadística aplicada con R" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 18 Diagnóstico de modelos | Estadística aplicada con R" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 18 Diagnóstico de modelos | Estadística aplicada con R" />
+  
+  
+  
+
+
+
+<meta name="date" content="2021-05-21" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  <link rel="shortcut icon" href="favicon.gif" type="image/x-icon" />
+<link rel="prev" href="análisis-de-varianza.html"/>
+<link rel="next" href="transformaciones.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Estadística aplicada con R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introducción</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#convenciones"><i class="fa fa-check"></i><b>1.1</b> Convenciones</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
+<li class="chapter" data-level="3" data-path="introducción-a-r.html"><a href="introducción-a-r.html"><i class="fa fa-check"></i><b>3</b> Introducción a <code>R</code></a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="introducción-a-r.html"><a href="introducción-a-r.html#primeros-pasos"><i class="fa fa-check"></i><b>3.1</b> Primeros pasos</a></li>
+<li class="chapter" data-level="3.2" data-path="introducción-a-r.html"><a href="introducción-a-r.html#cálculos-básicos"><i class="fa fa-check"></i><b>3.2</b> Cálculos básicos</a></li>
+<li class="chapter" data-level="3.3" data-path="introducción-a-r.html"><a href="introducción-a-r.html#obteniendo-ayuda"><i class="fa fa-check"></i><b>3.3</b> Obteniendo ayuda</a></li>
+<li class="chapter" data-level="3.4" data-path="introducción-a-r.html"><a href="introducción-a-r.html#instalación-de-paquetes"><i class="fa fa-check"></i><b>3.4</b> Instalación de paquetes</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="datos-y-programación.html"><a href="datos-y-programación.html"><i class="fa fa-check"></i><b>4</b> Datos y programación</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="datos-y-programación.html"><a href="datos-y-programación.html#tipos-de-datos"><i class="fa fa-check"></i><b>4.1</b> Tipos de datos</a></li>
+<li class="chapter" data-level="4.2" data-path="datos-y-programación.html"><a href="datos-y-programación.html#estructuras-de-datos"><i class="fa fa-check"></i><b>4.2</b> Estructuras de datos</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="datos-y-programación.html"><a href="datos-y-programación.html#vectores"><i class="fa fa-check"></i><b>4.2.1</b> Vectores</a></li>
+<li class="chapter" data-level="4.2.2" data-path="datos-y-programación.html"><a href="datos-y-programación.html#vectorización"><i class="fa fa-check"></i><b>4.2.2</b> Vectorización</a></li>
+<li class="chapter" data-level="4.2.3" data-path="datos-y-programación.html"><a href="datos-y-programación.html#operadores-logicos"><i class="fa fa-check"></i><b>4.2.3</b> Operadores logicos</a></li>
+<li class="chapter" data-level="4.2.4" data-path="datos-y-programación.html"><a href="datos-y-programación.html#más-vectorización"><i class="fa fa-check"></i><b>4.2.4</b> Más vectorización</a></li>
+<li class="chapter" data-level="4.2.5" data-path="datos-y-programación.html"><a href="datos-y-programación.html#matrices"><i class="fa fa-check"></i><b>4.2.5</b> Matrices</a></li>
+<li class="chapter" data-level="4.2.6" data-path="datos-y-programación.html"><a href="datos-y-programación.html#listas"><i class="fa fa-check"></i><b>4.2.6</b> Listas</a></li>
+<li class="chapter" data-level="4.2.7" data-path="datos-y-programación.html"><a href="datos-y-programación.html#marcos-de-datos"><i class="fa fa-check"></i><b>4.2.7</b> Marcos de datos</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="datos-y-programación.html"><a href="datos-y-programación.html#conceptos-básicos-de-programación"><i class="fa fa-check"></i><b>4.3</b> Conceptos básicos de programación</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="datos-y-programación.html"><a href="datos-y-programación.html#flujo-de-control"><i class="fa fa-check"></i><b>4.3.1</b> Flujo de control</a></li>
+<li class="chapter" data-level="4.3.2" data-path="datos-y-programación.html"><a href="datos-y-programación.html#funciones"><i class="fa fa-check"></i><b>4.3.2</b> Funciones</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>5</b> Literature</a></li>
+<li class="chapter" data-level="6" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>6</b> Methods</a></li>
+<li class="chapter" data-level="7" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html"><i class="fa fa-check"></i><b>7</b> Resumen de datos</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#resumen-estadístico"><i class="fa fa-check"></i><b>7.1</b> Resumen estadístico</a>
+<ul>
+<li class="chapter" data-level="" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#tendencia-central"><i class="fa fa-check"></i>Tendencia central</a></li>
+<li class="chapter" data-level="" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#dispersión"><i class="fa fa-check"></i>Dispersión</a></li>
+<li class="chapter" data-level="" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#categórica"><i class="fa fa-check"></i>Categórica</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#graficas"><i class="fa fa-check"></i><b>7.2</b> Graficas</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#histogramas"><i class="fa fa-check"></i><b>7.2.1</b> Histogramas</a></li>
+<li class="chapter" data-level="7.2.2" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#gráfico-de-barras"><i class="fa fa-check"></i><b>7.2.2</b> Gráfico de barras</a></li>
+<li class="chapter" data-level="7.2.3" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#diagramas-de-cajas"><i class="fa fa-check"></i><b>7.2.3</b> Diagramas de cajas</a></li>
+<li class="chapter" data-level="7.2.4" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#gráfico-de-dispersión"><i class="fa fa-check"></i><b>7.2.4</b> Gráfico de dispersión</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="applications.html"><a href="applications.html"><i class="fa fa-check"></i><b>8</b> Applications</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="applications.html"><a href="applications.html#example-one"><i class="fa fa-check"></i><b>8.1</b> Example one</a></li>
+<li class="chapter" data-level="8.2" data-path="applications.html"><a href="applications.html#example-two"><i class="fa fa-check"></i><b>8.2</b> Example two</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html"><i class="fa fa-check"></i><b>9</b> Probabilidad y estadística en <code>R</code></a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#probabilidad-en-r"><i class="fa fa-check"></i><b>9.1</b> Probabilidad en <code>R</code></a>
+<ul>
+<li class="chapter" data-level="9.1.1" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#distribuciones"><i class="fa fa-check"></i><b>9.1.1</b> Distribuciones</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#pruebas-de-hipótesis-en-r"><i class="fa fa-check"></i><b>9.2</b> Pruebas de hipótesis en <code>R</code></a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#prueba-t-de-una-muestra-revisión"><i class="fa fa-check"></i><b>9.2.1</b> Prueba t de una muestra: revisión</a></li>
+<li class="chapter" data-level="9.2.2" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#prueba-t-de-una-muestra-ejemplo"><i class="fa fa-check"></i><b>9.2.2</b> Prueba t de una muestra: ejemplo</a></li>
+<li class="chapter" data-level="9.2.3" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#prueba-t-de-dos-muestras-revisión"><i class="fa fa-check"></i><b>9.2.3</b> Prueba t de dos muestras: revisión</a></li>
+<li class="chapter" data-level="9.2.4" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#prueba-t-de-dos-muestras-ejemplo"><i class="fa fa-check"></i><b>9.2.4</b> Prueba t de dos muestras: Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#simulación"><i class="fa fa-check"></i><b>9.3</b> Simulación</a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#diferencias-emparejadas"><i class="fa fa-check"></i><b>9.3.1</b> Diferencias emparejadas</a></li>
+<li class="chapter" data-level="9.3.2" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#distribución-de-una-media-muestral"><i class="fa fa-check"></i><b>9.3.2</b> Distribución de una media muestral</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="recursos-r.html"><a href="recursos-r.html"><i class="fa fa-check"></i><b>10</b> Recursos <code>R</code></a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="recursos-r.html"><a href="recursos-r.html#referencias-y-tutoriales-para-principiantes"><i class="fa fa-check"></i><b>10.1</b> Referencias y tutoriales para principiantes</a></li>
+<li class="chapter" data-level="10.2" data-path="recursos-r.html"><a href="recursos-r.html#referencias-intermedias"><i class="fa fa-check"></i><b>10.2</b> Referencias intermedias</a></li>
+<li class="chapter" data-level="10.3" data-path="recursos-r.html"><a href="recursos-r.html#referencias-avanzadas"><i class="fa fa-check"></i><b>10.3</b> Referencias avanzadas</a></li>
+<li class="chapter" data-level="10.4" data-path="recursos-r.html"><a href="recursos-r.html#comparaciones-rápidas-con-otros-lenguajes"><i class="fa fa-check"></i><b>10.4</b> Comparaciones rápidas con otros lenguajes</a></li>
+<li class="chapter" data-level="10.5" data-path="recursos-r.html"><a href="recursos-r.html#vídeos-de-rstudio-y-rmarkdown"><i class="fa fa-check"></i><b>10.5</b> Vídeos de RStudio y RMarkdown</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>11</b> Final Words</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="12" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html"><i class="fa fa-check"></i><b>12</b> Regresión lineal simple</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#modelado"><i class="fa fa-check"></i><b>12.1</b> Modelado</a>
+<ul>
+<li class="chapter" data-level="12.1.1" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#modelo-de-regresión-lineal-simple"><i class="fa fa-check"></i><b>12.1.1</b> Modelo de regresión lineal simple</a></li>
+</ul></li>
+<li class="chapter" data-level="12.2" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#enfoque-de-mínimos-cuadrados"><i class="fa fa-check"></i><b>12.2</b> Enfoque de mínimos cuadrados</a>
+<ul>
+<li class="chapter" data-level="12.2.1" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#haciendo-predicciones"><i class="fa fa-check"></i><b>12.2.1</b> Haciendo predicciones</a></li>
+<li class="chapter" data-level="12.2.2" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#residuales"><i class="fa fa-check"></i><b>12.2.2</b> Residuales</a></li>
+<li class="chapter" data-level="12.2.3" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#estimación-de-la-varianza"><i class="fa fa-check"></i><b>12.2.3</b> Estimación de la varianza</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#descomposición-de-variación"><i class="fa fa-check"></i><b>12.3</b> Descomposición de variación</a>
+<ul>
+<li class="chapter" data-level="12.3.1" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#coeficiente-de-determinación"><i class="fa fa-check"></i><b>12.3.1</b> Coeficiente de determinación</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#la-función-lm"><i class="fa fa-check"></i><b>12.4</b> La función <code>lm</code></a></li>
+<li class="chapter" data-level="12.5" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#enfoque-de-estimación-de-máxima-verosimilitud-mle"><i class="fa fa-check"></i><b>12.5</b> Enfoque de estimación de máxima verosimilitud (MLE)</a></li>
+<li class="chapter" data-level="12.6" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#simulando-slr"><i class="fa fa-check"></i><b>12.6</b> Simulando SLR</a></li>
+<li class="chapter" data-level="12.7" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#historia"><i class="fa fa-check"></i><b>12.7</b> Historia</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html"><i class="fa fa-check"></i><b>13</b> Inferencia para regresión lineal simple</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#teorema-de-gauss-markov"><i class="fa fa-check"></i><b>13.1</b> Teorema de Gauss-Markov</a></li>
+<li class="chapter" data-level="13.2" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#distribuciones-muestrales"><i class="fa fa-check"></i><b>13.2</b> Distribuciones muestrales</a>
+<ul>
+<li class="chapter" data-level="13.2.1" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#simular-distribuciones-muestrales"><i class="fa fa-check"></i><b>13.2.1</b> Simular distribuciones muestrales</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#errores-estándar"><i class="fa fa-check"></i><b>13.3</b> Errores estándar</a></li>
+<li class="chapter" data-level="13.4" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#intervalos-de-confianza-para-pendiente-e-intercepto"><i class="fa fa-check"></i><b>13.4</b> Intervalos de confianza para pendiente e Intercepto</a></li>
+<li class="chapter" data-level="13.5" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#pruebas-de-hipótesis"><i class="fa fa-check"></i><b>13.5</b> Pruebas de hipótesis</a></li>
+<li class="chapter" data-level="13.6" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#ejemplo-cars"><i class="fa fa-check"></i><b>13.6</b> Ejemplo <code>cars</code></a>
+<ul>
+<li class="chapter" data-level="13.6.1" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#pruebas-en-r"><i class="fa fa-check"></i><b>13.6.1</b> Pruebas en <code>R</code></a></li>
+<li class="chapter" data-level="13.6.2" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#significancia-de-la-regresión-prueba-t."><i class="fa fa-check"></i><b>13.6.2</b> Significancia de la regresión, prueba t.</a></li>
+<li class="chapter" data-level="13.6.3" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#intervalos-de-confianza-en-r"><i class="fa fa-check"></i><b>13.6.3</b> Intervalos de confianza en <code>R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="13.7" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#intervalo-de-confianza-para-la-respuesta-promedio"><i class="fa fa-check"></i><b>13.7</b> Intervalo de confianza para la respuesta Promedio</a></li>
+<li class="chapter" data-level="13.8" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#intervalo-de-predicción-para-nuevas-observaciones"><i class="fa fa-check"></i><b>13.8</b> Intervalo de predicción para nuevas observaciones</a></li>
+<li class="chapter" data-level="13.9" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#bandas-de-confianza-y-predicción"><i class="fa fa-check"></i><b>13.9</b> Bandas de confianza y predicción</a></li>
+<li class="chapter" data-level="13.10" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#significancia-de-la-regresión-prueba-f"><i class="fa fa-check"></i><b>13.10</b> Significancia de la regresión, prueba F</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html"><i class="fa fa-check"></i><b>14</b> Regresión lineal múltiple</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#enfoque-matricial-para-la-regresión"><i class="fa fa-check"></i><b>14.1</b> Enfoque matricial para la regresión</a></li>
+<li class="chapter" data-level="14.2" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#distribución-muestral"><i class="fa fa-check"></i><b>14.2</b> Distribución muestral</a>
+<ul>
+<li class="chapter" data-level="14.2.1" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#pruebas-de-un-solo-parámetro"><i class="fa fa-check"></i><b>14.2.1</b> Pruebas de un solo parámetro</a></li>
+<li class="chapter" data-level="14.2.2" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#intervalos-de-confianza"><i class="fa fa-check"></i><b>14.2.2</b> Intervalos de confianza</a></li>
+<li class="chapter" data-level="14.2.3" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#intervalos-de-confianza-para-la-respuesta-media"><i class="fa fa-check"></i><b>14.2.3</b> Intervalos de confianza para la respuesta media</a></li>
+<li class="chapter" data-level="14.2.4" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#intervalos-de-predicción"><i class="fa fa-check"></i><b>14.2.4</b> Intervalos de predicción</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#significancia-de-la-regresión"><i class="fa fa-check"></i><b>14.3</b> Significancia de la regresión</a></li>
+<li class="chapter" data-level="14.4" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#modelos-anidados"><i class="fa fa-check"></i><b>14.4</b> Modelos anidados</a></li>
+<li class="chapter" data-level="14.5" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#simulación-1"><i class="fa fa-check"></i><b>14.5</b> Simulación</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html"><i class="fa fa-check"></i><b>15</b> Construcción del modelo</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#familia-forma-y-ajuste."><i class="fa fa-check"></i><b>15.1</b> Familia, forma, y ajuste.</a>
+<ul>
+<li class="chapter" data-level="15.1.1" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#ajuste."><i class="fa fa-check"></i><b>15.1.1</b> Ajuste.</a></li>
+<li class="chapter" data-level="15.1.2" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#forma"><i class="fa fa-check"></i><b>15.1.2</b> Forma</a></li>
+<li class="chapter" data-level="15.1.3" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#familia"><i class="fa fa-check"></i><b>15.1.3</b> Familia</a></li>
+<li class="chapter" data-level="15.1.4" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#modelo-asumido-modelo-ajustado"><i class="fa fa-check"></i><b>15.1.4</b> Modelo asumido, modelo ajustado</a></li>
+</ul></li>
+<li class="chapter" data-level="15.2" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#explicación-versus-predicción"><i class="fa fa-check"></i><b>15.2</b> Explicación versus predicción</a>
+<ul>
+<li class="chapter" data-level="15.2.1" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#explicación"><i class="fa fa-check"></i><b>15.2.1</b> Explicación</a></li>
+<li class="chapter" data-level="15.2.2" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#predicción"><i class="fa fa-check"></i><b>15.2.2</b> Predicción</a></li>
+</ul></li>
+<li class="chapter" data-level="15.3" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#resumen"><i class="fa fa-check"></i><b>15.3</b> Resumen</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html"><i class="fa fa-check"></i><b>16</b> Interacciones y predictores categóricos</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#variables-ficticias-dummy"><i class="fa fa-check"></i><b>16.1</b> Variables ficticias (Dummy)</a></li>
+<li class="chapter" data-level="16.2" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#interacciones"><i class="fa fa-check"></i><b>16.2</b> Interacciones</a></li>
+<li class="chapter" data-level="16.3" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#variables-factor"><i class="fa fa-check"></i><b>16.3</b> Variables factor</a>
+<ul>
+<li class="chapter" data-level="16.3.1" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#factores-con-más-de-dos-niveles"><i class="fa fa-check"></i><b>16.3.1</b> Factores con más de dos niveles</a></li>
+</ul></li>
+<li class="chapter" data-level="16.4" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#parametrización"><i class="fa fa-check"></i><b>16.4</b> Parametrización</a></li>
+<li class="chapter" data-level="16.5" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#construcción-de-modelos-más-grandes"><i class="fa fa-check"></i><b>16.5</b> Construcción de modelos más grandes</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html"><i class="fa fa-check"></i><b>17</b> Análisis de varianza</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#experimentos"><i class="fa fa-check"></i><b>17.1</b> Experimentos</a></li>
+<li class="chapter" data-level="17.2" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#prueba-t-de-dos-muestras"><i class="fa fa-check"></i><b>17.2</b> Prueba t de dos muestras</a></li>
+<li class="chapter" data-level="17.3" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#anova-de-una-vía"><i class="fa fa-check"></i><b>17.3</b> ANOVA de una vía</a>
+<ul>
+<li class="chapter" data-level="17.3.1" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#variables-factor-1"><i class="fa fa-check"></i><b>17.3.1</b> Variables factor</a></li>
+<li class="chapter" data-level="17.3.2" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#algo-de-simulación"><i class="fa fa-check"></i><b>17.3.2</b> Algo de simulación</a></li>
+<li class="chapter" data-level="17.3.3" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#potencia"><i class="fa fa-check"></i><b>17.3.3</b> Potencia</a></li>
+</ul></li>
+<li class="chapter" data-level="17.4" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#pruebas-post-hoc"><i class="fa fa-check"></i><b>17.4</b> Pruebas Post Hoc</a></li>
+<li class="chapter" data-level="17.5" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#anova-de-dos-vías"><i class="fa fa-check"></i><b>17.5</b> ANOVA de dos vías</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html"><i class="fa fa-check"></i><b>18</b> Diagnóstico de modelos</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#supuestos-del-modelo"><i class="fa fa-check"></i><b>18.1</b> Supuestos del modelo</a></li>
+<li class="chapter" data-level="18.2" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#comprobación-de-supuestos"><i class="fa fa-check"></i><b>18.2</b> Comprobación de supuestos</a>
+<ul>
+<li class="chapter" data-level="18.2.1" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#gráfica-de-ajustados-versus-residuos"><i class="fa fa-check"></i><b>18.2.1</b> Gráfica de ajustados versus residuos</a></li>
+<li class="chapter" data-level="18.2.2" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#prueba-de-breusch-pagan"><i class="fa fa-check"></i><b>18.2.2</b> Prueba de Breusch-Pagan</a></li>
+<li class="chapter" data-level="18.2.3" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#histogramas-1"><i class="fa fa-check"></i><b>18.2.3</b> Histogramas</a></li>
+<li class="chapter" data-level="18.2.4" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#gráficos-q-q"><i class="fa fa-check"></i><b>18.2.4</b> Gráficos Q-Q</a></li>
+<li class="chapter" data-level="18.2.5" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#prueba-de-shapiro-wilk"><i class="fa fa-check"></i><b>18.2.5</b> Prueba de Shapiro-Wilk</a></li>
+</ul></li>
+<li class="chapter" data-level="18.3" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#observaciones-inusuales"><i class="fa fa-check"></i><b>18.3</b> Observaciones inusuales</a>
+<ul>
+<li class="chapter" data-level="18.3.1" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#apalancamiento"><i class="fa fa-check"></i><b>18.3.1</b> Apalancamiento</a></li>
+<li class="chapter" data-level="18.3.2" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#valores-atípicos"><i class="fa fa-check"></i><b>18.3.2</b> Valores atípicos</a></li>
+<li class="chapter" data-level="18.3.3" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#influencia"><i class="fa fa-check"></i><b>18.3.3</b> Influencia</a></li>
+</ul></li>
+<li class="chapter" data-level="18.4" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#ejemplos-de-análisis-de-datos"><i class="fa fa-check"></i><b>18.4</b> Ejemplos de análisis de datos</a>
+<ul>
+<li class="chapter" data-level="18.4.1" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#buenos-diagnósticos"><i class="fa fa-check"></i><b>18.4.1</b> Buenos diagnósticos</a></li>
+<li class="chapter" data-level="18.4.2" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#diagnóstico-sospechoso"><i class="fa fa-check"></i><b>18.4.2</b> Diagnóstico sospechoso</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="transformaciones.html"><a href="transformaciones.html"><i class="fa fa-check"></i><b>19</b> Transformaciones</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="transformaciones.html"><a href="transformaciones.html#transformación-de-respuesta"><i class="fa fa-check"></i><b>19.1</b> Transformación de respuesta</a>
+<ul>
+<li class="chapter" data-level="19.1.1" data-path="transformaciones.html"><a href="transformaciones.html#transformaciones-estabilizadoras-de-varianza"><i class="fa fa-check"></i><b>19.1.1</b> Transformaciones estabilizadoras de varianza</a></li>
+<li class="chapter" data-level="19.1.2" data-path="transformaciones.html"><a href="transformaciones.html#transformaciones-de-box-cox"><i class="fa fa-check"></i><b>19.1.2</b> Transformaciones de Box-Cox</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="transformaciones.html"><a href="transformaciones.html#transformación-del-predictor"><i class="fa fa-check"></i><b>19.2</b> Transformación del predictor</a>
+<ul>
+<li class="chapter" data-level="19.2.1" data-path="transformaciones.html"><a href="transformaciones.html#polinomios"><i class="fa fa-check"></i><b>19.2.1</b> Polinomios</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="transformaciones.html"><a href="transformaciones.html#transformaciones-de-respuesta"><i class="fa fa-check"></i>Transformaciones de respuesta</a></li>
+<li class="chapter" data-level="" data-path="transformaciones.html"><a href="transformaciones.html#transformaciones-de-predictores"><i class="fa fa-check"></i>Transformaciones de predictores</a>
+<ul>
+<li class="chapter" data-level="19.2.2" data-path="transformaciones.html"><a href="transformaciones.html#un-modelo-cuadrático"><i class="fa fa-check"></i><b>19.2.2</b> Un modelo cuadrático</a></li>
+<li class="chapter" data-level="19.2.3" data-path="transformaciones.html"><a href="transformaciones.html#sobreajuste-y-extrapolación"><i class="fa fa-check"></i><b>19.2.3</b> Sobreajuste y extrapolación</a></li>
+<li class="chapter" data-level="19.2.4" data-path="transformaciones.html"><a href="transformaciones.html#comparación-de-modelos-polinomiales"><i class="fa fa-check"></i><b>19.2.4</b> Comparación de modelos polinomiales</a></li>
+<li class="chapter" data-level="19.2.5" data-path="transformaciones.html"><a href="transformaciones.html#poly-función-y-polinomios-ortogonales"><i class="fa fa-check"></i><b>19.2.5</b> <code>poly()</code> Función y polinomios ortogonales</a></li>
+<li class="chapter" data-level="19.2.6" data-path="transformaciones.html"><a href="transformaciones.html#función-de-inhibición"><i class="fa fa-check"></i><b>19.2.6</b> Función de inhibición</a></li>
+<li class="chapter" data-level="19.2.7" data-path="transformaciones.html"><a href="transformaciones.html#ejemplo-con-datos"><i class="fa fa-check"></i><b>19.2.7</b> Ejemplo con datos</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="colinealidad.html"><a href="colinealidad.html"><i class="fa fa-check"></i><b>20</b> Colinealidad</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="colinealidad.html"><a href="colinealidad.html#colinealidad-exacta"><i class="fa fa-check"></i><b>20.1</b> Colinealidad exacta</a></li>
+<li class="chapter" data-level="20.2" data-path="colinealidad.html"><a href="colinealidad.html#colinealidad-1"><i class="fa fa-check"></i><b>20.2</b> Colinealidad</a>
+<ul>
+<li class="chapter" data-level="20.2.1" data-path="colinealidad.html"><a href="colinealidad.html#factor-de-inflación-de-la-varianza."><i class="fa fa-check"></i><b>20.2.1</b> Factor de inflación de la varianza.</a></li>
+</ul></li>
+<li class="chapter" data-level="20.3" data-path="colinealidad.html"><a href="colinealidad.html#simulación-2"><i class="fa fa-check"></i><b>20.3</b> Simulación</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html"><i class="fa fa-check"></i><b>21</b> Selección de variables y construcción de modelos</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#criterio-de-calidad"><i class="fa fa-check"></i><b>21.1</b> Criterio de calidad</a>
+<ul>
+<li class="chapter" data-level="21.1.1" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#criterio-de-información-de-akaike"><i class="fa fa-check"></i><b>21.1.1</b> Criterio de información de Akaike</a></li>
+<li class="chapter" data-level="21.1.2" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#criterio-de-información-bayesiano"><i class="fa fa-check"></i><b>21.1.2</b> Criterio de información Bayesiano</a></li>
+<li class="chapter" data-level="21.1.3" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#r-cuadrado-ajustado"><i class="fa fa-check"></i><b>21.1.3</b> R cuadrado ajustado</a></li>
+<li class="chapter" data-level="21.1.4" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#rmse-con-validación-cruzada"><i class="fa fa-check"></i><b>21.1.4</b> RMSE con validación cruzada</a></li>
+</ul></li>
+<li class="chapter" data-level="21.2" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#procedimientos-de-selección"><i class="fa fa-check"></i><b>21.2</b> Procedimientos de selección</a>
+<ul>
+<li class="chapter" data-level="21.2.1" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#búsqueda-hacia-atrás-backward"><i class="fa fa-check"></i><b>21.2.1</b> Búsqueda hacia atrás (Backward)</a></li>
+<li class="chapter" data-level="21.2.2" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#búsqueda-hacia-adelante-forward"><i class="fa fa-check"></i><b>21.2.2</b> Búsqueda hacia adelante (Forward)</a></li>
+<li class="chapter" data-level="21.2.3" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#búsqueda-por-pasos-stepwise"><i class="fa fa-check"></i><b>21.2.3</b> Búsqueda por pasos (Stepwise)</a></li>
+<li class="chapter" data-level="21.2.4" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#búsqueda-exhaustiva"><i class="fa fa-check"></i><b>21.2.4</b> Búsqueda exhaustiva</a></li>
+</ul></li>
+<li class="chapter" data-level="21.3" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#términos-de-orden-superior"><i class="fa fa-check"></i><b>21.3</b> Términos de orden superior</a></li>
+<li class="chapter" data-level="21.4" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#explicación-versus-predicción-1"><i class="fa fa-check"></i><b>21.4</b> Explicación versus predicción</a>
+<ul>
+<li class="chapter" data-level="21.4.1" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#explicación-1"><i class="fa fa-check"></i><b>21.4.1</b> Explicación</a></li>
+<li class="chapter" data-level="21.4.2" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#predicción-1"><i class="fa fa-check"></i><b>21.4.2</b> Predicción</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="regresión-logística.html"><a href="regresión-logística.html"><i class="fa fa-check"></i><b>22</b> Regresión logística</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="regresión-logística.html"><a href="regresión-logística.html#modelos-lineales-generalizados"><i class="fa fa-check"></i><b>22.1</b> Modelos lineales generalizados</a></li>
+<li class="chapter" data-level="22.2" data-path="regresión-logística.html"><a href="regresión-logística.html#respuesta-binaria"><i class="fa fa-check"></i><b>22.2</b> Respuesta binaria</a>
+<ul>
+<li class="chapter" data-level="22.2.1" data-path="regresión-logística.html"><a href="regresión-logística.html#ajuste-de-la-regresión-logística"><i class="fa fa-check"></i><b>22.2.1</b> Ajuste de la regresión logística</a></li>
+<li class="chapter" data-level="22.2.2" data-path="regresión-logística.html"><a href="regresión-logística.html#problemas-de-ajuste"><i class="fa fa-check"></i><b>22.2.2</b> Problemas de ajuste</a></li>
+<li class="chapter" data-level="22.2.3" data-path="regresión-logística.html"><a href="regresión-logística.html#ejemplos-de-simulación"><i class="fa fa-check"></i><b>22.2.3</b> Ejemplos de simulación</a></li>
+</ul></li>
+<li class="chapter" data-level="22.3" data-path="regresión-logística.html"><a href="regresión-logística.html#trabajar-con-regresión-logística"><i class="fa fa-check"></i><b>22.3</b> Trabajar con regresión logística</a>
+<ul>
+<li class="chapter" data-level="22.3.1" data-path="regresión-logística.html"><a href="regresión-logística.html#pruebas-con-glms"><i class="fa fa-check"></i><b>22.3.1</b> Pruebas con GLMs</a></li>
+<li class="chapter" data-level="22.3.2" data-path="regresión-logística.html"><a href="regresión-logística.html#prueba-de-wald"><i class="fa fa-check"></i><b>22.3.2</b> Prueba de Wald</a></li>
+<li class="chapter" data-level="22.3.3" data-path="regresión-logística.html"><a href="regresión-logística.html#prueba-de-razón-de-verosimilitud"><i class="fa fa-check"></i><b>22.3.3</b> Prueba de razón de verosimilitud</a></li>
+<li class="chapter" data-level="22.3.4" data-path="regresión-logística.html"><a href="regresión-logística.html#ejemplo-saheart"><i class="fa fa-check"></i><b>22.3.4</b> Ejemplo <code>SAheart</code></a></li>
+<li class="chapter" data-level="22.3.5" data-path="regresión-logística.html"><a href="regresión-logística.html#intervalos-de-confianza-1"><i class="fa fa-check"></i><b>22.3.5</b> Intervalos de confianza</a></li>
+<li class="chapter" data-level="22.3.6" data-path="regresión-logística.html"><a href="regresión-logística.html#intervalos-de-confianza-para-la-respuesta-promedio"><i class="fa fa-check"></i><b>22.3.6</b> Intervalos de confianza para la respuesta promedio</a></li>
+<li class="chapter" data-level="22.3.7" data-path="regresión-logística.html"><a href="regresión-logística.html#sintaxis-de-la-fórmula"><i class="fa fa-check"></i><b>22.3.7</b> Sintaxis de la fórmula</a></li>
+<li class="chapter" data-level="22.3.8" data-path="regresión-logística.html"><a href="regresión-logística.html#desviación"><i class="fa fa-check"></i><b>22.3.8</b> Desviación</a></li>
+</ul></li>
+<li class="chapter" data-level="22.4" data-path="regresión-logística.html"><a href="regresión-logística.html#clasificación"><i class="fa fa-check"></i><b>22.4</b> Clasificación</a>
+<ul>
+<li class="chapter" data-level="22.4.1" data-path="regresión-logística.html"><a href="regresión-logística.html#ejemplo-spam"><i class="fa fa-check"></i><b>22.4.1</b> Ejemplo <code>spam</code></a></li>
+<li class="chapter" data-level="22.4.2" data-path="regresión-logística.html"><a href="regresión-logística.html#evaluar-clasificadores"><i class="fa fa-check"></i><b>22.4.2</b> Evaluar clasificadores</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="más-allá.html"><a href="más-allá.html"><i class="fa fa-check"></i><b>23</b> Más allá</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="más-allá.html"><a href="más-allá.html#rstudio"><i class="fa fa-check"></i><b>23.1</b> RStudio</a></li>
+<li class="chapter" data-level="23.2" data-path="más-allá.html"><a href="más-allá.html#tidy-data"><i class="fa fa-check"></i><b>23.2</b> Tidy Data</a></li>
+<li class="chapter" data-level="23.3" data-path="más-allá.html"><a href="más-allá.html#visualización"><i class="fa fa-check"></i><b>23.3</b> Visualización</a></li>
+<li class="chapter" data-level="23.4" data-path="más-allá.html"><a href="más-allá.html#aplicaciones-web"><i class="fa fa-check"></i><b>23.4</b> Aplicaciones web</a></li>
+<li class="chapter" data-level="23.5" data-path="más-allá.html"><a href="más-allá.html#diseño-experimental"><i class="fa fa-check"></i><b>23.5</b> Diseño experimental</a></li>
+<li class="chapter" data-level="23.6" data-path="más-allá.html"><a href="más-allá.html#aprendizaje-automático-machine-learning"><i class="fa fa-check"></i><b>23.6</b> Aprendizaje automático (Machine Learning)</a>
+<ul>
+<li class="chapter" data-level="23.6.1" data-path="más-allá.html"><a href="más-allá.html#aprendizaje-profundo-deep-learning"><i class="fa fa-check"></i><b>23.6.1</b> Aprendizaje profundo (Deep Learning)</a></li>
+</ul></li>
+<li class="chapter" data-level="23.7" data-path="más-allá.html"><a href="más-allá.html#series-de-tiempo"><i class="fa fa-check"></i><b>23.7</b> Series de tiempo</a></li>
+<li class="chapter" data-level="23.8" data-path="más-allá.html"><a href="más-allá.html#bayesiana"><i class="fa fa-check"></i><b>23.8</b> Bayesiana</a></li>
+<li class="chapter" data-level="23.9" data-path="más-allá.html"><a href="más-allá.html#computación-de-alto-rendimiento."><i class="fa fa-check"></i><b>23.9</b> Computación de alto rendimiento.</a></li>
+<li class="chapter" data-level="23.10" data-path="más-allá.html"><a href="más-allá.html#recursos-adicionales-de-r"><i class="fa fa-check"></i><b>23.10</b> Recursos adicionales de <code>R</code></a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/daviddalpiaz/appliedstats" target="blank">&copy; 2020 Adapatado de David Dalpiaz</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Estadística aplicada con R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="diagnóstico-de-modelos" class="section level1" number="18">
+<h1><span class="header-section-number">Capítulo 18</span> Diagnóstico de modelos</h1>
+<blockquote>
+<p>“Tus suposiciones son tus ventanas al mundo. Frótelas de vez en cuando o la luz no entrará.”</p>
+<p>— <strong>Isaac Asimov</strong></p>
+</blockquote>
+<p>Después de leer este capítulo, podrá:</p>
+<ul>
+<li>Comprender los supuestos de un modelo de regresión.</li>
+<li>Evaluar los supuestos del modelo de regresión mediante visualizaciones y pruebas.</li>
+<li>Comprender el apalancamiento, los valores atípicos y los puntos influyentes.</li>
+<li>Ser capaz de identificar observaciones inusuales en modelos de regresión.</li>
+</ul>
+<div id="supuestos-del-modelo" class="section level2" number="18.1">
+<h2><span class="header-section-number">18.1</span> Supuestos del modelo</h2>
+<p>Recuerde el modelo de regresión lineal múltiple que hemos definido.</p>
+<p><span class="math display">\[
+Y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_{p-1} x_{i(p-1)} + \epsilon_i, \qquad i = 1, 2, \ldots, n.
+\]</span></p>
+<p>Usando notación matricial, este modelo se puede escribir mucho más resumido como</p>
+<p><span class="math display">\[
+Y = X \beta + \epsilon.
+\]</span></p>
+<p>Dados los datos, encontramos las estimaciones para los parámetros <span class="math inline">\(\beta\)</span> usando</p>
+<p><span class="math display">\[
+\hat{\beta} = \left(  X^\top X  \right)^{-1}X^\top y.
+\]</span></p>
+<p>Luego, notamos que estas estimaciones tenían una media</p>
+<p><span class="math display">\[
+\text{E}[\hat{\beta}] = \beta,
+\]</span></p>
+<p>y varianza</p>
+<p><span class="math display">\[
+\text{Var}[\hat{\beta}] = \sigma^2 \left(  X^\top X  \right)^{-1}.
+\]</span></p>
+<p>En particular, un parámetro individual, digamos <span class="math inline">\(\hat{\beta}_j\)</span> tenía una distribución normal</p>
+<p><span class="math display">\[
+\hat{\beta}_j \sim N\left(\beta_j, \sigma^2 C_{jj}  \right)
+\]</span></p>
+<p>donde <span class="math inline">\(C\)</span> fue la matriz definida como</p>
+<p><span class="math display">\[
+C = \left(X^\top X\right)^{-1}.
+\]</span></p>
+<p>Luego usamos este hecho para definir</p>
+<p><span class="math display">\[
+\frac{\hat{\beta}_j - \beta_j}{s_e \sqrt{C_{jj}}} \sim t_{n-p},
+\]</span></p>
+<p>que usamos para realizar pruebas de hipótesis.</p>
+<p>Hasta ahora hemos analizado varias métricas como RMSE, RSE y <span class="math inline">\(R^2\)</span> para determinar qué tan bien nuestro modelo se ajusta a nuestros datos. Cada uno de estos de alguna manera considera la expresión</p>
+<p><span class="math display">\[
+\sum_{i = 1}^n (y_i - \hat{y}_i)^2.
+\]</span></p>
+<p>Entonces, esencialmente cada uno de estos mira qué tan cerca están los puntos de datos del modelo. Sin embargo, ¿eso es todo lo que nos importa?</p>
+<ul>
+<li>Puede ser que los errores se cometan de forma sistemática, lo que significa que nuestro modelo está mal especificado. Es posible que necesitemos términos de interacción adicionales o términos polinomiales que veremos más adelante.</li>
+<li>También es posible que en un conjunto particular de valores predictores, los errores sean muy pequeños, pero en un conjunto diferente de valores predictores, los errores sean grandes.</li>
+<li>Quizás la mayoría de los errores sean muy pequeños, pero algunos son muy grandes. Esto sugeriría que los errores no siguen una distribución normal.</li>
+</ul>
+<p>¿Son estos temas los que nos preocupan? Si todo lo que quisiéramos hacer es predecir, posiblemente no, ya que solo nos preocuparíamos por el tamaño de nuestros errores. Sin embargo, si nos gustaría realizar inferencias, por ejemplo, para determinar si un predictor en particular es importante, nos importa mucho. Todos los resultados distributivos, como una prueba <span class="math inline">\(t\)</span> para un solo predictor, se derivan de los supuestos de nuestro modelo.</p>
+<p>Técnicamente, los supuestos del modelo se codifican directamente en una declaración del modelo como,</p>
+<p><span class="math display">\[
+Y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_{p-1} x_{i(p-1)} + \epsilon_i
+\]</span></p>
+<p>donde <span class="math inline">\(\epsilon_i \sim N(0, \sigma^2).\)</span></p>
+<p>A menudo, los <strong>supuestos de regresión lineal</strong>, se expresan como,</p>
+<ul>
+<li>Linealidad: la respuesta se puede escribir como una combinación lineal de los predictores. (Con ruido sobre esta verdadera relación lineal).</li>
+<li>Independencia: los errores son independientes.</li>
+<li>Normalidad: la distribución de los errores debe seguir una distribución normal.</li>
+<li>Igualdad de varianza: la varianza del error es la misma en cualquier conjunto de valores predictores.</li>
+</ul>
+<p>El supuesto de linealidad se codifica como</p>
+<p><span class="math display">\[
+\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_{p-1} x_{i(p-1)},
+\]</span></p>
+<p>mientras que los tres restantes, están codificados en</p>
+<p><span class="math display">\[
+\epsilon_i \sim N(0, \sigma^2),
+\]</span></p>
+<p>ya que <span class="math inline">\(\epsilon_i\)</span> son <span class="math inline">\(iid\)</span> variables aleatorias normales con varianza constante.</p>
+<p>Si se cumplen estas suposiciones, ¡genial! Podemos realizar inferencia, <strong>y es válido</strong>. Si estas suposiciones <em>no</em> se cumplen, aún podemos “realizar” una prueba <span class="math inline">\(t\)</span> usando <code>R</code>, pero los resultados <strong>no son válidos</strong>. Las distribuciones de las estimaciones de los parámetros no serán las esperadas. Las pruebas de hipótesis aceptarán o rechazarán incorrectamente. Básicamente, <strong>basura entra, basura sale</strong>.</p>
+</div>
+<div id="comprobación-de-supuestos" class="section level2" number="18.2">
+<h2><span class="header-section-number">18.2</span> Comprobación de supuestos</h2>
+<p>Ahora veremos una serie de herramientas para verificar los supuestos de un modelo lineal. Para probar estas herramientas, usaremos datos simulados de tres modelos:</p>
+<p><span class="math display">\[
+\text{Modelo 1:} \quad Y = 3 + 5x + \epsilon, \quad \epsilon \sim N(0, 1)
+\]</span></p>
+<p><span class="math display">\[
+\text{Modelo 2:} \quad Y = 3 + 5x + \epsilon, \quad \epsilon \sim N(0, x^2)
+\]</span></p>
+<p><span class="math display">\[
+\text{Modelo 3:} \quad Y = 3 + 5x^2 + \epsilon, \quad \epsilon \sim N(0, 25)
+\]</span></p>
+<div class="sourceCode" id="cb875"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb875-1"><a href="diagnóstico-de-modelos.html#cb875-1" aria-hidden="true" tabindex="-1"></a>sim_1 <span class="ot">=</span> <span class="cf">function</span>(<span class="at">sample_size =</span> <span class="dv">500</span>) {</span>
+<span id="cb875-2"><a href="diagnóstico-de-modelos.html#cb875-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">=</span> <span class="fu">runif</span>(<span class="at">n =</span> sample_size) <span class="sc">*</span> <span class="dv">5</span></span>
+<span id="cb875-3"><a href="diagnóstico-de-modelos.html#cb875-3" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">=</span> <span class="dv">3</span> <span class="sc">+</span> <span class="dv">5</span> <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sample_size, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb875-4"><a href="diagnóstico-de-modelos.html#cb875-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(x, y)</span>
+<span id="cb875-5"><a href="diagnóstico-de-modelos.html#cb875-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb875-6"><a href="diagnóstico-de-modelos.html#cb875-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb875-7"><a href="diagnóstico-de-modelos.html#cb875-7" aria-hidden="true" tabindex="-1"></a>sim_2 <span class="ot">=</span> <span class="cf">function</span>(<span class="at">sample_size =</span> <span class="dv">500</span>) {</span>
+<span id="cb875-8"><a href="diagnóstico-de-modelos.html#cb875-8" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">=</span> <span class="fu">runif</span>(<span class="at">n =</span> sample_size) <span class="sc">*</span> <span class="dv">5</span></span>
+<span id="cb875-9"><a href="diagnóstico-de-modelos.html#cb875-9" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">=</span> <span class="dv">3</span> <span class="sc">+</span> <span class="dv">5</span> <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sample_size, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> x)</span>
+<span id="cb875-10"><a href="diagnóstico-de-modelos.html#cb875-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(x, y)</span>
+<span id="cb875-11"><a href="diagnóstico-de-modelos.html#cb875-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb875-12"><a href="diagnóstico-de-modelos.html#cb875-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb875-13"><a href="diagnóstico-de-modelos.html#cb875-13" aria-hidden="true" tabindex="-1"></a>sim_3 <span class="ot">=</span> <span class="cf">function</span>(<span class="at">sample_size =</span> <span class="dv">500</span>) {</span>
+<span id="cb875-14"><a href="diagnóstico-de-modelos.html#cb875-14" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">=</span> <span class="fu">runif</span>(<span class="at">n =</span> sample_size) <span class="sc">*</span> <span class="dv">5</span></span>
+<span id="cb875-15"><a href="diagnóstico-de-modelos.html#cb875-15" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">=</span> <span class="dv">3</span> <span class="sc">+</span> <span class="dv">5</span> <span class="sc">*</span> x <span class="sc">^</span> <span class="dv">2</span> <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sample_size, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">5</span>)</span>
+<span id="cb875-16"><a href="diagnóstico-de-modelos.html#cb875-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(x, y)</span>
+<span id="cb875-17"><a href="diagnóstico-de-modelos.html#cb875-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div id="gráfica-de-ajustados-versus-residuos" class="section level3" number="18.2.1">
+<h3><span class="header-section-number">18.2.1</span> Gráfica de ajustados versus residuos</h3>
+<p>Probablemente nuestra herramienta más útil sea una <strong>Gráfica de ajustados versus residuales</strong>. Será útil para verificar los supuestos de <strong>linealidad</strong> y <strong>varianza constante</strong>.</p>
+<p>Los datos generados a partir del Modelo 1 no deberían mostrar ningún signo de infracción de los supuestos, por lo que usaremos esto para ver cómo debería verse una buena gráfica de ajustados versus residuales. Primero, simularemos observaciones de este modelo.</p>
+<div class="sourceCode" id="cb876"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb876-1"><a href="diagnóstico-de-modelos.html#cb876-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb876-2"><a href="diagnóstico-de-modelos.html#cb876-2" aria-hidden="true" tabindex="-1"></a>sim_data_1 <span class="ot">=</span> <span class="fu">sim_1</span>()</span>
+<span id="cb876-3"><a href="diagnóstico-de-modelos.html#cb876-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sim_data_1)</span></code></pre></div>
+<pre><code>##          x         y
+## 1 4.574030 24.773995
+## 2 4.685377 26.475936
+## 3 1.430698  8.954993
+## 4 4.152238 23.951210
+## 5 3.208728 20.341344
+## 6 2.595480 14.943525</code></pre>
+<p>Luego ajustamos el modelo y agregamos la línea ajustada a un diagrama de dispersión.</p>
+<div class="sourceCode" id="cb878"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb878-1"><a href="diagnóstico-de-modelos.html#cb878-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> x, <span class="at">data =</span> sim_data_1, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">pch =</span> <span class="dv">20</span>,</span>
+<span id="cb878-2"><a href="diagnóstico-de-modelos.html#cb878-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Datos del modelo 1&quot;</span>)</span>
+<span id="cb878-3"><a href="diagnóstico-de-modelos.html#cb878-3" aria-hidden="true" tabindex="-1"></a>fit_1 <span class="ot">=</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> sim_data_1)</span>
+<span id="cb878-4"><a href="diagnóstico-de-modelos.html#cb878-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(fit_1, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>, <span class="at">lwd =</span> <span class="dv">3</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-387-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ahora trazamos un gráfico de ajustados versus residuales. Tenga en cuenta que se trata de residuos en el eje <span class="math inline">\(y\)</span> a pesar del orden en el nombre. A veces lo verá llamado gráfico de residuales versus ajustados, o residuales versus predichos.</p>
+<div class="sourceCode" id="cb879"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb879-1"><a href="diagnóstico-de-modelos.html#cb879-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(fit_1), <span class="fu">resid</span>(fit_1), <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">pch =</span> <span class="dv">20</span>,</span>
+<span id="cb879-2"><a href="diagnóstico-de-modelos.html#cb879-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Ajustados&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Residuales&quot;</span>, <span class="at">main =</span> <span class="st">&quot;Datos del modelo 1&quot;</span>)</span>
+<span id="cb879-3"><a href="diagnóstico-de-modelos.html#cb879-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-388-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Deberíamos buscar dos cosas en este gráfico.</p>
+<ul>
+<li>En cualquier valor ajustado, la media de los residuos debe ser aproximadamente 0. Si este es el caso, el supuesto de <em>linealidad</em> es válido. Por esta razón, generalmente agregamos una línea horizontal en <span class="math inline">\(y=0\)</span> para enfatizar este punto.</li>
+<li>En cada valor ajustado, la dispersión de los residuos debe ser aproximadamente la misma. Si este es el caso, el supuesto de <em>varianza constante</em> es válido.</li>
+</ul>
+<p>Aquí vemos que este es el caso.</p>
+<p>Para tener una mejor idea de cómo un gráfico de ajustados versus residuales puede ser útil, simularemos a partir de modelos con supuestos violados.</p>
+<p>El modelo 2 es un ejemplo de varianza no constante. En este caso, la varianza es mayor para valores mayores de la variable predictora <span class="math inline">\(x\)</span>.</p>
+<div class="sourceCode" id="cb880"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb880-1"><a href="diagnóstico-de-modelos.html#cb880-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb880-2"><a href="diagnóstico-de-modelos.html#cb880-2" aria-hidden="true" tabindex="-1"></a>sim_data_2 <span class="ot">=</span> <span class="fu">sim_2</span>()</span>
+<span id="cb880-3"><a href="diagnóstico-de-modelos.html#cb880-3" aria-hidden="true" tabindex="-1"></a>fit_2 <span class="ot">=</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> sim_data_2)</span>
+<span id="cb880-4"><a href="diagnóstico-de-modelos.html#cb880-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> x, <span class="at">data =</span> sim_data_2, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">pch =</span> <span class="dv">20</span>,</span>
+<span id="cb880-5"><a href="diagnóstico-de-modelos.html#cb880-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Datos del modelo 2&quot;</span>)</span>
+<span id="cb880-6"><a href="diagnóstico-de-modelos.html#cb880-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(fit_2, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>, <span class="at">lwd =</span> <span class="dv">3</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-389-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>En realidad, esto es bastante fácil de ver agregando la línea ajustada a un gráfico de dispersión. Esto se debe a que solo estamos realizando una regresión lineal simple. Con la regresión múltiple, una gráfica de ajustados versus residuales es una necesidad, ya que agregar una regresión ajustada a una gráfica de dispersión no es exactamente posible.</p>
+<div class="sourceCode" id="cb881"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb881-1"><a href="diagnóstico-de-modelos.html#cb881-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(fit_2), <span class="fu">resid</span>(fit_2), <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">pch =</span> <span class="dv">20</span>,</span>
+<span id="cb881-2"><a href="diagnóstico-de-modelos.html#cb881-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Ajustados&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Residuales&quot;</span>, <span class="at">main =</span> <span class="st">&quot;Datos del modelo 2&quot;</span>)</span>
+<span id="cb881-3"><a href="diagnóstico-de-modelos.html#cb881-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-390-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>En la gráfica de ajustados versus residuales, vemos dos cosas claramente. Para cualquier valor ajustado, los residuos parecen centrados aproximadamente en 0. ¡Esto es bueno! No se viola el supuesto de linealidad. Sin embargo, también vemos claramente que para valores ajustados más grandes, la dispersión de los residuos es mayor. ¡Esto es malo! Aquí se viola el supuesto de varianza constante.</p>
+<p>Ahora mostraremos un modelo que no cumple con el supuesto de linealidad. El modelo 3 es un ejemplo de un modelo en el que <span class="math inline">\(Y\)</span> no es una combinación lineal de los predictores. En este caso, el predictor es <span class="math inline">\(x\)</span>, pero el modelo usa <span class="math inline">\(x^2\)</span>. (Veremos más adelante que esto es algo con lo que puede lidiar un modelo “lineal”. La solución es simple, ¡simplemente haga que <span class="math inline">\(x^2\)</span> sea un predictor!)</p>
+<div class="sourceCode" id="cb882"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb882-1"><a href="diagnóstico-de-modelos.html#cb882-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb882-2"><a href="diagnóstico-de-modelos.html#cb882-2" aria-hidden="true" tabindex="-1"></a>sim_data_3 <span class="ot">=</span> <span class="fu">sim_3</span>()</span>
+<span id="cb882-3"><a href="diagnóstico-de-modelos.html#cb882-3" aria-hidden="true" tabindex="-1"></a>fit_3 <span class="ot">=</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> sim_data_3)</span>
+<span id="cb882-4"><a href="diagnóstico-de-modelos.html#cb882-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> x, <span class="at">data =</span> sim_data_3, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">pch =</span> <span class="dv">20</span>,</span>
+<span id="cb882-5"><a href="diagnóstico-de-modelos.html#cb882-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Datos del modelo 3&quot;</span>)</span>
+<span id="cb882-6"><a href="diagnóstico-de-modelos.html#cb882-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(fit_3, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>, <span class="at">lwd =</span> <span class="dv">3</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-391-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Una vez más, esto es bastante claro en el gráfico de dispersión, pero de nuevo, no podríamos comprobar este gráfico para la regresión múltiple.</p>
+<div class="sourceCode" id="cb883"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb883-1"><a href="diagnóstico-de-modelos.html#cb883-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(fit_3), <span class="fu">resid</span>(fit_3), <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">pch =</span> <span class="dv">20</span>,</span>
+<span id="cb883-2"><a href="diagnóstico-de-modelos.html#cb883-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Ajustados&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Residuales&quot;</span>, <span class="at">main =</span> <span class="st">&quot;Datos del modelo 3&quot;</span>)</span>
+<span id="cb883-3"><a href="diagnóstico-de-modelos.html#cb883-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-392-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Esta vez en la gráfica de ajustados versus residuales, para cualquier valor ajustado, la dispersión de los residuales es aproximadamente la misma. Sin embargo, ¡ni siquiera están cerca de centrarse en cero! En valores ajustados pequeños y grandes, el modelo se subestima, mientras que en valores ajustados medianos, el modelo se sobreestima. Estos son errores sistemáticos, no ruido aleatorio. Entonces se cumple el supuesto de varianza constante, pero se viola el supuesto de linealidad. La forma de nuestro modelo es simplemente incorrecta. ¡Estamos tratando de ajustar una línea a una curva!</p>
+</div>
+<div id="prueba-de-breusch-pagan" class="section level3" number="18.2.2">
+<h3><span class="header-section-number">18.2.2</span> Prueba de Breusch-Pagan</h3>
+<p>La varianza constante a menudo se denomina <strong>homocedasticidad</strong>. Por el contrario, la varianza no constante se denomina <strong>heterocedasticidad</strong>. Hemos visto cómo podemos usar una gráfica de ajustados versus residuales para buscar estos atributos.</p>
+<p>Si bien una gráfica de ajustados versus residuales puede darnos una idea sobre la homocedasticidad, a veces preferiríamos una prueba más formal. Hay muchas pruebas de varianza constante, pero aquí presentaremos una, la <a href="https://en.wikipedia.org/wiki/Breusch%E2%80%93Pagan_test" target="_blank">** Prueba Breusch-Pagan **</a>. Los detalles exactos de la prueba se omitirán aquí, pero lo que es más importante, se puede considerar que la nula y la alternativa son,</p>
+<ul>
+<li><span class="math inline">\(H_0\)</span>: Homoscedasticidad. Los errores tienen una variación constante con respecto al modelo real.</li>
+<li><span class="math inline">\(H_1\)</span>: Heteroscedasticidad. Los errores tienen una varianza no constante con respecto al modelo real.</li>
+</ul>
+<p>¿No es eso conveniente? Una prueba que probará específicamente el supuesto de <strong>varianza constante</strong>.</p>
+<p>La prueba Breusch-Pagan no se puede realizar de forma predeterminada en <code>R</code>, sin embargo, la función <code>bptest</code> en el paquete <code>lmtest</code> implementa la prueba.</p>
+<div class="sourceCode" id="cb884"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb884-1"><a href="diagnóstico-de-modelos.html#cb884-1" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages(&quot;lmtest&quot;)</span></span>
+<span id="cb884-2"><a href="diagnóstico-de-modelos.html#cb884-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span></code></pre></div>
+<p>Probémoslo en los tres modelos que ajustamos arriba. Recordar,</p>
+<ul>
+<li><code>fit_1</code> no ha violado los supuestos,</li>
+<li><code>fit_2</code> violó el supuesto de varianza constante, pero no linealidad,</li>
+<li><code>fit_3</code> violó linealidad, pero no varianza constante.</li>
+</ul>
+<div class="sourceCode" id="cb885"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb885-1"><a href="diagnóstico-de-modelos.html#cb885-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bptest</span>(fit_1)</span></code></pre></div>
+<pre><code>## 
+##  studentized Breusch-Pagan test
+## 
+## data:  fit_1
+## BP = 1.0234, df = 1, p-value = 0.3117</code></pre>
+<p>Para <code>fit_1</code> vemos un valor p grande, por lo que no rechazamos la hipótesis nula de homocedasticidad, que es lo que esperaríamos.</p>
+<div class="sourceCode" id="cb887"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb887-1"><a href="diagnóstico-de-modelos.html#cb887-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bptest</span>(fit_2)</span></code></pre></div>
+<pre><code>## 
+##  studentized Breusch-Pagan test
+## 
+## data:  fit_2
+## BP = 76.693, df = 1, p-value &lt; 2.2e-16</code></pre>
+<p>Para <code>fit_2</code> vemos un valor p pequeño, por lo que rechazamos la hipótesis nula de homocedasticidad. Se viola el supuesto de varianza constante. Esto coincide con nuestros hallazgos en la gráfica de ajustados versus residuales.</p>
+<div class="sourceCode" id="cb889"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb889-1"><a href="diagnóstico-de-modelos.html#cb889-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bptest</span>(fit_3)</span></code></pre></div>
+<pre><code>## 
+##  studentized Breusch-Pagan test
+## 
+## data:  fit_3
+## BP = 0.33466, df = 1, p-value = 0.5629</code></pre>
+<p>Por último, para <code>fit_3</code> nuevamente vemos un valor p grande, por lo que no rechazamos la hipótesis nula de homocedasticidad, que coincide con nuestros hallazgos en la gráfica de ajustados versus residuales.</p>
+</div>
+<div id="histogramas-1" class="section level3" number="18.2.3">
+<h3><span class="header-section-number">18.2.3</span> Histogramas</h3>
+<p>Disponemos de una serie de herramientas para evaluar el supuesto de normalidad. Lo más obvio sería hacer un histograma de los residuos. Si parece más o menos normal, creeremos que los errores podrían ser realmente normales.</p>
+<div class="sourceCode" id="cb891"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb891-1"><a href="diagnóstico-de-modelos.html#cb891-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb891-2"><a href="diagnóstico-de-modelos.html#cb891-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">resid</span>(fit_1),</span>
+<span id="cb891-3"><a href="diagnóstico-de-modelos.html#cb891-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab   =</span> <span class="st">&quot;Residuales&quot;</span>,</span>
+<span id="cb891-4"><a href="diagnóstico-de-modelos.html#cb891-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">main   =</span> <span class="st">&quot;Histograma de residuos, fit_1&quot;</span>,</span>
+<span id="cb891-5"><a href="diagnóstico-de-modelos.html#cb891-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">col    =</span> <span class="st">&quot;darkorange&quot;</span>,</span>
+<span id="cb891-6"><a href="diagnóstico-de-modelos.html#cb891-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">border =</span> <span class="st">&quot;dodgerblue&quot;</span>,</span>
+<span id="cb891-7"><a href="diagnóstico-de-modelos.html#cb891-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="dv">20</span>)</span>
+<span id="cb891-8"><a href="diagnóstico-de-modelos.html#cb891-8" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">resid</span>(fit_2),</span>
+<span id="cb891-9"><a href="diagnóstico-de-modelos.html#cb891-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab   =</span> <span class="st">&quot;Residuales&quot;</span>,</span>
+<span id="cb891-10"><a href="diagnóstico-de-modelos.html#cb891-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">main   =</span> <span class="st">&quot;Histograma de residuos, fit_2&quot;</span>,</span>
+<span id="cb891-11"><a href="diagnóstico-de-modelos.html#cb891-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">col    =</span> <span class="st">&quot;darkorange&quot;</span>,</span>
+<span id="cb891-12"><a href="diagnóstico-de-modelos.html#cb891-12" aria-hidden="true" tabindex="-1"></a>     <span class="at">border =</span> <span class="st">&quot;dodgerblue&quot;</span>,</span>
+<span id="cb891-13"><a href="diagnóstico-de-modelos.html#cb891-13" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="dv">20</span>)</span>
+<span id="cb891-14"><a href="diagnóstico-de-modelos.html#cb891-14" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">resid</span>(fit_3),</span>
+<span id="cb891-15"><a href="diagnóstico-de-modelos.html#cb891-15" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab   =</span> <span class="st">&quot;Residuales&quot;</span>,</span>
+<span id="cb891-16"><a href="diagnóstico-de-modelos.html#cb891-16" aria-hidden="true" tabindex="-1"></a>     <span class="at">main   =</span> <span class="st">&quot;Histograma de residuos, fit_3&quot;</span>,</span>
+<span id="cb891-17"><a href="diagnóstico-de-modelos.html#cb891-17" aria-hidden="true" tabindex="-1"></a>     <span class="at">col    =</span> <span class="st">&quot;darkorange&quot;</span>,</span>
+<span id="cb891-18"><a href="diagnóstico-de-modelos.html#cb891-18" aria-hidden="true" tabindex="-1"></a>     <span class="at">border =</span> <span class="st">&quot;dodgerblue&quot;</span>,</span>
+<span id="cb891-19"><a href="diagnóstico-de-modelos.html#cb891-19" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="dv">20</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-397-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<p>Arriba están los histogramas para cada una de las tres regresiones que hemos estado considerando. Observe que el primero, para <code>fit_1</code>, parece muy normal. El tercero, para <code>fit_3</code>, parece ser muy anormal. Sin embargo, <code>fit_2</code> no es tan claro. Tiene una forma de campana rugosa, sin embargo, también tiene un pico muy afilado. Por esta razón usualmente usaremos herramientas más poderosas como <strong>gráficos Q-Q</strong> y la <strong>prueba de Shapiro-Wilk</strong> para evaluar la normalidad de los errores.</p>
+</div>
+<div id="gráficos-q-q" class="section level3" number="18.2.4">
+<h3><span class="header-section-number">18.2.4</span> Gráficos Q-Q</h3>
+<p>Otro método visual para evaluar la normalidad de los errores, que es más poderoso que un histograma, es un gráfico cuantil-cuantílico normal, o <strong>gráfico Q-Q</strong> para abreviar.</p>
+<p>En <code>R</code> estos son muy fáciles de hacer. La función <code>qqnorm()</code> traza los puntos, y la función <code>qqline()</code> agrega la línea necesaria. Creamos un gráfico Q-Q para los residuos de <code>fit_1</code> para verificar si los errores realmente se pueden distribuir normalmente.</p>
+<div class="sourceCode" id="cb892"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb892-1"><a href="diagnóstico-de-modelos.html#cb892-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">resid</span>(fit_1), <span class="at">main =</span> <span class="st">&quot;Normal Q-Q Plot, fit_1&quot;</span>, <span class="at">col =</span> <span class="st">&quot;darkgrey&quot;</span>)</span>
+<span id="cb892-2"><a href="diagnóstico-de-modelos.html#cb892-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(<span class="fu">resid</span>(fit_1), <span class="at">col =</span> <span class="st">&quot;dodgerblue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-398-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>En resumen, si los puntos de la gráfica no siguen de cerca una línea recta, esto sugeriría que los datos no provienen de una distribución normal.</p>
+<p>Los cálculos necesarios para crear el gráfico varían según la implementación, pero esencialmente el eje <span class="math inline">\(y\)</span> son los datos ordenados (cuantiles observados o de muestra), y el eje <span class="math inline">\(x\)</span> son los valores que esperaríamos si los datos procedieran de una distribución normal (cuantiles teóricos).</p>
+<p>La <a href="http://en.wikipedia.org/wiki/Normal_probability_plot" target="_blank">página de Wikipedia para gráficos de probabilidad normal</a> brinda detalles sobre cómo se implementa esto en <code>R</code> si está interesado.</p>
+<p>Además, para tener una mejor idea de cómo funcionan los gráficos Q-Q, aquí hay una función rápida que crea un gráfico Q-Q:</p>
+<div class="sourceCode" id="cb893"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb893-1"><a href="diagnóstico-de-modelos.html#cb893-1" aria-hidden="true" tabindex="-1"></a>qq_plot <span class="ot">=</span> <span class="cf">function</span>(e) {</span>
+<span id="cb893-2"><a href="diagnóstico-de-modelos.html#cb893-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb893-3"><a href="diagnóstico-de-modelos.html#cb893-3" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">=</span> <span class="fu">length</span>(e)</span>
+<span id="cb893-4"><a href="diagnóstico-de-modelos.html#cb893-4" aria-hidden="true" tabindex="-1"></a>  normal_quantiles <span class="ot">=</span> <span class="fu">qnorm</span>(((<span class="dv">1</span><span class="sc">:</span>n <span class="sc">-</span> <span class="fl">0.5</span>) <span class="sc">/</span> n))</span>
+<span id="cb893-5"><a href="diagnóstico-de-modelos.html#cb893-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># normal_quantiles = qnorm(((1:n) / (n + 1)))</span></span>
+<span id="cb893-6"><a href="diagnóstico-de-modelos.html#cb893-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb893-7"><a href="diagnóstico-de-modelos.html#cb893-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># graficar cuantiles teóricos vs observados</span></span>
+<span id="cb893-8"><a href="diagnóstico-de-modelos.html#cb893-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(normal_quantiles, <span class="fu">sort</span>(e),</span>
+<span id="cb893-9"><a href="diagnóstico-de-modelos.html#cb893-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlab =</span> <span class="fu">c</span>(<span class="st">&quot;Cuantiles teóricos&quot;</span>),</span>
+<span id="cb893-10"><a href="diagnóstico-de-modelos.html#cb893-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">ylab =</span> <span class="fu">c</span>(<span class="st">&quot;Cuantiles de muestra&quot;</span>),</span>
+<span id="cb893-11"><a href="diagnóstico-de-modelos.html#cb893-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">&quot;darkgrey&quot;</span>)</span>
+<span id="cb893-12"><a href="diagnóstico-de-modelos.html#cb893-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">title</span>(<span class="st">&quot;Normal Q-Q Plot&quot;</span>)</span>
+<span id="cb893-13"><a href="diagnóstico-de-modelos.html#cb893-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb893-14"><a href="diagnóstico-de-modelos.html#cb893-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># calcular la línea a través del primer y tercer cuartil</span></span>
+<span id="cb893-15"><a href="diagnóstico-de-modelos.html#cb893-15" aria-hidden="true" tabindex="-1"></a>  slope     <span class="ot">=</span> (<span class="fu">quantile</span>(e, <span class="fl">0.75</span>) <span class="sc">-</span> <span class="fu">quantile</span>(e, <span class="fl">0.25</span>)) <span class="sc">/</span> (<span class="fu">qnorm</span>(<span class="fl">0.75</span>) <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="fl">0.25</span>))</span>
+<span id="cb893-16"><a href="diagnóstico-de-modelos.html#cb893-16" aria-hidden="true" tabindex="-1"></a>  intercept <span class="ot">=</span> <span class="fu">quantile</span>(e, <span class="fl">0.25</span>) <span class="sc">-</span> slope <span class="sc">*</span> <span class="fu">qnorm</span>(<span class="fl">0.25</span>)</span>
+<span id="cb893-17"><a href="diagnóstico-de-modelos.html#cb893-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb893-18"><a href="diagnóstico-de-modelos.html#cb893-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># agregar al gráfico existente</span></span>
+<span id="cb893-19"><a href="diagnóstico-de-modelos.html#cb893-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(intercept, slope, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;dodgerblue&quot;</span>)</span>
+<span id="cb893-20"><a href="diagnóstico-de-modelos.html#cb893-20" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Entonces podemos verificar que es esencialmente equivalente a usar <code>qqnorm()</code> y <code>qqline()</code> en <code>R</code>.</p>
+<div class="sourceCode" id="cb894"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb894-1"><a href="diagnóstico-de-modelos.html#cb894-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">420</span>)</span>
+<span id="cb894-2"><a href="diagnóstico-de-modelos.html#cb894-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> <span class="dv">0</span> , <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb894-3"><a href="diagnóstico-de-modelos.html#cb894-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb894-4"><a href="diagnóstico-de-modelos.html#cb894-4" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(x, <span class="at">col =</span> <span class="st">&quot;darkgrey&quot;</span>)</span>
+<span id="cb894-5"><a href="diagnóstico-de-modelos.html#cb894-5" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(x, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;dodgerblue&quot;</span>)</span>
+<span id="cb894-6"><a href="diagnóstico-de-modelos.html#cb894-6" aria-hidden="true" tabindex="-1"></a><span class="fu">qq_plot</span>(x)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-400-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>Para tener una mejor idea de lo que significa “cerca de la línea”, realizamos una serie de simulaciones y creamos gráficos Q-Q.</p>
+<p>Primero, simulamos datos de una distribución normal con diferentes tamaños de muestra, y cada vez creamos una gráfica Q-Q.</p>
+<div class="sourceCode" id="cb895"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb895-1"><a href="diagnóstico-de-modelos.html#cb895-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb895-2"><a href="diagnóstico-de-modelos.html#cb895-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">420</span>)</span>
+<span id="cb895-3"><a href="diagnóstico-de-modelos.html#cb895-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qq_plot</span>(<span class="fu">rnorm</span>(<span class="dv">10</span>))</span>
+<span id="cb895-4"><a href="diagnóstico-de-modelos.html#cb895-4" aria-hidden="true" tabindex="-1"></a><span class="fu">qq_plot</span>(<span class="fu">rnorm</span>(<span class="dv">25</span>))</span>
+<span id="cb895-5"><a href="diagnóstico-de-modelos.html#cb895-5" aria-hidden="true" tabindex="-1"></a><span class="fu">qq_plot</span>(<span class="fu">rnorm</span>(<span class="dv">100</span>))</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-401-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p>Dado que estos datos <strong>son</strong> muestreados a partir de una distribución normal, todos estos son, por definición, buenos gráficos Q-Q. Los puntos están “cerca de la línea” y concluiríamos que estos datos podrían haber sido muestreados a partir de una distribución normal. Observe que en la primera gráfica, un punto está <em>algo</em> lejos de la línea, pero solo un punto, en combinación con el tamaño pequeño de la muestra, no es suficiente para preocuparnos. Vemos que con el gran tamaño de la muestra, todos los puntos están bastante cerca de la línea.</p>
+<p>A continuación, simulamos datos de una distribución <span class="math inline">\(t\)</span> con pequeños grados de libertad, para diferentes tamaños de muestra.</p>
+<div class="sourceCode" id="cb896"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb896-1"><a href="diagnóstico-de-modelos.html#cb896-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb896-2"><a href="diagnóstico-de-modelos.html#cb896-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">420</span>)</span>
+<span id="cb896-3"><a href="diagnóstico-de-modelos.html#cb896-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qq_plot</span>(<span class="fu">rt</span>(<span class="dv">10</span>, <span class="at">df =</span> <span class="dv">4</span>))</span>
+<span id="cb896-4"><a href="diagnóstico-de-modelos.html#cb896-4" aria-hidden="true" tabindex="-1"></a><span class="fu">qq_plot</span>(<span class="fu">rt</span>(<span class="dv">25</span>, <span class="at">df =</span> <span class="dv">4</span>))</span>
+<span id="cb896-5"><a href="diagnóstico-de-modelos.html#cb896-5" aria-hidden="true" tabindex="-1"></a><span class="fu">qq_plot</span>(<span class="fu">rt</span>(<span class="dv">100</span>, <span class="at">df =</span> <span class="dv">4</span>))</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-402-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p>Recuerde que a medida que los grados de libertad para una distribución <span class="math inline">\(t\)</span> aumentan, la distribución se vuelve cada vez más similar a una normal. Aquí, usando 4 grados de libertad, tenemos una distribución que es algo normal, es simétrica y tiene forma de campana, sin embargo tiene “colas gruesas”. Esto se presenta claramente en el tercer panel. Si bien muchos de los puntos están cerca de la línea, en los bordes existen grandes discrepancias. Esto indica que los valores son demasiado pequeños (negativos) o demasiado grandes (positivos) en comparación con lo que esperaríamos para una distribución normal. Entonces, para el tamaño de muestra de <code>100</code>, concluiríamos que se viola el supuesto de normalidad. (Si estos fueran residuos de un modelo). Para tamaños de muestra de <code>10</code> y <code>25</code> podemos sospechar, pero no del todo seguros. Leer gráficos Q-Q es un arte, no completamente una ciencia.</p>
+<p>A continuación, simulamos datos de una distribución exponencial.</p>
+<div class="sourceCode" id="cb897"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb897-1"><a href="diagnóstico-de-modelos.html#cb897-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb897-2"><a href="diagnóstico-de-modelos.html#cb897-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">420</span>)</span>
+<span id="cb897-3"><a href="diagnóstico-de-modelos.html#cb897-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qq_plot</span>(<span class="fu">rexp</span>(<span class="dv">10</span>))</span>
+<span id="cb897-4"><a href="diagnóstico-de-modelos.html#cb897-4" aria-hidden="true" tabindex="-1"></a><span class="fu">qq_plot</span>(<span class="fu">rexp</span>(<span class="dv">25</span>))</span>
+<span id="cb897-5"><a href="diagnóstico-de-modelos.html#cb897-5" aria-hidden="true" tabindex="-1"></a><span class="fu">qq_plot</span>(<span class="fu">rexp</span>(<span class="dv">100</span>))</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-403-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p>Esta es una distribución que no es muy similar a una normal, por lo que en los tres casos vemos puntos que están lejos de las líneas, por lo que pensaríamos que se viola el supuesto de normalidad.</p>
+<p>Para comprender mejor qué gráficas Q-Q son “buenas”, repita las simulaciones anteriores varias veces (sin establecer la semilla) y preste atención a las diferencias entre las que se simulan de la normal y las que no. También considere diferentes tamaños de muestras y parámetros de distribución.</p>
+<p>Volviendo a nuestras tres regresiones, recuerde:</p>
+<ul>
+<li><code>fit_1</code> no ha violado los supuestos,</li>
+<li><code>fit_2</code> violó el supuesto de varianza constante, pero no linealidad,</li>
+<li><code>fit_3</code> violó linealidad, pero no varianza constante.</li>
+</ul>
+<p>Ahora crearemos un gráfico Q-Q para cada uno con el objetivo de evaluar la normalidad de los errores.</p>
+<div class="sourceCode" id="cb898"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb898-1"><a href="diagnóstico-de-modelos.html#cb898-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">resid</span>(fit_1), <span class="at">main =</span> <span class="st">&quot;Normal Q-Q Plot, fit_1&quot;</span>, <span class="at">col =</span> <span class="st">&quot;darkgrey&quot;</span>)</span>
+<span id="cb898-2"><a href="diagnóstico-de-modelos.html#cb898-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(<span class="fu">resid</span>(fit_1), <span class="at">col =</span> <span class="st">&quot;dodgerblue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-404-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Para <code>fit_1</code>, tenemos una gráfica Q-Q casi perfecta. Creemos que los errores siguen una distribución normal.</p>
+<div class="sourceCode" id="cb899"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb899-1"><a href="diagnóstico-de-modelos.html#cb899-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">resid</span>(fit_2), <span class="at">main =</span> <span class="st">&quot;Normal Q-Q Plot, fit_2&quot;</span>, <span class="at">col =</span> <span class="st">&quot;darkgrey&quot;</span>)</span>
+<span id="cb899-2"><a href="diagnóstico-de-modelos.html#cb899-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(<span class="fu">resid</span>(fit_2), <span class="at">col =</span> <span class="st">&quot;dodgerblue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-405-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Para <code>fit_2</code>, tenemos una gráfica Q-Q sospechosa. Probablemente <strong>no</strong> creeríamos que los errores siguen una distribución normal.</p>
+<div class="sourceCode" id="cb900"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb900-1"><a href="diagnóstico-de-modelos.html#cb900-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">resid</span>(fit_3), <span class="at">main =</span> <span class="st">&quot;Normal Q-Q Plot, fit_3&quot;</span>, <span class="at">col =</span> <span class="st">&quot;darkgrey&quot;</span>)</span>
+<span id="cb900-2"><a href="diagnóstico-de-modelos.html#cb900-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(<span class="fu">resid</span>(fit_3), <span class="at">col =</span> <span class="st">&quot;dodgerblue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-406-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Por último, para <code>fit_3</code>, nuevamente tenemos una gráfica Q-Q sospechosa. Probablemente <strong>no</strong> creeríamos que los errores siguen una distribución normal.</p>
+</div>
+<div id="prueba-de-shapiro-wilk" class="section level3" number="18.2.5">
+<h3><span class="header-section-number">18.2.5</span> Prueba de Shapiro-Wilk</h3>
+<p>Los histogramas y los gráficos Q-Q brindan una buena representación visual de la distribución de los residuos; sin embargo, si estamos interesados en las pruebas formales, hay varias opciones disponibles. Una prueba de uso común es la <strong>prueba de Shapiro-Wilk</strong>, que se implementa en <code>R</code>.</p>
+<div class="sourceCode" id="cb901"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb901-1"><a href="diagnóstico-de-modelos.html#cb901-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb901-2"><a href="diagnóstico-de-modelos.html#cb901-2" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">rnorm</span>(<span class="dv">25</span>))</span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  rnorm(25)
+## W = 0.9499, p-value = 0.2495</code></pre>
+<div class="sourceCode" id="cb903"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb903-1"><a href="diagnóstico-de-modelos.html#cb903-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">rexp</span>(<span class="dv">25</span>))</span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  rexp(25)
+## W = 0.71164, p-value = 1.05e-05</code></pre>
+<p>Esto nos da el valor del estadístico de prueba y su valor p. La hipótesis nula asume que los datos fueron muestreados a partir de una distribución normal, por lo que un valor p pequeño indica que creemos que hay solo una pequeña probabilidad de que los datos pudieran haber sido muestreados a partir de una distribución normal.</p>
+<p>Para obtener más detalles, consulte: <a href="https://en.wikipedia.org/wiki/Shapiro-Wilk_test" target="_blank">Wikipedia: Shapiro–Wilk test.</a></p>
+<p>En los ejemplos anteriores, vemos que no rechazamos los datos muestreados de la normal y rechazamos los datos no normales, para cualquier <span class="math inline">\(\alpha\)</span> razonable.</p>
+<p>Volviendo de nuevo a <code>fit_1</code>, <code>fit_2</code> y <code>fit_3</code>, vemos el resultado de ejecutar <code>shapiro.test()</code> en los residuos de cada uno, devuelve un resultado para cada uno que coincide con las decisiones basadas en los gráficos Q-Q.</p>
+<div class="sourceCode" id="cb905"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb905-1"><a href="diagnóstico-de-modelos.html#cb905-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">resid</span>(fit_1))</span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  resid(fit_1)
+## W = 0.99858, p-value = 0.9622</code></pre>
+<div class="sourceCode" id="cb907"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb907-1"><a href="diagnóstico-de-modelos.html#cb907-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">resid</span>(fit_2))</span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  resid(fit_2)
+## W = 0.93697, p-value = 1.056e-13</code></pre>
+<div class="sourceCode" id="cb909"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb909-1"><a href="diagnóstico-de-modelos.html#cb909-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">resid</span>(fit_3))</span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  resid(fit_3)
+## W = 0.97643, p-value = 3.231e-07</code></pre>
+</div>
+</div>
+<div id="observaciones-inusuales" class="section level2" number="18.3">
+<h2><span class="header-section-number">18.3</span> Observaciones inusuales</h2>
+<p>Además de verificar los supuestos de regresión, también buscamos cualquier “observación inusual” en los datos. A menudo, una pequeña cantidad de puntos de datos puede tener una influencia extremadamente grande en una regresión, a veces tanto que los supuestos de la regresión se violan como resultado de estos puntos.</p>
+<p>Los siguientes tres gráficos están inspirados en un ejemplo de <a href="http://www.maths.bath.ac.uk/~jjf23/LMR/" target="_blank">Modelos lineales con R</a>.</p>
+<div class="sourceCode" id="cb911"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb911-1"><a href="diagnóstico-de-modelos.html#cb911-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb911-2"><a href="diagnóstico-de-modelos.html#cb911-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb911-3"><a href="diagnóstico-de-modelos.html#cb911-3" aria-hidden="true" tabindex="-1"></a>ex_data  <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,</span>
+<span id="cb911-4"><a href="diagnóstico-de-modelos.html#cb911-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y =</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">1</span> <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">10</span>))</span>
+<span id="cb911-5"><a href="diagnóstico-de-modelos.html#cb911-5" aria-hidden="true" tabindex="-1"></a>ex_model <span class="ot">=</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> ex_data)</span>
+<span id="cb911-6"><a href="diagnóstico-de-modelos.html#cb911-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb911-7"><a href="diagnóstico-de-modelos.html#cb911-7" aria-hidden="true" tabindex="-1"></a><span class="co"># apalancamiento bajo, residual grande, Influencia pequeña</span></span>
+<span id="cb911-8"><a href="diagnóstico-de-modelos.html#cb911-8" aria-hidden="true" tabindex="-1"></a>point_1 <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">5.4</span>, <span class="dv">11</span>)</span>
+<span id="cb911-9"><a href="diagnóstico-de-modelos.html#cb911-9" aria-hidden="true" tabindex="-1"></a>ex_data_1 <span class="ot">=</span> <span class="fu">rbind</span>(ex_data, point_1)</span>
+<span id="cb911-10"><a href="diagnóstico-de-modelos.html#cb911-10" aria-hidden="true" tabindex="-1"></a>model_1 <span class="ot">=</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> ex_data_1)</span>
+<span id="cb911-11"><a href="diagnóstico-de-modelos.html#cb911-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> x, <span class="at">data =</span> ex_data_1, <span class="at">cex =</span> <span class="dv">2</span>, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>,</span>
+<span id="cb911-12"><a href="diagnóstico-de-modelos.html#cb911-12" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Apalancamiento bajo, Residual grande, Influencia pequeña&quot;</span>)</span>
+<span id="cb911-13"><a href="diagnóstico-de-modelos.html#cb911-13" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> point_1[<span class="dv">1</span>], <span class="at">y =</span> point_1[<span class="dv">2</span>], <span class="at">pch =</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="dv">4</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb911-14"><a href="diagnóstico-de-modelos.html#cb911-14" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(ex_model, <span class="at">col =</span> <span class="st">&quot;dodgerblue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb911-15"><a href="diagnóstico-de-modelos.html#cb911-15" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(model_1, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb911-16"><a href="diagnóstico-de-modelos.html#cb911-16" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomleft&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;Original Data&quot;</span>, <span class="st">&quot;Added Point&quot;</span>),</span>
+<span id="cb911-17"><a href="diagnóstico-de-modelos.html#cb911-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;dodgerblue&quot;</span>, <span class="st">&quot;darkorange&quot;</span>))</span>
+<span id="cb911-18"><a href="diagnóstico-de-modelos.html#cb911-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb911-19"><a href="diagnóstico-de-modelos.html#cb911-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Apalancamiento alto, Residual Pequeño, Pequeña influencia</span></span>
+<span id="cb911-20"><a href="diagnóstico-de-modelos.html#cb911-20" aria-hidden="true" tabindex="-1"></a>point_2 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">18</span>, <span class="sc">-</span><span class="fl">5.7</span>)</span>
+<span id="cb911-21"><a href="diagnóstico-de-modelos.html#cb911-21" aria-hidden="true" tabindex="-1"></a>ex_data_2 <span class="ot">=</span> <span class="fu">rbind</span>(ex_data, point_2)</span>
+<span id="cb911-22"><a href="diagnóstico-de-modelos.html#cb911-22" aria-hidden="true" tabindex="-1"></a>model_2 <span class="ot">=</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> ex_data_2)</span>
+<span id="cb911-23"><a href="diagnóstico-de-modelos.html#cb911-23" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> x, <span class="at">data =</span> ex_data_2, <span class="at">cex =</span> <span class="dv">2</span>, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>,</span>
+<span id="cb911-24"><a href="diagnóstico-de-modelos.html#cb911-24" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Apalancamiento alto, Residual Pequeño, Influencia pequeña&quot;</span>)</span>
+<span id="cb911-25"><a href="diagnóstico-de-modelos.html#cb911-25" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> point_2[<span class="dv">1</span>], <span class="at">y =</span> point_2[<span class="dv">2</span>], <span class="at">pch =</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="dv">4</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb911-26"><a href="diagnóstico-de-modelos.html#cb911-26" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(ex_model, <span class="at">col =</span> <span class="st">&quot;dodgerblue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb911-27"><a href="diagnóstico-de-modelos.html#cb911-27" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(model_2, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb911-28"><a href="diagnóstico-de-modelos.html#cb911-28" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomleft&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;Original Data&quot;</span>, <span class="st">&quot;Added Point&quot;</span>),</span>
+<span id="cb911-29"><a href="diagnóstico-de-modelos.html#cb911-29" aria-hidden="true" tabindex="-1"></a>       <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;dodgerblue&quot;</span>, <span class="st">&quot;darkorange&quot;</span>))</span>
+<span id="cb911-30"><a href="diagnóstico-de-modelos.html#cb911-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb911-31"><a href="diagnóstico-de-modelos.html#cb911-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Apalancamiento alto, residual grande, Gran influencia</span></span>
+<span id="cb911-32"><a href="diagnóstico-de-modelos.html#cb911-32" aria-hidden="true" tabindex="-1"></a>point_3 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">14</span>, <span class="fl">5.1</span>)</span>
+<span id="cb911-33"><a href="diagnóstico-de-modelos.html#cb911-33" aria-hidden="true" tabindex="-1"></a>ex_data_3 <span class="ot">=</span> <span class="fu">rbind</span>(ex_data, point_3)</span>
+<span id="cb911-34"><a href="diagnóstico-de-modelos.html#cb911-34" aria-hidden="true" tabindex="-1"></a>model_3 <span class="ot">=</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> ex_data_3)</span>
+<span id="cb911-35"><a href="diagnóstico-de-modelos.html#cb911-35" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> x, <span class="at">data =</span> ex_data_3, <span class="at">cex =</span> <span class="dv">2</span>, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">12</span>),</span>
+<span id="cb911-36"><a href="diagnóstico-de-modelos.html#cb911-36" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Apalancamiento alto, Residual grande, Gran influencia&quot;</span>)</span>
+<span id="cb911-37"><a href="diagnóstico-de-modelos.html#cb911-37" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="at">x =</span> point_3[<span class="dv">1</span>], <span class="at">y =</span> point_3[<span class="dv">2</span>], <span class="at">pch =</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="dv">4</span>, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb911-38"><a href="diagnóstico-de-modelos.html#cb911-38" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(ex_model, <span class="at">col =</span> <span class="st">&quot;dodgerblue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb911-39"><a href="diagnóstico-de-modelos.html#cb911-39" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(model_3, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb911-40"><a href="diagnóstico-de-modelos.html#cb911-40" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomleft&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;Original Data&quot;</span>, <span class="st">&quot;Added Point&quot;</span>),</span>
+<span id="cb911-41"><a href="diagnóstico-de-modelos.html#cb911-41" aria-hidden="true" tabindex="-1"></a>       <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;dodgerblue&quot;</span>, <span class="st">&quot;darkorange&quot;</span>))</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unusual_obs_plot-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<p>La línea sólida azul en cada gráfico es un ajuste de regresión a los 10 puntos de datos originales almacenados en <code>ex_data</code>. La línea discontinua naranja en cada gráfico es el resultado de agregar un solo punto a los datos originales en <code>ex_data</code>. Este punto adicional está indicado por el punto encerrado en un círculo.</p>
+<p>La pendiente de la regresión para los diez puntos originales, la línea azul sólida, viene dada por:</p>
+<div class="sourceCode" id="cb912"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb912-1"><a href="diagnóstico-de-modelos.html#cb912-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(ex_model)[<span class="dv">2</span>]</span></code></pre></div>
+<pre><code>##          x 
+## -0.9696033</code></pre>
+<p>El punto agregado en la primera gráfica tiene un efecto <em>pequeño</em> en la pendiente, que se convierte en:</p>
+<div class="sourceCode" id="cb914"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb914-1"><a href="diagnóstico-de-modelos.html#cb914-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model_1)[<span class="dv">2</span>]</span></code></pre></div>
+<pre><code>##          x 
+## -0.9749534</code></pre>
+<p>Diremos que este punto tiene un apalancamiento bajo, es un valor atípico debido a su gran residual, pero tiene poca influencia.</p>
+<p>El punto agregado en la segunda gráfica también tiene un efecto <em>pequeño</em> en la pendiente, que es:</p>
+<div class="sourceCode" id="cb916"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb916-1"><a href="diagnóstico-de-modelos.html#cb916-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model_2)[<span class="dv">2</span>]</span></code></pre></div>
+<pre><code>##          x 
+## -0.9507397</code></pre>
+<p>Diremos que este punto tiene un apalancamiento alto, no es un valor atípico debido a su pequeño residuo y tiene una influencia muy pequeña.</p>
+<p>Por último, el punto agregado en la tercera gráfica tiene un efecto <em>grande</em> en la pendiente, que ahora es:</p>
+<div class="sourceCode" id="cb918"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb918-1"><a href="diagnóstico-de-modelos.html#cb918-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model_3)[<span class="dv">2</span>]</span></code></pre></div>
+<pre><code>##          x 
+## -0.5892241</code></pre>
+<p>Este punto agregado es influyente. tiene un alto apalancamiento y es un valor atípico debido a su gran residual.</p>
+<p>Ahora hemos mencionado tres nuevos conceptos: apalancamiento, valores atípicos y puntos influyentes, cada uno de los cuales discutiremos en detalle.</p>
+<div id="apalancamiento" class="section level3" number="18.3.1">
+<h3><span class="header-section-number">18.3.1</span> Apalancamiento</h3>
+<p>Un punto de datos con <strong>apalancamiento</strong> alto, es un punto de datos que <em>podría</em> tener una gran influencia al ajustar el modelo.</p>
+<p>Recordemos que,</p>
+<p><span class="math display">\[
+\hat{\beta} = \left(X^\top X \right)^{-1} X^\top y.
+\]</span></p>
+<p>Por lo tanto,</p>
+<p><span class="math display">\[
+\hat{y} = X \hat{\beta}   = X \left(X^\top X \right)^{-1} X^\top y
+\]</span></p>
+<p>Ahora definimos,</p>
+<p><span class="math display">\[
+H = X \left(X^\top X\right)^{-1} X^\top
+\]</span></p>
+<p>a la que nos referiremos como <em>hat matrix</em>. La matriz sombrero se utiliza para proyectar en el subespacio que se extiende por las columnas de <span class="math inline">\(X\)</span>. También se conoce simplemente como matriz de proyección.</p>
+<p>La matriz sombrero es una matriz que toma los valores originales de <span class="math inline">\(y\)</span> y agrega un sombrero.</p>
+<p><span class="math display">\[
+\hat{y} = H y
+\]</span></p>
+<p>Los elementos diagonales de esta matriz se denominan <strong>apalancamiento</strong></p>
+<p><span class="math display">\[
+H_{ii} = h_i,
+\]</span></p>
+<p>donde <span class="math inline">\(h_i\)</span> es el apalancamiento para la observación <span class="math inline">\(i\)</span> ésima.</p>
+<p>Los valores grandes de <span class="math inline">\(h_i\)</span> indican valores extremos en <span class="math inline">\(X\)</span>, que pueden influir en la regresión. Tenga en cuenta que los apalancamientos solo dependen de <span class="math inline">\(X\)</span>.</p>
+<p>Aquí, <span class="math inline">\(p\)</span> el número de <span class="math inline">\(\beta\)</span> también es el trazo (y rango) de la matriz sombrero.</p>
+<p><span class="math display">\[
+\sum_{i = 1}^n h_i = p
+\]</span></p>
+<p>¿Cuál es el valor de <span class="math inline">\(h_i\)</span> que se consideraría grande? No hay una respuesta exacta a esta pregunta. Una heurística común sería comparar cada apalancamiento con dos veces el apalancamiento promedio. Un apalancamiento mayor que esto se considera una observación a tener en cuenta. Es decir, si</p>
+<p><span class="math display">\[
+h_i &gt; 2 \bar{h}
+\]</span></p>
+<p>decimos que la observación <span class="math inline">\(i\)</span> tiene un gran apalancamiento. Aquí,</p>
+<p><span class="math display">\[
+\bar{h} = \frac{\sum_{i = 1}^n h_i}{n} = \frac{p}{n}.
+\]</span></p>
+<p>Para la regresión lineal simple, el apalancamiento para cada punto viene dado por</p>
+<p><span class="math display">\[
+h_i = \frac{1}{n} + \frac{(x_i - \bar{x})^2}{S_{xx}}.
+\]</span></p>
+<p>Esta expresión debería resultarle familiar. (Piense en la inferencia de SLR). Sugiere que los grandes apalancamientos ocurren cuando los valores de <span class="math inline">\(x\)</span> están lejos de su media. Recuerde que la regresión pasa por el punto <span class="math inline">\((\bar{x}, \bar{y})\)</span>.</p>
+<p>Hay varias formas de encontrar apalancamientos en <code>R</code>.</p>
+<div class="sourceCode" id="cb920"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb920-1"><a href="diagnóstico-de-modelos.html#cb920-1" aria-hidden="true" tabindex="-1"></a>lev_ex <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
+<span id="cb920-2"><a href="diagnóstico-de-modelos.html#cb920-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x1 =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">11</span>, <span class="dv">11</span>, <span class="dv">7</span>, <span class="dv">4</span>, <span class="dv">10</span>, <span class="dv">5</span>, <span class="dv">8</span>),</span>
+<span id="cb920-3"><a href="diagnóstico-de-modelos.html#cb920-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x2 =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">2</span>),</span>
+<span id="cb920-4"><a href="diagnóstico-de-modelos.html#cb920-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y  =</span> <span class="fu">c</span>(<span class="dv">11</span>, <span class="dv">15</span>, <span class="dv">13</span>, <span class="dv">14</span>, <span class="dv">0</span>, <span class="dv">19</span>, <span class="dv">16</span>, <span class="dv">8</span>))</span>
+<span id="cb920-5"><a href="diagnóstico-de-modelos.html#cb920-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb920-6"><a href="diagnóstico-de-modelos.html#cb920-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x2 <span class="sc">~</span> x1, <span class="at">data =</span> lev_ex, <span class="at">cex =</span> <span class="dv">2</span>)</span>
+<span id="cb920-7"><a href="diagnóstico-de-modelos.html#cb920-7" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="dv">7</span>, <span class="dv">3</span>, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">cex =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-415-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Aquí hemos creado algunos datos multivariados. Observe que hemos trazado los valores de <span class="math inline">\(x\)</span>, no los valores de <span class="math inline">\(y\)</span>. El punto rojo es <span class="math inline">\((7,3)\)</span> que es la media de <code>x1</code> y la media de<code>x2</code> respectivamente.</p>
+<p>Podríamos calcular los apalancamientos usando las expresiones definidas anteriormente. Primero creamos la matriz <span class="math inline">\(X\)</span>, luego calculamos <span class="math inline">\(H\)</span> como se define y extraemos los elementos diagonales.</p>
+<div class="sourceCode" id="cb921"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb921-1"><a href="diagnóstico-de-modelos.html#cb921-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">=</span> <span class="fu">cbind</span>(<span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">8</span>), lev_ex<span class="sc">$</span>x1, lev_ex<span class="sc">$</span>x2)</span>
+<span id="cb921-2"><a href="diagnóstico-de-modelos.html#cb921-2" aria-hidden="true" tabindex="-1"></a>H <span class="ot">=</span> X <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X) <span class="sc">%*%</span> <span class="fu">t</span>(X)</span>
+<span id="cb921-3"><a href="diagnóstico-de-modelos.html#cb921-3" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(H)</span></code></pre></div>
+<pre><code>## [1] 0.6000 0.3750 0.2875 0.1250 0.4000 0.2125 0.5875 0.4125</code></pre>
+<p>Observe que aquí tenemos dos predictores, por lo que la regresión tendría 3 parámetros <span class="math inline">\(\beta\)</span>, por lo que la suma de los elementos diagonales es 3.</p>
+<div class="sourceCode" id="cb923"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb923-1"><a href="diagnóstico-de-modelos.html#cb923-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">diag</span>(H))</span></code></pre></div>
+<pre><code>## [1] 3</code></pre>
+<p>Alternativamente, el método que usaremos con más frecuencia es simplemente ajustar una regresión, luego usar la función <code>hatvalues()</code>, que devuelve los apalancamientos.</p>
+<div class="sourceCode" id="cb925"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb925-1"><a href="diagnóstico-de-modelos.html#cb925-1" aria-hidden="true" tabindex="-1"></a>lev_fit <span class="ot">=</span> <span class="fu">lm</span>(y <span class="sc">~</span> ., <span class="at">data =</span> lev_ex)</span>
+<span id="cb925-2"><a href="diagnóstico-de-modelos.html#cb925-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hatvalues</span>(lev_fit)</span></code></pre></div>
+<pre><code>##      1      2      3      4      5      6      7      8 
+## 0.6000 0.3750 0.2875 0.1250 0.4000 0.2125 0.5875 0.4125</code></pre>
+<p>Nuevamente, tenga en cuenta que aquí hemos “usado” los valores <span class="math inline">\(y\)</span> para ajustar la regresión, pero <code>R</code> aún los ignora al calcular los apalancamientos, ya que los apalancamientos solo dependen de los valores <span class="math inline">\(x\)</span>.</p>
+<div class="sourceCode" id="cb927"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb927-1"><a href="diagnóstico-de-modelos.html#cb927-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(lev_fit)</span></code></pre></div>
+<pre><code>## (Intercept)          x1          x2 
+##         3.7        -0.7         4.4</code></pre>
+<p>Veamos qué sucede con estos coeficientes cuando modificamos el valor <code>y</code> del punto con el apalancamiento más alto.</p>
+<div class="sourceCode" id="cb929"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb929-1"><a href="diagnóstico-de-modelos.html#cb929-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which.max</span>(<span class="fu">hatvalues</span>(lev_fit))</span></code></pre></div>
+<pre><code>## 1 
+## 1</code></pre>
+<div class="sourceCode" id="cb931"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb931-1"><a href="diagnóstico-de-modelos.html#cb931-1" aria-hidden="true" tabindex="-1"></a>lev_ex[<span class="fu">which.max</span>(<span class="fu">hatvalues</span>(lev_fit)),]</span></code></pre></div>
+<pre><code>##   x1 x2  y
+## 1  0  1 11</code></pre>
+<p>Vemos que el valor original de <code>y</code> es 11. Crearemos una copia de los datos y modificaremos este punto para que tenga un valor <code>y</code> de<code>20</code>.</p>
+<div class="sourceCode" id="cb933"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb933-1"><a href="diagnóstico-de-modelos.html#cb933-1" aria-hidden="true" tabindex="-1"></a>lev_ex_1 <span class="ot">=</span> lev_ex</span>
+<span id="cb933-2"><a href="diagnóstico-de-modelos.html#cb933-2" aria-hidden="true" tabindex="-1"></a>lev_ex_1<span class="sc">$</span>y[<span class="dv">1</span>] <span class="ot">=</span> <span class="dv">20</span></span>
+<span id="cb933-3"><a href="diagnóstico-de-modelos.html#cb933-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(y <span class="sc">~</span> ., <span class="at">data =</span> lev_ex_1)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = y ~ ., data = lev_ex_1)
+## 
+## Coefficients:
+## (Intercept)           x1           x2  
+##       8.875       -1.375        4.625</code></pre>
+<p>Observe los cambios <strong>grandes</strong> en los coeficientes. También observe que cada uno de los coeficientes ha cambiado de alguna manera. Tenga en cuenta que el apalancamiento de los puntos no habría cambiado, ya que no hemos modificado ninguno de los valores de <span class="math inline">\(x\)</span>.</p>
+<p>Ahora veamos qué sucede con estos coeficientes cuando modificamos el valor <code>y</code> del punto con el apalancamiento más bajo.</p>
+<div class="sourceCode" id="cb935"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb935-1"><a href="diagnóstico-de-modelos.html#cb935-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which.min</span>(<span class="fu">hatvalues</span>(lev_fit))</span></code></pre></div>
+<pre><code>## 4 
+## 4</code></pre>
+<div class="sourceCode" id="cb937"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb937-1"><a href="diagnóstico-de-modelos.html#cb937-1" aria-hidden="true" tabindex="-1"></a>lev_ex[<span class="fu">which.min</span>(<span class="fu">hatvalues</span>(lev_fit)),]</span></code></pre></div>
+<pre><code>##   x1 x2  y
+## 4  7  3 14</code></pre>
+<p>Vemos que el valor original de <code>y</code> es 14. Nuevamente crearemos una copia de los datos y modificaremos este punto para que tenga un valor <code>y</code> de <code>30</code>.</p>
+<div class="sourceCode" id="cb939"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb939-1"><a href="diagnóstico-de-modelos.html#cb939-1" aria-hidden="true" tabindex="-1"></a>lev_ex_2 <span class="ot">=</span> lev_ex</span>
+<span id="cb939-2"><a href="diagnóstico-de-modelos.html#cb939-2" aria-hidden="true" tabindex="-1"></a>lev_ex_2<span class="sc">$</span>y[<span class="dv">4</span>] <span class="ot">=</span> <span class="dv">30</span></span>
+<span id="cb939-3"><a href="diagnóstico-de-modelos.html#cb939-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(y <span class="sc">~</span> ., <span class="at">data =</span> lev_ex_2)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = y ~ ., data = lev_ex_2)
+## 
+## Coefficients:
+## (Intercept)           x1           x2  
+##         5.7         -0.7          4.4</code></pre>
+<p>Esta vez, a pesar de un gran cambio en el valor de <code>y</code>, solo hay un pequeño cambio en los coeficientes. Además, ¡solo ha cambiado el intercepto!</p>
+<div class="sourceCode" id="cb941"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb941-1"><a href="diagnóstico-de-modelos.html#cb941-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(lev_ex<span class="sc">$</span>x1)</span></code></pre></div>
+<pre><code>## [1] 7</code></pre>
+<div class="sourceCode" id="cb943"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb943-1"><a href="diagnóstico-de-modelos.html#cb943-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(lev_ex<span class="sc">$</span>x2)</span></code></pre></div>
+<pre><code>## [1] 3</code></pre>
+<div class="sourceCode" id="cb945"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb945-1"><a href="diagnóstico-de-modelos.html#cb945-1" aria-hidden="true" tabindex="-1"></a>lev_ex[<span class="dv">4</span>,]</span></code></pre></div>
+<pre><code>##   x1 x2  y
+## 4  7  3 14</code></pre>
+<p>Observe que este punto fue la media de ambos predictores.</p>
+<p>Volviendo a nuestras tres gráficas, cada una con un punto añadido, podemos calcular los apalancamientos para cada una. Tenga en cuenta que el undécimo punto de datos es el punto agregado.</p>
+<div class="sourceCode" id="cb947"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb947-1"><a href="diagnóstico-de-modelos.html#cb947-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hatvalues</span>(model_1)</span></code></pre></div>
+<pre><code>##          1          2          3          4          5          6          7 
+## 0.33534597 0.23860732 0.16610842 0.11784927 0.09382988 0.09405024 0.11851036 
+##          8          9         10         11 
+## 0.16721022 0.24014985 0.33732922 0.09100926</code></pre>
+<div class="sourceCode" id="cb949"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb949-1"><a href="diagnóstico-de-modelos.html#cb949-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hatvalues</span>(model_2)</span></code></pre></div>
+<pre><code>##          1          2          3          4          5          6          7 
+## 0.23238866 0.18663968 0.14979757 0.12186235 0.10283401 0.09271255 0.09149798 
+##          8          9         10         11 
+## 0.09919028 0.11578947 0.14129555 0.66599190</code></pre>
+<div class="sourceCode" id="cb951"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb951-1"><a href="diagnóstico-de-modelos.html#cb951-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hatvalues</span>(model_3)</span></code></pre></div>
+<pre><code>##          1          2          3          4          5          6          7 
+## 0.27852761 0.21411043 0.16319018 0.12576687 0.10184049 0.09141104 0.09447853 
+##          8          9         10         11 
+## 0.11104294 0.14110429 0.18466258 0.49386503</code></pre>
+<p>¿Alguno de estos es grande?</p>
+<div class="sourceCode" id="cb953"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb953-1"><a href="diagnóstico-de-modelos.html#cb953-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hatvalues</span>(model_1) <span class="sc">&gt;</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">mean</span>(<span class="fu">hatvalues</span>(model_1))</span></code></pre></div>
+<pre><code>##     1     2     3     4     5     6     7     8     9    10    11 
+## FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</code></pre>
+<div class="sourceCode" id="cb955"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb955-1"><a href="diagnóstico-de-modelos.html#cb955-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hatvalues</span>(model_2) <span class="sc">&gt;</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">mean</span>(<span class="fu">hatvalues</span>(model_2))</span></code></pre></div>
+<pre><code>##     1     2     3     4     5     6     7     8     9    10    11 
+## FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE</code></pre>
+<div class="sourceCode" id="cb957"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb957-1"><a href="diagnóstico-de-modelos.html#cb957-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hatvalues</span>(model_3) <span class="sc">&gt;</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">mean</span>(<span class="fu">hatvalues</span>(model_3))</span></code></pre></div>
+<pre><code>##     1     2     3     4     5     6     7     8     9    10    11 
+## FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE</code></pre>
+<p>Vemos que en la segunda y tercer gráfica, el punto agregado es un punto de alto apalancamiento. Recuerde que solo en el tercer gráfico eso influyó en la regresión. Para entender por qué, necesitaremos analizar los valores atípicos.</p>
+</div>
+<div id="valores-atípicos" class="section level3" number="18.3.2">
+<h3><span class="header-section-number">18.3.2</span> Valores atípicos</h3>
+<p>Los valores atípicos son puntos que no se ajustan bien al modelo. Pueden tener o no un gran efecto en él. Para identificar valores atípicos, buscaremos observaciones con residuos grandes.</p>
+<p>Ahora,</p>
+<p><span class="math display">\[
+e = y - \hat{y} = Iy - Hy = (I - H) y
+\]</span></p>
+<p>Entonces, bajo los supuestos de regresión lineal,</p>
+<p><span class="math display">\[
+\text{Var}(e_i) = (1 - h_i) \sigma^2
+\]</span></p>
+<p>y por lo tanto la estimación de <span class="math inline">\(\sigma^2\)</span> con <span class="math inline">\(s_e^2\)</span> es</p>
+<p><span class="math display">\[
+\text{SE}[e_i] = s_e \sqrt{(1 - h_i)}.
+\]</span></p>
+<p>Luego podemos mirar el <strong>residuo estandarizado</strong> para cada observación, <span class="math inline">\(i = 1, 2, \ldots n\)</span>,</p>
+<p><span class="math display">\[
+r_i = \frac{e_i}{s_e\sqrt{1 - h_i}} \overset{approx}{\sim} N(\mu = 0, \sigma^ 2 = 1)
+\]</span></p>
+<p>cuando <span class="math inline">\(n\)</span> es grande.</p>
+<p>Podemos utilizar este hecho para identificar residuos “grandes”. Por ejemplo, los residuos estandarizados de magnitud superior a 2 solo deberían ocurrir aproximadamente el 5 por ciento de las veces.</p>
+<p>Volviendo nuevamente a nuestras tres gráficas, cada una con un punto agregado, podemos calcular los residuos y los residuos estandarizados para cada una. Los residuos estandarizados se pueden obtener en <code>R</code> usando <code>rstandard()</code> donde normalmente usaríamos <code>resid()</code>.</p>
+<div class="sourceCode" id="cb959"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb959-1"><a href="diagnóstico-de-modelos.html#cb959-1" aria-hidden="true" tabindex="-1"></a><span class="fu">resid</span>(model_1)</span></code></pre></div>
+<pre><code>##          1          2          3          4          5          6          7 
+##  0.4949887 -1.4657145 -0.5629345 -0.3182468 -0.5718877 -1.1073271  0.4852728 
+##          8          9         10         11 
+## -1.1459548  0.9420814 -1.1641029  4.4138254</code></pre>
+<div class="sourceCode" id="cb961"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb961-1"><a href="diagnóstico-de-modelos.html#cb961-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rstandard</span>(model_1)</span></code></pre></div>
+<pre><code>##          1          2          3          4          5          6          7 
+##  0.3464701 -0.9585470 -0.3517802 -0.1933575 -0.3428264 -0.6638841  0.2949482 
+##          8          9         10         11 
+## -0.7165857  0.6167268 -0.8160389  2.6418234</code></pre>
+<div class="sourceCode" id="cb963"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb963-1"><a href="diagnóstico-de-modelos.html#cb963-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rstandard</span>(model_1)[<span class="fu">abs</span>(<span class="fu">rstandard</span>(model_1)) <span class="sc">&gt;</span> <span class="dv">2</span>]</span></code></pre></div>
+<pre><code>##       11 
+## 2.641823</code></pre>
+<p>En la primera gráfica, vemos que el undécimo punto, el punto agregado, es un residuo estandarizado grande.</p>
+<div class="sourceCode" id="cb965"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb965-1"><a href="diagnóstico-de-modelos.html#cb965-1" aria-hidden="true" tabindex="-1"></a><span class="fu">resid</span>(model_2)</span></code></pre></div>
+<pre><code>##           1           2           3           4           5           6 
+##  1.03288292 -0.95203397 -0.07346766  0.14700626 -0.13084829 -0.69050140 
+##           7           8           9          10          11 
+##  0.87788484 -0.77755647  1.28626601 -0.84413207  0.12449986</code></pre>
+<div class="sourceCode" id="cb967"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb967-1"><a href="diagnóstico-de-modelos.html#cb967-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rstandard</span>(model_2)</span></code></pre></div>
+<pre><code>##           1           2           3           4           5           6 
+##  1.41447023 -1.26655590 -0.09559792  0.18822094 -0.16574677 -0.86977220 
+##           7           8           9          10          11 
+##  1.10506546 -0.98294409  1.64121833 -1.09295417  0.25846620</code></pre>
+<div class="sourceCode" id="cb969"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb969-1"><a href="diagnóstico-de-modelos.html#cb969-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rstandard</span>(model_2)[<span class="fu">abs</span>(<span class="fu">rstandard</span>(model_2)) <span class="sc">&gt;</span> <span class="dv">2</span>]</span></code></pre></div>
+<pre><code>## named numeric(0)</code></pre>
+<p>En la segunda gráfica, vemos que no hay puntos con grandes residuos estandarizados.</p>
+<div class="sourceCode" id="cb971"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb971-1"><a href="diagnóstico-de-modelos.html#cb971-1" aria-hidden="true" tabindex="-1"></a><span class="fu">resid</span>(model_3)</span></code></pre></div>
+<pre><code>##           1           2           3           4           5           6 
+##  2.30296166 -0.04347087  0.47357980  0.33253808 -0.30683212 -1.22800087 
+##           7           8           9          10          11 
+## -0.02113027 -2.03808722 -0.33578039 -2.82769411  3.69191633</code></pre>
+<div class="sourceCode" id="cb973"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb973-1"><a href="diagnóstico-de-modelos.html#cb973-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rstandard</span>(model_3)</span></code></pre></div>
+<pre><code>##           1           2           3           4           5           6 
+##  1.41302755 -0.02555591  0.26980722  0.18535382 -0.16873216 -0.67141143 
+##           7           8           9          10          11 
+## -0.01157256 -1.12656475 -0.18882474 -1.63206526  2.70453408</code></pre>
+<div class="sourceCode" id="cb975"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb975-1"><a href="diagnóstico-de-modelos.html#cb975-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rstandard</span>(model_3)[<span class="fu">abs</span>(<span class="fu">rstandard</span>(model_3)) <span class="sc">&gt;</span> <span class="dv">2</span>]</span></code></pre></div>
+<pre><code>##       11 
+## 2.704534</code></pre>
+<p>En la última gráfica, vemos que el undécimo punto, el punto agregado, es un residuo estandarizado grande.</p>
+<p>Recuerde que el punto agregado en las gráficas dos y tres fueron ambos de alto apalancamiento, pero ahora solo el punto en la gráfica tres tiene un gran residuo. Ahora combinaremos esta información y discutiremos la influencia.</p>
+</div>
+<div id="influencia" class="section level3" number="18.3.3">
+<h3><span class="header-section-number">18.3.3</span> Influencia</h3>
+<p>Como hemos visto en los tres gráficos, algunos valores atípicos solo cambian la regresión en pequeña cantidad (gráfico uno) y algunos valores atípicos tienen un gran efecto en la regresión (gráfico tres). Las observaciones que caen en la última categoría, puntos con (alguna combinación de) <em>alto apalancamiento</em> <strong>y</strong> <em>gran residual</em>, los llamaremos <strong>influyentes</strong>.</p>
+<p>Una medida común de influencia es la <strong>Distancia de Cook</strong>, que se define como</p>
+<p><span class="math display">\[
+  D_i = \frac{1}{p}r_i^2\frac{h_i}{1-{h_i}}.
+\]</span></p>
+<p>Tenga en cuenta que esta es una función tanto del <em>apalancamiento</em> como de los <em>residuales estandarizados</em>.</p>
+<p>La distancia Cook a menudo se considera grande si</p>
+<p><span class="math display">\[
+D_i &gt; \frac{4}{n}
+\]</span></p>
+<p>y una observación con una distancia de Cook grande se llama influyente. De nuevo, esto es simplemente una heurística y no una regla exacta.</p>
+<p>La distancia de Cook para cada punto de una regresión se puede calcular usando <code>cooks.distance()</code> que es una función predeterminada en <code>R</code>. Busquemos puntos influyentes en las tres gráficas que habíamos estado considerando.</p>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-430-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<p>Recuerde que los puntos encerrados en un círculo en cada gráfico tienen características diferentes:</p>
+<ul>
+<li>Gráfico Uno: apalancamiento bajo, residuo grande.</li>
+<li>Gráfico Dos: apalancamiento alto, residuo pequeño.</li>
+<li>Gráfico Tres: apalancamiento alto, residuo grande.</li>
+</ul>
+<p>Ahora comprobaremos directamente si cada uno de estos es influyente.</p>
+<div class="sourceCode" id="cb977"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb977-1"><a href="diagnóstico-de-modelos.html#cb977-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cooks.distance</span>(model_1)[<span class="dv">11</span>] <span class="sc">&gt;</span> <span class="dv">4</span> <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">cooks.distance</span>(model_1))</span></code></pre></div>
+<pre><code>##    11 
+## FALSE</code></pre>
+<div class="sourceCode" id="cb979"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb979-1"><a href="diagnóstico-de-modelos.html#cb979-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cooks.distance</span>(model_2)[<span class="dv">11</span>] <span class="sc">&gt;</span> <span class="dv">4</span> <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">cooks.distance</span>(model_2))</span></code></pre></div>
+<pre><code>##    11 
+## FALSE</code></pre>
+<div class="sourceCode" id="cb981"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb981-1"><a href="diagnóstico-de-modelos.html#cb981-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cooks.distance</span>(model_3)[<span class="dv">11</span>] <span class="sc">&gt;</span> <span class="dv">4</span> <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">cooks.distance</span>(model_3))</span></code></pre></div>
+<pre><code>##   11 
+## TRUE</code></pre>
+<p>Y, como se esperaba, ¡el punto agregado en la tercer gráfica, con un alto apalancamiento y un gran residuo, se considera influyente!</p>
+</div>
+</div>
+<div id="ejemplos-de-análisis-de-datos" class="section level2" number="18.4">
+<h2><span class="header-section-number">18.4</span> Ejemplos de análisis de datos</h2>
+<div id="buenos-diagnósticos" class="section level3" number="18.4.1">
+<h3><span class="header-section-number">18.4.1</span> Buenos diagnósticos</h3>
+<p>En el último capítulo ajustamos una regresión aditiva a los datos de <code>mtcars</code> con <code>mpg</code> como respuesta y <code>hp</code> y <code>am</code> como predictores. Realicemos algunos diagnósticos en este modelo.</p>
+<p>Primero, ajuste el modelo como hicimos en el capítulo anterior.</p>
+<div class="sourceCode" id="cb983"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb983-1"><a href="diagnóstico-de-modelos.html#cb983-1" aria-hidden="true" tabindex="-1"></a>mpg_hp_add <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> am, <span class="at">data =</span> mtcars)</span></code></pre></div>
+<div class="sourceCode" id="cb984"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb984-1"><a href="diagnóstico-de-modelos.html#cb984-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(mpg_hp_add), <span class="fu">resid</span>(mpg_hp_add), <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">pch =</span> <span class="dv">20</span>,</span>
+<span id="cb984-2"><a href="diagnóstico-de-modelos.html#cb984-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Ajustados&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Residuales&quot;</span>,</span>
+<span id="cb984-3"><a href="diagnóstico-de-modelos.html#cb984-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;mtcars: Ajustados versus Residuales&quot;</span>)</span>
+<span id="cb984-4"><a href="diagnóstico-de-modelos.html#cb984-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-433-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>La gráfica de ajustados versus residuales se ve bien. No vemos ningún patrón obvio y la varianza parece aproximadamente constante. (Tal vez un poco más grande para valores ajustados grandes, pero no lo suficiente como para preocuparse).</p>
+<div class="sourceCode" id="cb985"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb985-1"><a href="diagnóstico-de-modelos.html#cb985-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bptest</span>(mpg_hp_add)</span></code></pre></div>
+<pre><code>## 
+##  studentized Breusch-Pagan test
+## 
+## data:  mpg_hp_add
+## BP = 7.5858, df = 2, p-value = 0.02253</code></pre>
+<p>La prueba de Breusch-Pagan verifica esto, al menos para un pequeño valor de <span class="math inline">\(\alpha\)</span>.</p>
+<div class="sourceCode" id="cb987"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb987-1"><a href="diagnóstico-de-modelos.html#cb987-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">resid</span>(mpg_hp_add), <span class="at">col =</span> <span class="st">&quot;darkgrey&quot;</span>)</span>
+<span id="cb987-2"><a href="diagnóstico-de-modelos.html#cb987-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(<span class="fu">resid</span>(mpg_hp_add), <span class="at">col =</span> <span class="st">&quot;dodgerblue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-435-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>La gráfica Q-Q se ve extremadamente bien y la prueba de Shapiro-Wilk está de acuerdo.</p>
+<div class="sourceCode" id="cb988"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb988-1"><a href="diagnóstico-de-modelos.html#cb988-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">resid</span>(mpg_hp_add))</span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  resid(mpg_hp_add)
+## W = 0.96485, p-value = 0.3706</code></pre>
+<div class="sourceCode" id="cb990"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb990-1"><a href="diagnóstico-de-modelos.html#cb990-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">hatvalues</span>(mpg_hp_add) <span class="sc">&gt;</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">mean</span>(<span class="fu">hatvalues</span>(mpg_hp_add)))</span></code></pre></div>
+<pre><code>## [1] 2</code></pre>
+<p>Vemos que hay dos puntos de gran apalancamiento.</p>
+<div class="sourceCode" id="cb992"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb992-1"><a href="diagnóstico-de-modelos.html#cb992-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">abs</span>(<span class="fu">rstandard</span>(mpg_hp_add)) <span class="sc">&gt;</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 1</code></pre>
+<p>También hay un punto con un gran residuo. ¿Estos resultan en puntos que se consideran influyentes?</p>
+<div class="sourceCode" id="cb994"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb994-1"><a href="diagnóstico-de-modelos.html#cb994-1" aria-hidden="true" tabindex="-1"></a>cd_mpg_hp_add <span class="ot">=</span> <span class="fu">cooks.distance</span>(mpg_hp_add)</span>
+<span id="cb994-2"><a href="diagnóstico-de-modelos.html#cb994-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(cd_mpg_hp_add <span class="sc">&gt;</span> <span class="dv">4</span> <span class="sc">/</span> <span class="fu">length</span>(cd_mpg_hp_add))</span></code></pre></div>
+<pre><code>## [1] 2</code></pre>
+<div class="sourceCode" id="cb996"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb996-1"><a href="diagnóstico-de-modelos.html#cb996-1" aria-hidden="true" tabindex="-1"></a>large_cd_mpg <span class="ot">=</span> cd_mpg_hp_add <span class="sc">&gt;</span> <span class="dv">4</span> <span class="sc">/</span> <span class="fu">length</span>(cd_mpg_hp_add)</span>
+<span id="cb996-2"><a href="diagnóstico-de-modelos.html#cb996-2" aria-hidden="true" tabindex="-1"></a>cd_mpg_hp_add[large_cd_mpg]</span></code></pre></div>
+<pre><code>## Toyota Corolla  Maserati Bora 
+##      0.1772555      0.3447994</code></pre>
+<p>Encontramos dos puntos influyentes. Curiosamente, son <strong>coches muy</strong> diferentes.</p>
+<div class="sourceCode" id="cb998"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb998-1"><a href="diagnóstico-de-modelos.html#cb998-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(mpg_hp_add)</span></code></pre></div>
+<pre><code>## (Intercept)          hp          am 
+##  26.5849137  -0.0588878   5.2770853</code></pre>
+<p>Dado que los diagnósticos se veían bien, no hay mucha necesidad de preocuparse por estos dos puntos, pero veamos cuánto cambian los coeficientes si los eliminamos.</p>
+<div class="sourceCode" id="cb1000"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1000-1"><a href="diagnóstico-de-modelos.html#cb1000-1" aria-hidden="true" tabindex="-1"></a>mpg_hp_add_fix <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> am,</span>
+<span id="cb1000-2"><a href="diagnóstico-de-modelos.html#cb1000-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> mtcars,</span>
+<span id="cb1000-3"><a href="diagnóstico-de-modelos.html#cb1000-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">subset =</span> cd_mpg_hp_add <span class="sc">&lt;=</span> <span class="dv">4</span> <span class="sc">/</span> <span class="fu">length</span>(cd_mpg_hp_add))</span>
+<span id="cb1000-4"><a href="diagnóstico-de-modelos.html#cb1000-4" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(mpg_hp_add_fix)</span></code></pre></div>
+<pre><code>## (Intercept)          hp          am 
+## 27.22190933 -0.06286249  4.29765867</code></pre>
+<p>Parece que no hay mucho cambio en los coeficientes como resultado de eliminar los supuestos puntos influyentes. Tenga en cuenta que no creamos un nuevo conjunto de datos para lograr esto. En su lugar, usamos el argumento <code>subset</code> para <code>lm()</code>. Piense en lo que hace el código <code>cd_mpg_hp_add &lt;= 4 / length(cd_mpg_hp_add)</code> aquí.</p>
+<div class="sourceCode" id="cb1002"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1002-1"><a href="diagnóstico-de-modelos.html#cb1002-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb1002-2"><a href="diagnóstico-de-modelos.html#cb1002-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mpg_hp_add)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-442-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>Observe que, al llamar a <code>plot()</code> en una variable que almacena un objeto creado por <code>lm()</code>, se generan cuatro diagramas de diagnóstico por defecto. Utilice <code>?Plot.lm</code> para obtener más información. Los dos primeros ya deberían resultarle familiares.</p>
+</div>
+<div id="diagnóstico-sospechoso" class="section level3" number="18.4.2">
+<h3><span class="header-section-number">18.4.2</span> Diagnóstico sospechoso</h3>
+<p>Consideremos el modelo <code>big_model</code> del último capítulo que se ajustó al conjunto de datos <code>autompg</code>. Se usó <code>mpg</code> como respuesta y se consideraron muchos términos de interacción entre los predictores <code>disp</code>, <code>hp</code> y <code>domestic</code>.</p>
+<div class="sourceCode" id="cb1003"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1003-1"><a href="diagnóstico-de-modelos.html#cb1003-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(autompg)</span></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    383 obs. of  9 variables:
+##  $ mpg     : num  18 15 18 16 17 15 14 14 14 15 ...
+##  $ cyl     : Factor w/ 3 levels &quot;4&quot;,&quot;6&quot;,&quot;8&quot;: 3 3 3 3 3 3 3 3 3 3 ...
+##  $ disp    : num  307 350 318 304 302 429 454 440 455 390 ...
+##  $ hp      : num  130 165 150 150 140 198 220 215 225 190 ...
+##  $ wt      : num  3504 3693 3436 3433 3449 ...
+##  $ acc     : num  12 11.5 11 12 10.5 10 9 8.5 10 8.5 ...
+##  $ year    : int  70 70 70 70 70 70 70 70 70 70 ...
+##  $ origin  : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ domestic: num  1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+<div class="sourceCode" id="cb1005"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1005-1"><a href="diagnóstico-de-modelos.html#cb1005-1" aria-hidden="true" tabindex="-1"></a>big_model <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> disp <span class="sc">*</span> hp <span class="sc">*</span> domestic, <span class="at">data =</span> autompg)</span></code></pre></div>
+<div class="sourceCode" id="cb1006"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1006-1"><a href="diagnóstico-de-modelos.html#cb1006-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">resid</span>(big_model), <span class="at">col =</span> <span class="st">&quot;darkgrey&quot;</span>)</span>
+<span id="cb1006-2"><a href="diagnóstico-de-modelos.html#cb1006-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(<span class="fu">resid</span>(big_model), <span class="at">col =</span> <span class="st">&quot;dodgerblue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-446-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb1007"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1007-1"><a href="diagnóstico-de-modelos.html#cb1007-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">resid</span>(big_model))</span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  resid(big_model)
+## W = 0.96161, p-value = 1.824e-08</code></pre>
+<p>Aquí, tanto la gráfica Q-Q como la prueba de Shapiro-Wilk sugieren que se viola el supuesto de normalidad.</p>
+<div class="sourceCode" id="cb1009"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1009-1"><a href="diagnóstico-de-modelos.html#cb1009-1" aria-hidden="true" tabindex="-1"></a>big_mod_cd <span class="ot">=</span> <span class="fu">cooks.distance</span>(big_model)</span>
+<span id="cb1009-2"><a href="diagnóstico-de-modelos.html#cb1009-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(big_mod_cd <span class="sc">&gt;</span> <span class="dv">4</span> <span class="sc">/</span> <span class="fu">length</span>(big_mod_cd))</span></code></pre></div>
+<pre><code>## [1] 31</code></pre>
+<p>Aquí, encontramos 31, ¡así que quizás eliminarlos ayude!</p>
+<div class="sourceCode" id="cb1011"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1011-1"><a href="diagnóstico-de-modelos.html#cb1011-1" aria-hidden="true" tabindex="-1"></a>big_model_fix <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> disp <span class="sc">*</span> hp <span class="sc">*</span> domestic,</span>
+<span id="cb1011-2"><a href="diagnóstico-de-modelos.html#cb1011-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data =</span> autompg,</span>
+<span id="cb1011-3"><a href="diagnóstico-de-modelos.html#cb1011-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">subset =</span> big_mod_cd <span class="sc">&lt;</span> <span class="dv">4</span> <span class="sc">/</span> <span class="fu">length</span>(big_mod_cd))</span>
+<span id="cb1011-4"><a href="diagnóstico-de-modelos.html#cb1011-4" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">resid</span>(big_model_fix), <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>)</span>
+<span id="cb1011-5"><a href="diagnóstico-de-modelos.html#cb1011-5" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(<span class="fu">resid</span>(big_model_fix), <span class="at">col =</span> <span class="st">&quot;dodgerblue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-448-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb1012"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1012-1"><a href="diagnóstico-de-modelos.html#cb1012-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">resid</span>(big_model_fix))</span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  resid(big_model_fix)
+## W = 0.99035, p-value = 0.02068</code></pre>
+<p>Eliminar estos puntos da como resultado una gráfica Q-Q mucho mejor, y ahora Shapiro-Wilk no puede rechazar por un <span class="math inline">\(\alpha\)</span> bajo.</p>
+<p>Ahora hemos visto que, a veces, la modificación de los datos puede solucionar problemas con la regresión. Sin embargo, en el próximo capítulo, en lugar de modificar los datos, modificaremos el modelo mediante <em>transformaciones</em>.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="análisis-de-varianza.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="transformaciones.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

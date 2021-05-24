@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 7 Regresión lineal simple | Estadística aplicada con R</title>
+  <meta name="description" content="Capítulo 7 Regresión lineal simple | Estadística aplicada con R" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 7 Regresión lineal simple | Estadística aplicada con R" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 7 Regresión lineal simple | Estadística aplicada con R" />
+  
+  
+  
+
+
+
+<meta name="date" content="2021-05-24" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  <link rel="shortcut icon" href="favicon.gif" type="image/x-icon" />
+<link rel="prev" href="recursos-r.html"/>
+<link rel="next" href="inferencia-para-regresión-lineal-simple.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Estadística aplicada con R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introducción</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#convenciones"><i class="fa fa-check"></i><b>1.1</b> Convenciones</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="introducción-a-r.html"><a href="introducción-a-r.html"><i class="fa fa-check"></i><b>2</b> Introducción a <code>R</code></a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introducción-a-r.html"><a href="introducción-a-r.html#primeros-pasos"><i class="fa fa-check"></i><b>2.1</b> Primeros pasos</a></li>
+<li class="chapter" data-level="2.2" data-path="introducción-a-r.html"><a href="introducción-a-r.html#cálculos-básicos"><i class="fa fa-check"></i><b>2.2</b> Cálculos básicos</a></li>
+<li class="chapter" data-level="2.3" data-path="introducción-a-r.html"><a href="introducción-a-r.html#obteniendo-ayuda"><i class="fa fa-check"></i><b>2.3</b> Obteniendo ayuda</a></li>
+<li class="chapter" data-level="2.4" data-path="introducción-a-r.html"><a href="introducción-a-r.html#instalación-de-paquetes"><i class="fa fa-check"></i><b>2.4</b> Instalación de paquetes</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="datos-y-programación.html"><a href="datos-y-programación.html"><i class="fa fa-check"></i><b>3</b> Datos y programación</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="datos-y-programación.html"><a href="datos-y-programación.html#tipos-de-datos"><i class="fa fa-check"></i><b>3.1</b> Tipos de datos</a></li>
+<li class="chapter" data-level="3.2" data-path="datos-y-programación.html"><a href="datos-y-programación.html#estructuras-de-datos"><i class="fa fa-check"></i><b>3.2</b> Estructuras de datos</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="datos-y-programación.html"><a href="datos-y-programación.html#vectores"><i class="fa fa-check"></i><b>3.2.1</b> Vectores</a></li>
+<li class="chapter" data-level="3.2.2" data-path="datos-y-programación.html"><a href="datos-y-programación.html#vectorización"><i class="fa fa-check"></i><b>3.2.2</b> Vectorización</a></li>
+<li class="chapter" data-level="3.2.3" data-path="datos-y-programación.html"><a href="datos-y-programación.html#operadores-logicos"><i class="fa fa-check"></i><b>3.2.3</b> Operadores logicos</a></li>
+<li class="chapter" data-level="3.2.4" data-path="datos-y-programación.html"><a href="datos-y-programación.html#más-vectorización"><i class="fa fa-check"></i><b>3.2.4</b> Más vectorización</a></li>
+<li class="chapter" data-level="3.2.5" data-path="datos-y-programación.html"><a href="datos-y-programación.html#matrices"><i class="fa fa-check"></i><b>3.2.5</b> Matrices</a></li>
+<li class="chapter" data-level="3.2.6" data-path="datos-y-programación.html"><a href="datos-y-programación.html#listas"><i class="fa fa-check"></i><b>3.2.6</b> Listas</a></li>
+<li class="chapter" data-level="3.2.7" data-path="datos-y-programación.html"><a href="datos-y-programación.html#marcos-de-datos"><i class="fa fa-check"></i><b>3.2.7</b> Marcos de datos</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="datos-y-programación.html"><a href="datos-y-programación.html#conceptos-básicos-de-programación"><i class="fa fa-check"></i><b>3.3</b> Conceptos básicos de programación</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="datos-y-programación.html"><a href="datos-y-programación.html#flujo-de-control"><i class="fa fa-check"></i><b>3.3.1</b> Flujo de control</a></li>
+<li class="chapter" data-level="3.3.2" data-path="datos-y-programación.html"><a href="datos-y-programación.html#funciones"><i class="fa fa-check"></i><b>3.3.2</b> Funciones</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html"><i class="fa fa-check"></i><b>4</b> Resumen de datos</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#resumen-estadístico"><i class="fa fa-check"></i><b>4.1</b> Resumen estadístico</a>
+<ul>
+<li class="chapter" data-level="" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#tendencia-central"><i class="fa fa-check"></i>Tendencia central</a></li>
+<li class="chapter" data-level="" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#dispersión"><i class="fa fa-check"></i>Dispersión</a></li>
+<li class="chapter" data-level="" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#categórica"><i class="fa fa-check"></i>Categórica</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#graficas"><i class="fa fa-check"></i><b>4.2</b> Graficas</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#histogramas"><i class="fa fa-check"></i><b>4.2.1</b> Histogramas</a></li>
+<li class="chapter" data-level="4.2.2" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#gráfico-de-barras"><i class="fa fa-check"></i><b>4.2.2</b> Gráfico de barras</a></li>
+<li class="chapter" data-level="4.2.3" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#diagramas-de-cajas"><i class="fa fa-check"></i><b>4.2.3</b> Diagramas de cajas</a></li>
+<li class="chapter" data-level="4.2.4" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#gráfico-de-dispersión"><i class="fa fa-check"></i><b>4.2.4</b> Gráfico de dispersión</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html"><i class="fa fa-check"></i><b>5</b> Probabilidad y estadística en <code>R</code></a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#probabilidad-en-r"><i class="fa fa-check"></i><b>5.1</b> Probabilidad en <code>R</code></a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#distribuciones"><i class="fa fa-check"></i><b>5.1.1</b> Distribuciones</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#pruebas-de-hipótesis-en-r"><i class="fa fa-check"></i><b>5.2</b> Pruebas de hipótesis en <code>R</code></a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#prueba-t-de-una-muestra-revisión"><i class="fa fa-check"></i><b>5.2.1</b> Prueba t de una muestra: revisión</a></li>
+<li class="chapter" data-level="5.2.2" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#prueba-t-de-una-muestra-ejemplo"><i class="fa fa-check"></i><b>5.2.2</b> Prueba t de una muestra: ejemplo</a></li>
+<li class="chapter" data-level="5.2.3" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#prueba-t-de-dos-muestras-revisión"><i class="fa fa-check"></i><b>5.2.3</b> Prueba t de dos muestras: revisión</a></li>
+<li class="chapter" data-level="5.2.4" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#prueba-t-de-dos-muestras-ejemplo"><i class="fa fa-check"></i><b>5.2.4</b> Prueba t de dos muestras: Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#simulación"><i class="fa fa-check"></i><b>5.3</b> Simulación</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#diferencias-emparejadas"><i class="fa fa-check"></i><b>5.3.1</b> Diferencias emparejadas</a></li>
+<li class="chapter" data-level="5.3.2" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#distribución-de-una-media-muestral"><i class="fa fa-check"></i><b>5.3.2</b> Distribución de una media muestral</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="recursos-r.html"><a href="recursos-r.html"><i class="fa fa-check"></i><b>6</b> Recursos <code>R</code></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="recursos-r.html"><a href="recursos-r.html#referencias-y-tutoriales-para-principiantes"><i class="fa fa-check"></i><b>6.1</b> Referencias y tutoriales para principiantes</a></li>
+<li class="chapter" data-level="6.2" data-path="recursos-r.html"><a href="recursos-r.html#referencias-intermedias"><i class="fa fa-check"></i><b>6.2</b> Referencias intermedias</a></li>
+<li class="chapter" data-level="6.3" data-path="recursos-r.html"><a href="recursos-r.html#referencias-avanzadas"><i class="fa fa-check"></i><b>6.3</b> Referencias avanzadas</a></li>
+<li class="chapter" data-level="6.4" data-path="recursos-r.html"><a href="recursos-r.html#comparaciones-rápidas-con-otros-lenguajes"><i class="fa fa-check"></i><b>6.4</b> Comparaciones rápidas con otros lenguajes</a></li>
+<li class="chapter" data-level="6.5" data-path="recursos-r.html"><a href="recursos-r.html#vídeos-de-rstudio-y-rmarkdown"><i class="fa fa-check"></i><b>6.5</b> Vídeos de RStudio y RMarkdown</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html"><i class="fa fa-check"></i><b>7</b> Regresión lineal simple</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#modelado"><i class="fa fa-check"></i><b>7.1</b> Modelado</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#modelo-de-regresión-lineal-simple"><i class="fa fa-check"></i><b>7.1.1</b> Modelo de regresión lineal simple</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#enfoque-de-mínimos-cuadrados"><i class="fa fa-check"></i><b>7.2</b> Enfoque de mínimos cuadrados</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#haciendo-predicciones"><i class="fa fa-check"></i><b>7.2.1</b> Haciendo predicciones</a></li>
+<li class="chapter" data-level="7.2.2" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#residuales"><i class="fa fa-check"></i><b>7.2.2</b> Residuales</a></li>
+<li class="chapter" data-level="7.2.3" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#estimación-de-la-varianza"><i class="fa fa-check"></i><b>7.2.3</b> Estimación de la varianza</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#descomposición-de-variación"><i class="fa fa-check"></i><b>7.3</b> Descomposición de variación</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#coeficiente-de-determinación"><i class="fa fa-check"></i><b>7.3.1</b> Coeficiente de determinación</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#la-función-lm"><i class="fa fa-check"></i><b>7.4</b> La función <code>lm</code></a></li>
+<li class="chapter" data-level="7.5" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#enfoque-de-estimación-de-máxima-verosimilitud-mle"><i class="fa fa-check"></i><b>7.5</b> Enfoque de estimación de máxima verosimilitud (MLE)</a></li>
+<li class="chapter" data-level="7.6" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#simulando-slr"><i class="fa fa-check"></i><b>7.6</b> Simulando SLR</a></li>
+<li class="chapter" data-level="7.7" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#historia"><i class="fa fa-check"></i><b>7.7</b> Historia</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html"><i class="fa fa-check"></i><b>8</b> Inferencia para regresión lineal simple</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#teorema-de-gauss-markov"><i class="fa fa-check"></i><b>8.1</b> Teorema de Gauss-Markov</a></li>
+<li class="chapter" data-level="8.2" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#distribuciones-muestrales"><i class="fa fa-check"></i><b>8.2</b> Distribuciones muestrales</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#simular-distribuciones-muestrales"><i class="fa fa-check"></i><b>8.2.1</b> Simular distribuciones muestrales</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#errores-estándar"><i class="fa fa-check"></i><b>8.3</b> Errores estándar</a></li>
+<li class="chapter" data-level="8.4" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#intervalos-de-confianza-para-pendiente-e-intercepto"><i class="fa fa-check"></i><b>8.4</b> Intervalos de confianza para pendiente e Intercepto</a></li>
+<li class="chapter" data-level="8.5" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#pruebas-de-hipótesis"><i class="fa fa-check"></i><b>8.5</b> Pruebas de hipótesis</a></li>
+<li class="chapter" data-level="8.6" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#ejemplo-cars"><i class="fa fa-check"></i><b>8.6</b> Ejemplo <code>cars</code></a>
+<ul>
+<li class="chapter" data-level="8.6.1" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#pruebas-en-r"><i class="fa fa-check"></i><b>8.6.1</b> Pruebas en <code>R</code></a></li>
+<li class="chapter" data-level="8.6.2" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#significancia-de-la-regresión-prueba-t."><i class="fa fa-check"></i><b>8.6.2</b> Significancia de la regresión, prueba t.</a></li>
+<li class="chapter" data-level="8.6.3" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#intervalos-de-confianza-en-r"><i class="fa fa-check"></i><b>8.6.3</b> Intervalos de confianza en <code>R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#intervalo-de-confianza-para-la-respuesta-promedio"><i class="fa fa-check"></i><b>8.7</b> Intervalo de confianza para la respuesta Promedio</a></li>
+<li class="chapter" data-level="8.8" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#intervalo-de-predicción-para-nuevas-observaciones"><i class="fa fa-check"></i><b>8.8</b> Intervalo de predicción para nuevas observaciones</a></li>
+<li class="chapter" data-level="8.9" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#bandas-de-confianza-y-predicción"><i class="fa fa-check"></i><b>8.9</b> Bandas de confianza y predicción</a></li>
+<li class="chapter" data-level="8.10" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#significancia-de-la-regresión-prueba-f"><i class="fa fa-check"></i><b>8.10</b> Significancia de la regresión, prueba F</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html"><i class="fa fa-check"></i><b>9</b> Regresión lineal múltiple</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#enfoque-matricial-para-la-regresión"><i class="fa fa-check"></i><b>9.1</b> Enfoque matricial para la regresión</a></li>
+<li class="chapter" data-level="9.2" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#distribución-muestral"><i class="fa fa-check"></i><b>9.2</b> Distribución muestral</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#pruebas-de-un-solo-parámetro"><i class="fa fa-check"></i><b>9.2.1</b> Pruebas de un solo parámetro</a></li>
+<li class="chapter" data-level="9.2.2" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#intervalos-de-confianza"><i class="fa fa-check"></i><b>9.2.2</b> Intervalos de confianza</a></li>
+<li class="chapter" data-level="9.2.3" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#intervalos-de-confianza-para-la-respuesta-media"><i class="fa fa-check"></i><b>9.2.3</b> Intervalos de confianza para la respuesta media</a></li>
+<li class="chapter" data-level="9.2.4" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#intervalos-de-predicción"><i class="fa fa-check"></i><b>9.2.4</b> Intervalos de predicción</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#significancia-de-la-regresión"><i class="fa fa-check"></i><b>9.3</b> Significancia de la regresión</a></li>
+<li class="chapter" data-level="9.4" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#modelos-anidados"><i class="fa fa-check"></i><b>9.4</b> Modelos anidados</a></li>
+<li class="chapter" data-level="9.5" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#simulación-1"><i class="fa fa-check"></i><b>9.5</b> Simulación</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html"><i class="fa fa-check"></i><b>10</b> Construcción del modelo</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#familia-forma-y-ajuste."><i class="fa fa-check"></i><b>10.1</b> Familia, forma, y ajuste.</a>
+<ul>
+<li class="chapter" data-level="10.1.1" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#ajuste."><i class="fa fa-check"></i><b>10.1.1</b> Ajuste.</a></li>
+<li class="chapter" data-level="10.1.2" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#forma"><i class="fa fa-check"></i><b>10.1.2</b> Forma</a></li>
+<li class="chapter" data-level="10.1.3" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#familia"><i class="fa fa-check"></i><b>10.1.3</b> Familia</a></li>
+<li class="chapter" data-level="10.1.4" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#modelo-asumido-modelo-ajustado"><i class="fa fa-check"></i><b>10.1.4</b> Modelo asumido, modelo ajustado</a></li>
+</ul></li>
+<li class="chapter" data-level="10.2" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#explicación-versus-predicción"><i class="fa fa-check"></i><b>10.2</b> Explicación versus predicción</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#explicación"><i class="fa fa-check"></i><b>10.2.1</b> Explicación</a></li>
+<li class="chapter" data-level="10.2.2" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#predicción"><i class="fa fa-check"></i><b>10.2.2</b> Predicción</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#resumen"><i class="fa fa-check"></i><b>10.3</b> Resumen</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html"><i class="fa fa-check"></i><b>11</b> Interacciones y predictores categóricos</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#variables-ficticias-dummy"><i class="fa fa-check"></i><b>11.1</b> Variables ficticias (Dummy)</a></li>
+<li class="chapter" data-level="11.2" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#interacciones"><i class="fa fa-check"></i><b>11.2</b> Interacciones</a></li>
+<li class="chapter" data-level="11.3" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#variables-factor"><i class="fa fa-check"></i><b>11.3</b> Variables factor</a>
+<ul>
+<li class="chapter" data-level="11.3.1" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#factores-con-más-de-dos-niveles"><i class="fa fa-check"></i><b>11.3.1</b> Factores con más de dos niveles</a></li>
+</ul></li>
+<li class="chapter" data-level="11.4" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#parametrización"><i class="fa fa-check"></i><b>11.4</b> Parametrización</a></li>
+<li class="chapter" data-level="11.5" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#construcción-de-modelos-más-grandes"><i class="fa fa-check"></i><b>11.5</b> Construcción de modelos más grandes</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html"><i class="fa fa-check"></i><b>12</b> Análisis de varianza</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#experimentos"><i class="fa fa-check"></i><b>12.1</b> Experimentos</a></li>
+<li class="chapter" data-level="12.2" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#prueba-t-de-dos-muestras"><i class="fa fa-check"></i><b>12.2</b> Prueba t de dos muestras</a></li>
+<li class="chapter" data-level="12.3" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#anova-de-una-vía"><i class="fa fa-check"></i><b>12.3</b> ANOVA de una vía</a>
+<ul>
+<li class="chapter" data-level="12.3.1" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#variables-factor-1"><i class="fa fa-check"></i><b>12.3.1</b> Variables factor</a></li>
+<li class="chapter" data-level="12.3.2" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#algo-de-simulación"><i class="fa fa-check"></i><b>12.3.2</b> Algo de simulación</a></li>
+<li class="chapter" data-level="12.3.3" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#potencia"><i class="fa fa-check"></i><b>12.3.3</b> Potencia</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#pruebas-post-hoc"><i class="fa fa-check"></i><b>12.4</b> Pruebas Post Hoc</a></li>
+<li class="chapter" data-level="12.5" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#anova-de-dos-vías"><i class="fa fa-check"></i><b>12.5</b> ANOVA de dos vías</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html"><i class="fa fa-check"></i><b>13</b> Diagnóstico de modelos</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#supuestos-del-modelo"><i class="fa fa-check"></i><b>13.1</b> Supuestos del modelo</a></li>
+<li class="chapter" data-level="13.2" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#comprobación-de-supuestos"><i class="fa fa-check"></i><b>13.2</b> Comprobación de supuestos</a>
+<ul>
+<li class="chapter" data-level="13.2.1" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#gráfica-de-ajustados-versus-residuos"><i class="fa fa-check"></i><b>13.2.1</b> Gráfica de ajustados versus residuos</a></li>
+<li class="chapter" data-level="13.2.2" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#prueba-de-breusch-pagan"><i class="fa fa-check"></i><b>13.2.2</b> Prueba de Breusch-Pagan</a></li>
+<li class="chapter" data-level="13.2.3" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#histogramas-1"><i class="fa fa-check"></i><b>13.2.3</b> Histogramas</a></li>
+<li class="chapter" data-level="13.2.4" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#gráficos-q-q"><i class="fa fa-check"></i><b>13.2.4</b> Gráficos Q-Q</a></li>
+<li class="chapter" data-level="13.2.5" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#prueba-de-shapiro-wilk"><i class="fa fa-check"></i><b>13.2.5</b> Prueba de Shapiro-Wilk</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#observaciones-inusuales"><i class="fa fa-check"></i><b>13.3</b> Observaciones inusuales</a>
+<ul>
+<li class="chapter" data-level="13.3.1" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#apalancamiento"><i class="fa fa-check"></i><b>13.3.1</b> Apalancamiento</a></li>
+<li class="chapter" data-level="13.3.2" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#valores-atípicos"><i class="fa fa-check"></i><b>13.3.2</b> Valores atípicos</a></li>
+<li class="chapter" data-level="13.3.3" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#influencia"><i class="fa fa-check"></i><b>13.3.3</b> Influencia</a></li>
+</ul></li>
+<li class="chapter" data-level="13.4" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#ejemplos-de-análisis-de-datos"><i class="fa fa-check"></i><b>13.4</b> Ejemplos de análisis de datos</a>
+<ul>
+<li class="chapter" data-level="13.4.1" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#buenos-diagnósticos"><i class="fa fa-check"></i><b>13.4.1</b> Buenos diagnósticos</a></li>
+<li class="chapter" data-level="13.4.2" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#diagnóstico-sospechoso"><i class="fa fa-check"></i><b>13.4.2</b> Diagnóstico sospechoso</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="transformaciones.html"><a href="transformaciones.html"><i class="fa fa-check"></i><b>14</b> Transformaciones</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="transformaciones.html"><a href="transformaciones.html#transformación-de-respuesta"><i class="fa fa-check"></i><b>14.1</b> Transformación de respuesta</a>
+<ul>
+<li class="chapter" data-level="14.1.1" data-path="transformaciones.html"><a href="transformaciones.html#transformaciones-estabilizadoras-de-varianza"><i class="fa fa-check"></i><b>14.1.1</b> Transformaciones estabilizadoras de varianza</a></li>
+<li class="chapter" data-level="14.1.2" data-path="transformaciones.html"><a href="transformaciones.html#transformaciones-de-box-cox"><i class="fa fa-check"></i><b>14.1.2</b> Transformaciones de Box-Cox</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="transformaciones.html"><a href="transformaciones.html#transformación-del-predictor"><i class="fa fa-check"></i><b>14.2</b> Transformación del predictor</a>
+<ul>
+<li class="chapter" data-level="14.2.1" data-path="transformaciones.html"><a href="transformaciones.html#polinomios"><i class="fa fa-check"></i><b>14.2.1</b> Polinomios</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="transformaciones.html"><a href="transformaciones.html#transformaciones-de-respuesta"><i class="fa fa-check"></i>Transformaciones de respuesta</a></li>
+<li class="chapter" data-level="" data-path="transformaciones.html"><a href="transformaciones.html#transformaciones-de-predictores"><i class="fa fa-check"></i>Transformaciones de predictores</a>
+<ul>
+<li class="chapter" data-level="14.2.2" data-path="transformaciones.html"><a href="transformaciones.html#un-modelo-cuadrático"><i class="fa fa-check"></i><b>14.2.2</b> Un modelo cuadrático</a></li>
+<li class="chapter" data-level="14.2.3" data-path="transformaciones.html"><a href="transformaciones.html#sobreajuste-y-extrapolación"><i class="fa fa-check"></i><b>14.2.3</b> Sobreajuste y extrapolación</a></li>
+<li class="chapter" data-level="14.2.4" data-path="transformaciones.html"><a href="transformaciones.html#comparación-de-modelos-polinomiales"><i class="fa fa-check"></i><b>14.2.4</b> Comparación de modelos polinomiales</a></li>
+<li class="chapter" data-level="14.2.5" data-path="transformaciones.html"><a href="transformaciones.html#poly-función-y-polinomios-ortogonales"><i class="fa fa-check"></i><b>14.2.5</b> <code>poly()</code> Función y polinomios ortogonales</a></li>
+<li class="chapter" data-level="14.2.6" data-path="transformaciones.html"><a href="transformaciones.html#función-de-inhibición"><i class="fa fa-check"></i><b>14.2.6</b> Función de inhibición</a></li>
+<li class="chapter" data-level="14.2.7" data-path="transformaciones.html"><a href="transformaciones.html#ejemplo-con-datos"><i class="fa fa-check"></i><b>14.2.7</b> Ejemplo con datos</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="colinealidad.html"><a href="colinealidad.html"><i class="fa fa-check"></i><b>15</b> Colinealidad</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="colinealidad.html"><a href="colinealidad.html#colinealidad-exacta"><i class="fa fa-check"></i><b>15.1</b> Colinealidad exacta</a></li>
+<li class="chapter" data-level="15.2" data-path="colinealidad.html"><a href="colinealidad.html#colinealidad-1"><i class="fa fa-check"></i><b>15.2</b> Colinealidad</a>
+<ul>
+<li class="chapter" data-level="15.2.1" data-path="colinealidad.html"><a href="colinealidad.html#factor-de-inflación-de-la-varianza."><i class="fa fa-check"></i><b>15.2.1</b> Factor de inflación de la varianza.</a></li>
+</ul></li>
+<li class="chapter" data-level="15.3" data-path="colinealidad.html"><a href="colinealidad.html#simulación-2"><i class="fa fa-check"></i><b>15.3</b> Simulación</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html"><i class="fa fa-check"></i><b>16</b> Selección de variables y construcción de modelos</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#criterio-de-calidad"><i class="fa fa-check"></i><b>16.1</b> Criterio de calidad</a>
+<ul>
+<li class="chapter" data-level="16.1.1" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#criterio-de-información-de-akaike"><i class="fa fa-check"></i><b>16.1.1</b> Criterio de información de Akaike</a></li>
+<li class="chapter" data-level="16.1.2" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#criterio-de-información-bayesiano"><i class="fa fa-check"></i><b>16.1.2</b> Criterio de información Bayesiano</a></li>
+<li class="chapter" data-level="16.1.3" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#r-cuadrado-ajustado"><i class="fa fa-check"></i><b>16.1.3</b> R cuadrado ajustado</a></li>
+<li class="chapter" data-level="16.1.4" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#rmse-con-validación-cruzada"><i class="fa fa-check"></i><b>16.1.4</b> RMSE con validación cruzada</a></li>
+</ul></li>
+<li class="chapter" data-level="16.2" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#procedimientos-de-selección"><i class="fa fa-check"></i><b>16.2</b> Procedimientos de selección</a>
+<ul>
+<li class="chapter" data-level="16.2.1" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#búsqueda-hacia-atrás-backward"><i class="fa fa-check"></i><b>16.2.1</b> Búsqueda hacia atrás (Backward)</a></li>
+<li class="chapter" data-level="16.2.2" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#búsqueda-hacia-adelante-forward"><i class="fa fa-check"></i><b>16.2.2</b> Búsqueda hacia adelante (Forward)</a></li>
+<li class="chapter" data-level="16.2.3" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#búsqueda-por-pasos-stepwise"><i class="fa fa-check"></i><b>16.2.3</b> Búsqueda por pasos (Stepwise)</a></li>
+<li class="chapter" data-level="16.2.4" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#búsqueda-exhaustiva"><i class="fa fa-check"></i><b>16.2.4</b> Búsqueda exhaustiva</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#términos-de-orden-superior"><i class="fa fa-check"></i><b>16.3</b> Términos de orden superior</a></li>
+<li class="chapter" data-level="16.4" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#explicación-versus-predicción-1"><i class="fa fa-check"></i><b>16.4</b> Explicación versus predicción</a>
+<ul>
+<li class="chapter" data-level="16.4.1" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#explicación-1"><i class="fa fa-check"></i><b>16.4.1</b> Explicación</a></li>
+<li class="chapter" data-level="16.4.2" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#predicción-1"><i class="fa fa-check"></i><b>16.4.2</b> Predicción</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="regresión-logística.html"><a href="regresión-logística.html"><i class="fa fa-check"></i><b>17</b> Regresión logística</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="regresión-logística.html"><a href="regresión-logística.html#modelos-lineales-generalizados"><i class="fa fa-check"></i><b>17.1</b> Modelos lineales generalizados</a></li>
+<li class="chapter" data-level="17.2" data-path="regresión-logística.html"><a href="regresión-logística.html#respuesta-binaria"><i class="fa fa-check"></i><b>17.2</b> Respuesta binaria</a>
+<ul>
+<li class="chapter" data-level="17.2.1" data-path="regresión-logística.html"><a href="regresión-logística.html#ajuste-de-la-regresión-logística"><i class="fa fa-check"></i><b>17.2.1</b> Ajuste de la regresión logística</a></li>
+<li class="chapter" data-level="17.2.2" data-path="regresión-logística.html"><a href="regresión-logística.html#problemas-de-ajuste"><i class="fa fa-check"></i><b>17.2.2</b> Problemas de ajuste</a></li>
+<li class="chapter" data-level="17.2.3" data-path="regresión-logística.html"><a href="regresión-logística.html#ejemplos-de-simulación"><i class="fa fa-check"></i><b>17.2.3</b> Ejemplos de simulación</a></li>
+</ul></li>
+<li class="chapter" data-level="17.3" data-path="regresión-logística.html"><a href="regresión-logística.html#trabajar-con-regresión-logística"><i class="fa fa-check"></i><b>17.3</b> Trabajar con regresión logística</a>
+<ul>
+<li class="chapter" data-level="17.3.1" data-path="regresión-logística.html"><a href="regresión-logística.html#pruebas-con-glms"><i class="fa fa-check"></i><b>17.3.1</b> Pruebas con GLMs</a></li>
+<li class="chapter" data-level="17.3.2" data-path="regresión-logística.html"><a href="regresión-logística.html#prueba-de-wald"><i class="fa fa-check"></i><b>17.3.2</b> Prueba de Wald</a></li>
+<li class="chapter" data-level="17.3.3" data-path="regresión-logística.html"><a href="regresión-logística.html#prueba-de-razón-de-verosimilitud"><i class="fa fa-check"></i><b>17.3.3</b> Prueba de razón de verosimilitud</a></li>
+<li class="chapter" data-level="17.3.4" data-path="regresión-logística.html"><a href="regresión-logística.html#ejemplo-saheart"><i class="fa fa-check"></i><b>17.3.4</b> Ejemplo <code>SAheart</code></a></li>
+<li class="chapter" data-level="17.3.5" data-path="regresión-logística.html"><a href="regresión-logística.html#intervalos-de-confianza-1"><i class="fa fa-check"></i><b>17.3.5</b> Intervalos de confianza</a></li>
+<li class="chapter" data-level="17.3.6" data-path="regresión-logística.html"><a href="regresión-logística.html#intervalos-de-confianza-para-la-respuesta-promedio"><i class="fa fa-check"></i><b>17.3.6</b> Intervalos de confianza para la respuesta promedio</a></li>
+<li class="chapter" data-level="17.3.7" data-path="regresión-logística.html"><a href="regresión-logística.html#sintaxis-de-la-fórmula"><i class="fa fa-check"></i><b>17.3.7</b> Sintaxis de la fórmula</a></li>
+<li class="chapter" data-level="17.3.8" data-path="regresión-logística.html"><a href="regresión-logística.html#desviación"><i class="fa fa-check"></i><b>17.3.8</b> Desviación</a></li>
+</ul></li>
+<li class="chapter" data-level="17.4" data-path="regresión-logística.html"><a href="regresión-logística.html#clasificación"><i class="fa fa-check"></i><b>17.4</b> Clasificación</a>
+<ul>
+<li class="chapter" data-level="17.4.1" data-path="regresión-logística.html"><a href="regresión-logística.html#ejemplo-spam"><i class="fa fa-check"></i><b>17.4.1</b> Ejemplo <code>spam</code></a></li>
+<li class="chapter" data-level="17.4.2" data-path="regresión-logística.html"><a href="regresión-logística.html#evaluar-clasificadores"><i class="fa fa-check"></i><b>17.4.2</b> Evaluar clasificadores</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="más-allá.html"><a href="más-allá.html"><i class="fa fa-check"></i><b>18</b> Más allá</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="más-allá.html"><a href="más-allá.html#rstudio"><i class="fa fa-check"></i><b>18.1</b> RStudio</a></li>
+<li class="chapter" data-level="18.2" data-path="más-allá.html"><a href="más-allá.html#tidy-data"><i class="fa fa-check"></i><b>18.2</b> Tidy Data</a></li>
+<li class="chapter" data-level="18.3" data-path="más-allá.html"><a href="más-allá.html#visualización"><i class="fa fa-check"></i><b>18.3</b> Visualización</a></li>
+<li class="chapter" data-level="18.4" data-path="más-allá.html"><a href="más-allá.html#aplicaciones-web"><i class="fa fa-check"></i><b>18.4</b> Aplicaciones web</a></li>
+<li class="chapter" data-level="18.5" data-path="más-allá.html"><a href="más-allá.html#diseño-experimental"><i class="fa fa-check"></i><b>18.5</b> Diseño experimental</a></li>
+<li class="chapter" data-level="18.6" data-path="más-allá.html"><a href="más-allá.html#aprendizaje-automático-machine-learning"><i class="fa fa-check"></i><b>18.6</b> Aprendizaje automático (Machine Learning)</a>
+<ul>
+<li class="chapter" data-level="18.6.1" data-path="más-allá.html"><a href="más-allá.html#aprendizaje-profundo-deep-learning"><i class="fa fa-check"></i><b>18.6.1</b> Aprendizaje profundo (Deep Learning)</a></li>
+</ul></li>
+<li class="chapter" data-level="18.7" data-path="más-allá.html"><a href="más-allá.html#series-de-tiempo"><i class="fa fa-check"></i><b>18.7</b> Series de tiempo</a></li>
+<li class="chapter" data-level="18.8" data-path="más-allá.html"><a href="más-allá.html#bayesiana"><i class="fa fa-check"></i><b>18.8</b> Bayesiana</a></li>
+<li class="chapter" data-level="18.9" data-path="más-allá.html"><a href="más-allá.html#computación-de-alto-rendimiento."><i class="fa fa-check"></i><b>18.9</b> Computación de alto rendimiento.</a></li>
+<li class="chapter" data-level="18.10" data-path="más-allá.html"><a href="más-allá.html#recursos-adicionales-de-r"><i class="fa fa-check"></i><b>18.10</b> Recursos adicionales de <code>R</code></a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/daviddalpiaz/appliedstats" target="blank">&copy; 2020 Adapatado de David Dalpiaz</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Estadística aplicada con R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="regresión-lineal-simple" class="section level1" number="7">
+<h1><span class="header-section-number">Capítulo 7</span> Regresión lineal simple</h1>
+<blockquote>
+<p>“Todos los modelos son incorrectos, pero algunos son útiles..”</p>
+<p>— <strong>George E. P. Box</strong></p>
+</blockquote>
+<p>Después de leer este capítulo, podrá:</p>
+<ul>
+<li>Comprender el concepto de modelo.</li>
+<li>Describir dos formas en las que se derivan los coeficientes de regresión.</li>
+<li>Estimar y visualizar un modelo de regresión usando “R”.</li>
+<li>Interpretar coeficientes de regresión y estadística en el contexto de problemas del mundo real.</li>
+<li>Utilizar un modelo de regresión para realizar predicciones.</li>
+</ul>
+<div id="modelado" class="section level2" number="7.1">
+<h2><span class="header-section-number">7.1</span> Modelado</h2>
+<p>Consideremos un ejemplo simple de cómo la velocidad de un automóvil afecta su distancia de frenado, es decir, qué tan lejos avanza antes de detenerse. Para examinar esta relación, usaremos el conjunto de datos <code>cars</code> que es un conjunto de datos predeterminado de <code>R</code>. Por lo tanto, no necesitamos cargar un paquete; está disponible de inmediato.</p>
+<p>Para echar un primer vistazo a los datos, puede usar la función <code>View()</code> dentro de RStudio.</p>
+<div class="sourceCode" id="cb412"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb412-1"><a href="regresión-lineal-simple.html#cb412-1" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(cars)</span></code></pre></div>
+<p>También podríamos echar un vistazo a los nombres de las variables, la dimensión del marco de datos y algunas observaciones de muestra con <code>str()</code>.</p>
+<div class="sourceCode" id="cb413"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb413-1"><a href="regresión-lineal-simple.html#cb413-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(cars)</span></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    50 obs. of  2 variables:
+##  $ speed: num  4 4 7 7 8 9 10 10 10 11 ...
+##  $ dist : num  2 10 4 22 16 10 18 26 34 17 ...</code></pre>
+<p>Como hemos visto antes con los marcos de datos, hay una serie de funciones adicionales para acceder directamente a parte de esta información.</p>
+<div class="sourceCode" id="cb415"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb415-1"><a href="regresión-lineal-simple.html#cb415-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(cars)</span></code></pre></div>
+<pre><code>## [1] 50  2</code></pre>
+<div class="sourceCode" id="cb417"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb417-1"><a href="regresión-lineal-simple.html#cb417-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(cars)</span></code></pre></div>
+<pre><code>## [1] 50</code></pre>
+<div class="sourceCode" id="cb419"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb419-1"><a href="regresión-lineal-simple.html#cb419-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ncol</span>(cars)</span></code></pre></div>
+<pre><code>## [1] 2</code></pre>
+<p>Aparte de los dos nombres de variables y el número de observaciones, estos datos siguen siendo solo un montón de números, por lo que probablemente deberíamos obtener algo de contexto.</p>
+<div class="sourceCode" id="cb421"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb421-1"><a href="regresión-lineal-simple.html#cb421-1" aria-hidden="true" tabindex="-1"></a>?cars</span></code></pre></div>
+<p>Al leer la documentación, nos enteramos de que se trata de datos recopilados durante la década de 1920 sobre la velocidad de los automóviles y la distancia resultante que tarda el automóvil en detenerse. La tarea interesante es determinar qué tan lejos viaja un automóvil antes de detenerse, cuando viaja a cierta velocidad. Entonces, primero graficaremos la distancia de frenado contra la velocidad.</p>
+<div class="sourceCode" id="cb422"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb422-1"><a href="regresión-lineal-simple.html#cb422-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars,</span>
+<span id="cb422-2"><a href="regresión-lineal-simple.html#cb422-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Velocidad (en millas por hora)&quot;</span>,</span>
+<span id="cb422-3"><a href="regresión-lineal-simple.html#cb422-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Distancia de frenado (en pies)&quot;</span>,</span>
+<span id="cb422-4"><a href="regresión-lineal-simple.html#cb422-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Distancia de frenado vs velocidad&quot;</span>,</span>
+<span id="cb422-5"><a href="regresión-lineal-simple.html#cb422-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch  =</span> <span class="dv">20</span>,</span>
+<span id="cb422-6"><a href="regresión-lineal-simple.html#cb422-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex  =</span> <span class="dv">2</span>,</span>
+<span id="cb422-7"><a href="regresión-lineal-simple.html#cb422-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">col  =</span> <span class="st">&quot;grey&quot;</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-160-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Definamos ahora algo de terminología. Tenemos pares de datos, <span class="math inline">\((x_i, y_i)\)</span>, para <span class="math inline">\(i = 1, 2, \ldots n\)</span>, donde <span class="math inline">\(n\)</span> es el tamaño de muestra del conjunto de datos.</p>
+<p>Usamos <span class="math inline">\(i\)</span> como índice, simplemente como notación. Usamos <span class="math inline">\(x_i\)</span> como la variable <strong>predictora</strong> (explicativa). La variable predictiva se utiliza para ayudar a <em>predecir</em> o explicar la variable <strong>respuesta</strong> (objetivo, resultado), <span class="math inline">\(y_i\)</span>.</p>
+<p>Otros textos pueden usar el término variable independiente en lugar de predictor y variable dependiente en lugar de respuesta. Sin embargo, esos apodos implican características matemáticas que podrían no ser ciertas. Si bien estos otros términos no son incorrectos, la independencia ya es un concepto estrictamente definido en probabilidad. Por ejemplo, al intentar predecir el peso de una persona dada su altura, ¿sería correcto decir que la altura es independiente del peso? Ciertamente no, pero eso es una implicación involuntaria de decir “variable independiente”. Preferimos alejarnos de esta nomenclatura.</p>
+<p>En el ejemplo de <code>cars</code>, estamos interesados en usar la variable predictora <code>speed</code> para predecir y explicar la variable respuesta <code>dist</code>.</p>
+<p>En términos generales, nos gustaría modelar la relación entre <span class="math inline">\(X\)</span> y <span class="math inline">\(Y\)</span> usando la forma</p>
+<p><span class="math display">\[
+Y = f(X) + \epsilon.
+\]</span></p>
+<p>La función <span class="math inline">\(f\)</span> describe la relación funcional entre las dos variables, y el término <span class="math inline">\(\epsilon\)</span> se usa para dar cuenta del error. Esto indica que si ingresamos un valor dado de <span class="math inline">\(X\)</span> como entrada, nuestra salida es un valor de <span class="math inline">\(Y\)</span>, dentro de un cierto rango de error. Puedes pensar en esto de varias maneras:</p>
+<ul>
+<li>Respuesta = Predicción + Error</li>
+<li>Respuesta = Señal + Ruido</li>
+<li>Respuesta = Modelo + Inexplicable</li>
+<li>Respuesta = determinista + aleatoria</li>
+<li>Respuesta = Explicable + Inexplicable</li>
+</ul>
+<p>¿Qué tipo de función deberíamos usar para <span class="math inline">\(f(X)\)</span> para los datos <code>cars</code>?</p>
+<p>Podríamos intentar modelar los datos con una línea horizontal. Es decir, el modelo para <span class="math inline">\(y\)</span> no depende del valor de <span class="math inline">\(x\)</span>. (Alguna función <span class="math inline">\(f(X) = c\)</span>.) En la gráfica de abajo, vemos que esto no parece funcionar muy bien. Muchos de los puntos de datos están muy lejos de la línea naranja que representa <span class="math inline">\(c\)</span>. Este es un ejemplo de <strong>desajuste</strong>. La solución obvia es hacer que la función <span class="math inline">\(f(X)\)</span> realmente dependa de <span class="math inline">\(x\)</span>.</p>
+<p><img src="EstadisticaR_files/figure-html/underfit_plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>También podríamos intentar modelar los datos con una función muy “ondulada” que intenta pasar por tantos puntos de datos como sea posible. Esto tampoco parece funcionar muy bien. ¡La distancia de frenado para una velocidad de 5 mph no debería estar fuera de la tabla! (Incluso en 1920). Este es un ejemplo de <strong>sobreajuste</strong>. (Tenga en cuenta que en este ejemplo ninguna función pasará por todos los puntos, ya que hay algunos valores <span class="math inline">\(x\)</span> que tienen varios valores <span class="math inline">\(y\)</span> posibles en los datos).</p>
+<p><img src="EstadisticaR_files/figure-html/overfit_plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Por último, podríamos intentar modelar los datos eligiendo bien una línea en lugar de uno de los dos extremos que se intentaron anteriormente. La línea del siguiente gráfico parece resumir bastante bien la relación entre la distancia de frenado y la velocidad. A medida que aumenta la velocidad, aumenta la distancia necesaria para detenerse. Todavía hay alguna variación en esta línea, pero parece capturar la tendencia general.</p>
+<p><img src="EstadisticaR_files/figure-html/goodfit_plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Con esto en mente, nos gustaría restringir nuestra elección de<span class="math inline">\(f(X)\)</span> a funciones <em>lineales</em> de <span class="math inline">\(X\)</span>. Escribiremos nuestro modelo usando <span class="math inline">\(\beta_1\)</span> para la pendiente y <span class="math inline">\(\beta_0\)</span> para la intersección,</p>
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1 X + \epsilon.
+\]</span></p>
+<div id="modelo-de-regresión-lineal-simple" class="section level3" number="7.1.1">
+<h3><span class="header-section-number">7.1.1</span> Modelo de regresión lineal simple</h3>
+<p>Ahora definimos lo que llamaremos el modelo de regresión lineal simple,</p>
+<p><span class="math display">\[
+Y_i = \beta_0 + \beta_1 x_i + \epsilon_i
+\]</span></p>
+<p>donde</p>
+<p><span class="math display">\[
+\epsilon_i \sim N(0, \sigma^2).
+\]</span></p>
+<p>Es decir, los <span class="math inline">\(\epsilon_i\)</span> son variables aleatorias normales <em>independientes e idénticamente distribuidas</em> (iid) con media <span class="math inline">\(0\)</span> y varianza <span class="math inline">\(\sigma^2\)</span>. Este modelo tiene tres parámetros para estimar: <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> y <span class="math inline">\(\sigma^2\)</span>, que son constantes fijas pero desconocidas.</p>
+<p>Hemos modificado ligeramente nuestra notación. Ahora estamos usando <span class="math inline">\(Y_i\)</span> y <span class="math inline">\(x_i\)</span>, ya que ajustaremos este modelo a un conjunto de <span class="math inline">\(n\)</span> puntos de datos, para <span class="math inline">\(i = 1, 2, \ldots n\)</span>.</p>
+<p>Recuerde que usamos <span class="math inline">\(Y\)</span> mayúscula para indicar una variable aleatoria y <span class="math inline">\(y\)</span> minúscula para denotar un valor potencial de la variable aleatoria. Como tendremos <span class="math inline">\(n\)</span> observaciones, tenemos <span class="math inline">\(n\)</span> variables aleatorias <span class="math inline">\(Y_i\)</span> y sus posibles valores <span class="math inline">\(y_i\)</span>.</p>
+<p>En el modelo de regresión lineal simple, se supone que <span class="math inline">\(x_i\)</span> son constantes fijas conocidas y, por lo tanto, se anotan con una variable en minúscula. La respuesta <span class="math inline">\(Y_i\)</span> sigue siendo una variable aleatoria debido al comportamiento aleatorio de la variable de error, <span class="math inline">\(\epsilon_i\)</span>. Es decir, cada respuesta <span class="math inline">\(Y_i\)</span> está vinculada a un <span class="math inline">\(x_i\)</span> observable y un <span class="math inline">\(\epsilon_i\)</span> aleatorio, no observable.</p>
+<p>Esencialmente, podríamos pensar explícitamente que <span class="math inline">\(Y_i\)</span> tiene una distribución diferente para cada <span class="math inline">\(X_i\)</span>. En otras palabras, <span class="math inline">\(Y_i\)</span> tiene una distribución condicional que depende del valor de <span class="math inline">\(X_i\)</span>, escrito <span class="math inline">\(x_i\)</span>. Al hacerlo, todavía no hacemos suposiciones de distribución de <span class="math inline">\(X_i\)</span>, ya que solo estamos interesados en la distribución de <span class="math inline">\(Y_i\)</span> para un valor particular <span class="math inline">\(x_i\)</span>.</p>
+<p><span class="math display">\[
+Y_i \mid X_i \sim N(\beta_0 + \beta_1 x_i, \sigma^2)
+\]</span></p>
+<p>Los <span class="math inline">\(Y_i\)</span> aleatorios son una función de <span class="math inline">\(x_i\)</span>, por lo que podemos escribir su media como una función de <span class="math inline">\(x_i\)</span>,</p>
+<p><span class="math display">\[
+\text{E}[Y_i \mid X_i = x_i] = \beta_0 + \beta_1 x_i.
+\]</span></p>
+<p>Sin embargo, su varianza permanece constante para cada <span class="math inline">\(x_i\)</span>,</p>
+<p><span class="math display">\[
+\text{Var}[Y_i \mid X_i = x_i] = \sigma^2.
+\]</span></p>
+<p>Esto se muestra visualmente en la siguiente imagen, Vemos que para cualquier valor <span class="math inline">\(x\)</span>, el valor esperado de <span class="math inline">\(Y\)</span> es <span class="math inline">\(\beta_0 + \beta_1 x\)</span>. En cada valor de <span class="math inline">\(x\)</span>, <span class="math inline">\(Y\)</span> tiene la misma varianza <span class="math inline">\(\sigma^2\)</span>.</p>
+<div class="figure">
+<img src="images/model.jpg" alt="" />
+<p class="caption">Simple Linear Regression Model <a href="http://statwiki.ucdavis.edu/Textbook_Maps/General_Statistics/Map%3A_Introductory_Statistics_(Shafer_and_Zhang)/10%3A_Correlation_and_Regression/10.3_Modelling_Linear_Relationships_with_Randomness_Present" target="_blank">Introductory Statistics (Shafer and Zhang), UC Davis Stat Wiki</a></p>
+</div>
+<p>A menudo, hablamos directamente sobre las suposiciones que hace este modelo.</p>
+<ul>
+<li>Lineal. La relación entre <span class="math inline">\(Y\)</span> y <span class="math inline">\(x\)</span> es lineal, de la forma <span class="math inline">\(\beta_0 + \beta_1 x\)</span>.</li>
+<li>Independiente. Los errores <span class="math inline">\(\epsilon\)</span> son independientes.</li>
+<li>Normal. Los errores <span class="math inline">\(\epsilon\)</span> se distribuyen normalmente. Ese es el “error” alrededor de la línea, sigue una distribución normal.</li>
+<li>Igualdad de varianza. En cada valor de <span class="math inline">\(x\)</span>, la varianza de <span class="math inline">\(Y\)</span> es la misma, <span class="math inline">\(\sigma^2\)</span>.</li>
+</ul>
+<p>También asumimos que los valores de <span class="math inline">\(x\)</span> son fijos, es decir, no aleatorios. No hacemos una suposición distributiva sobre la variable predictora.</p>
+<p>Como nota al margen, a menudo nos referiremos a la regresión lineal simple como <strong>SLR</strong>, por sus siglas en inglés. Una explicación del nombre SLR:</p>
+<ul>
+<li><strong>Simple</strong> se refiere al hecho de que estamos utilizando una única variable predictora. Posteriormente usaremos múltiples variables predictoras.</li>
+<li><strong>Linear</strong> nos dice que nuestro modelo para <span class="math inline">\(Y\)</span> es una combinación lineal de los predictores <span class="math inline">\(X\)</span>. (En este caso solo uno.) Ahora mismo, esto siempre da como resultado un modelo que es una línea, pero más adelante veremos cómo no siempre es así.</li>
+<li><strong>Regression</strong> simplemente significa que estamos intentando medir la relación entre una variable respuesta y (una o más) variables predictoras. En el caso de SLR, tanto la respuesta como el predictor son variables <em>numéricas</em>.</li>
+</ul>
+<p>Entonces, SLR modela <span class="math inline">\(Y\)</span> como una función lineal de <span class="math inline">\(X\)</span>, pero ¿cómo definimos realmente una buena línea? Hay un número infinito de líneas que podríamos usar, por lo que intentaremos encontrar una con “pequeños errores”. Esa es una línea con tantos puntos como sea posible. La pregunta ahora es, ¿cómo encontramos esa línea? Hay muchos enfoques que podríamos tomar.</p>
+<p>Podríamos encontrar la línea que tiene la distancia máxima más pequeña desde cualquiera de los puntos a la línea. Es decir,</p>
+<p><span class="math display">\[
+\underset{\beta_0, \beta_1}{\mathrm{argmin}} \max|y_i - (\beta_0 + \beta_1 x_i)|.
+\]</span></p>
+<p>Podríamos encontrar la línea que minimiza la suma de todas las distancias desde los puntos a la línea. Es decir,</p>
+<p><span class="math display">\[
+\underset{\beta_0, \beta_1}{\mathrm{argmin}} \sum_{i = 1}^{n}|y_i - (\beta_0 + \beta_1 x_i)|.
+\]</span></p>
+<p>Podríamos encontrar la línea que minimiza la suma de todas las distancias al cuadrado desde los puntos hasta la línea. Es decir,</p>
+<p><span class="math display">\[
+\underset{\beta_0, \beta_1}{\mathrm{argmin}} \sum_{i = 1}^{n}(y_i - (\beta_0 + \beta_1 x_i))^2.
+\]</span></p>
+<p>Esta última opción se llama método de <strong>mínimos cuadrados</strong>. Es esencialmente el método de hecho para ajustar una línea a los datos. (Es posible que lo haya visto antes en un curso de álgebra lineal). Su popularidad se debe en gran parte al hecho de que es matemáticamente “fácil”. (Lo cual fue importante históricamente, ya que las computadoras son un artilugio moderno). También es muy popular porque muchas relaciones están bien aproximadas por una función lineal.</p>
+</div>
+</div>
+<div id="enfoque-de-mínimos-cuadrados" class="section level2" number="7.2">
+<h2><span class="header-section-number">7.2</span> Enfoque de mínimos cuadrados</h2>
+<p>Dadas las observaciones <span class="math inline">\((x_i, y_i)\)</span>, para <span class="math inline">\(i = 1, 2, \ldots n\)</span>, queremos encontrar valores de <span class="math inline">\(\beta_0\)</span> y <span class="math inline">\(\beta_1\)</span> que minimicen</p>
+<p><span class="math display">\[
+f(\beta_0, \beta_1) = \sum_{i = 1}^{n}(y_i - (\beta_0 + \beta_1 x_i))^2 = \sum_{i = 1}^{n}(y_i - \beta_0 - \beta_1 x_i)^2.
+\]</span></p>
+<p>Llamaremos a estos valores <span class="math inline">\(\hat{\beta}_0\)</span> y <span class="math inline">\(\hat{\beta}_1\)</span>.</p>
+<p>Primero, tomamos una derivada parcial con respecto a <span class="math inline">\(\beta_0\)</span> y <span class="math inline">\(\beta_1\)</span>.</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{\partial f}{\partial \beta_0} &amp;= -2 \sum_{i = 1}^{n}(y_i - \beta_0 - \beta_1 x_i) \\
+\frac{\partial f}{\partial \beta_1} &amp;= -2 \sum_{i = 1}^{n}(x_i)(y_i - \beta_0 - \beta_1 x_i)
+\end{aligned}
+\]</span></p>
+<p>Luego igualamos a cero cada una de las derivadas parciales y resolvemos el sistema de ecuaciones resultante.</p>
+<p><span class="math display">\[
+\begin{aligned}
+\sum_{i = 1}^{n}(y_i - \beta_0 - \beta_1 x_i) &amp;= 0 \\
+\sum_{i = 1}^{n}(x_i)(y_i - \beta_0 - \beta_1 x_i) &amp;= 0 
+\end{aligned}
+\]</span></p>
+<p>Al resolver el sistema de ecuaciones, un reordenamiento algebraico común da como resultado las <strong>ecuaciones normales</strong>.</p>
+<p><span class="math display">\[
+\begin{aligned}
+n \beta_0 + \beta_1 \sum_{i = 1}^{n} x_i &amp;= \sum_{i = 1}^{n} y_i\\
+\beta_0 \sum_{i = 1}^{n} x_i + \beta_1 \sum_{i = 1}^{n} x_i^2 &amp;= \sum_{i = 1}^{n} x_i y_i  
+\end{aligned}
+\]</span></p>
+<p>Finalmente, terminamos de resolver el sistema de ecuaciones.</p>
+<p><span class="math display">\[
+\begin{aligned}
+\hat{\beta}_1 &amp;= \frac{\sum_{i = 1}^{n} x_i y_i - \frac{(\sum_{i = 1}^{n} x_i)(\sum_{i = 1}^{n} y_i)}{n}}{\sum_{i = 1}^{n} x_i^2 - \frac{(\sum_{i = 1}^{n} x_i)^2}{n}} = \frac{S_{xy}}{S_{xx}}\\
+\hat{\beta}_0 &amp;= \bar{y} - \hat{\beta}_1 \bar{x}
+\end{aligned}
+\]</span></p>
+<p>Aquí, hemos definido una notación para la expresión que hemos obtenido. Tenga en cuenta que tienen formas alternativas con las que es mucho más fácil trabajar. (No lo haremos aquí, pero puede intentar demostrar las equivalencias a continuación por su cuenta, por “diversión”). Usamos la letra mayúscula <span class="math inline">\(S\)</span> para denotar “suma” que reemplaza a la letra mayúscula <span class="math inline">\(\Sigma\)</span> cuando calculamos estos valores basados en datos observados, <span class="math inline">\((x_i ,y_i)\)</span>. Los subíndices como <span class="math inline">\(xy\)</span> denotan sobre qué variables se aplica la función <span class="math inline">\((z - \bar{z})\)</span>.</p>
+<p><span class="math display">\[
+\begin{aligned}
+S_{xy} &amp;= \sum_{i = 1}^{n} x_i y_i - \frac{(\sum_{i = 1}^{n} x_i)(\sum_{i = 1}^{n} y_i)}{n}  = \sum_{i = 1}^{n}(x_i - \bar{x})(y_i - \bar{y})\\
+S_{xx} &amp;= \sum_{i = 1}^{n} x_i^2 - \frac{(\sum_{i = 1}^{n} x_i)^2}{n}  = \sum_{i = 1}^{n}(x_i - \bar{x})^2\\
+S_{yy} &amp;= \sum_{i = 1}^{n} y_i^2 - \frac{(\sum_{i = 1}^{n} y_i)^2}{n}  = \sum_{i = 1}^{n}(y_i - \bar{y})^2
+\end{aligned}
+\]</span></p>
+<p>Tenga en cuenta que estas sumas <span class="math inline">\(S\)</span> no deben confundirse con la desviación estándar muestral <span class="math inline">\(s\)</span>.</p>
+<p>Al usar las expresiones alternativas anteriores para <span class="math inline">\(S_{xy}\)</span> y <span class="math inline">\(S_{xx}\)</span>, llegamos a una expresión más limpia y útil para <span class="math inline">\(\hat{\beta}_1\)</span>.</p>
+<p><span class="math display">\[
+\hat{\beta}_1 = \frac{S_{xy}}{S_{xx}} = \frac{\sum_{i = 1}^{n}(x_i - \bar{x})(y_i - \bar{y})}{\sum_{i = 1}^{n}(x_i - \bar{x})^2}
+\]</span></p>
+<p>Tradicionalmente, calcularíamos <span class="math inline">\(\hat{\beta}_0\)</span> y <span class="math inline">\(\hat{\beta}_1\)</span> a mano para el conjunto de datos <code>cars</code>. Sin embargo, debido a que vivimos en el siglo XXI y somos inteligentes (o perezosos o eficientes, según su perspectiva), utilizaremos <code>R</code> para hacer el cálculo numérico por nosotros.</p>
+<p>Para mantener alguna notación consistente con las matemáticas anteriores, almacenaremos la variable de respuesta como <code>y</code> y la variable predictora como <code>x</code>.</p>
+<div class="sourceCode" id="cb423"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb423-1"><a href="regresión-lineal-simple.html#cb423-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> cars<span class="sc">$</span>speed</span>
+<span id="cb423-2"><a href="regresión-lineal-simple.html#cb423-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> cars<span class="sc">$</span>dist</span></code></pre></div>
+<p>Luego calculamos las tres sumas de cuadrados definidos anteriormente.</p>
+<div class="sourceCode" id="cb424"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb424-1"><a href="regresión-lineal-simple.html#cb424-1" aria-hidden="true" tabindex="-1"></a>Sxy <span class="ot">=</span> <span class="fu">sum</span>((x <span class="sc">-</span> <span class="fu">mean</span>(x)) <span class="sc">*</span> (y <span class="sc">-</span> <span class="fu">mean</span>(y)))</span>
+<span id="cb424-2"><a href="regresión-lineal-simple.html#cb424-2" aria-hidden="true" tabindex="-1"></a>Sxx <span class="ot">=</span> <span class="fu">sum</span>((x <span class="sc">-</span> <span class="fu">mean</span>(x)) <span class="sc">^</span> <span class="dv">2</span>)</span>
+<span id="cb424-3"><a href="regresión-lineal-simple.html#cb424-3" aria-hidden="true" tabindex="-1"></a>Syy <span class="ot">=</span> <span class="fu">sum</span>((y <span class="sc">-</span> <span class="fu">mean</span>(y)) <span class="sc">^</span> <span class="dv">2</span>)</span>
+<span id="cb424-4"><a href="regresión-lineal-simple.html#cb424-4" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(Sxy, Sxx, Syy)</span></code></pre></div>
+<pre><code>## [1]  5387.40  1370.00 32538.98</code></pre>
+<p>Luego, finalmente calculamos <span class="math inline">\(\hat{\beta}_0\)</span> y <span class="math inline">\(\hat{\beta}_1\)</span>.</p>
+<div class="sourceCode" id="cb426"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb426-1"><a href="regresión-lineal-simple.html#cb426-1" aria-hidden="true" tabindex="-1"></a>beta_1_hat <span class="ot">=</span> Sxy <span class="sc">/</span> Sxx</span>
+<span id="cb426-2"><a href="regresión-lineal-simple.html#cb426-2" aria-hidden="true" tabindex="-1"></a>beta_0_hat <span class="ot">=</span> <span class="fu">mean</span>(y) <span class="sc">-</span> beta_1_hat <span class="sc">*</span> <span class="fu">mean</span>(x)</span>
+<span id="cb426-3"><a href="regresión-lineal-simple.html#cb426-3" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(beta_0_hat, beta_1_hat)</span></code></pre></div>
+<pre><code>## [1] -17.579095   3.932409</code></pre>
+<p>¿Qué nos dicen estos valores sobre nuestro conjunto de datos?</p>
+<p>El <em>parámetro</em> de pendiente <span class="math inline">\(\beta_1\)</span> nos dice que para un aumento en la velocidad de una milla por hora, la distancia <strong>media</strong> de frenado aumenta en <span class="math inline">\(\beta_1\)</span>. Es importante precisar que estamos hablando de la media. Recuerde que <span class="math inline">\(\beta_0 + \beta_1 x\)</span> es la media de <span class="math inline">\(Y\)</span>, en este caso la distancia de frenado, para un valor particular de <span class="math inline">\(x\)</span>. (la velocidad). Entonces <span class="math inline">\(\beta_1\)</span> nos dice cómo la media de <span class="math inline">\(Y\)</span> se ve afectada por un cambio en <span class="math inline">\(x\)</span>.</p>
+<p>De manera similar, la <em>estimación</em> <span class="math inline">\(\hat{\beta}_1 = 3.93\)</span> nos dice que para un aumento en la velocidad de una milla por hora, la distancia <em>media</em> <strong>estimada</strong> de frenado aumenta en <span class="math inline">\(3.93\)</span> pies. Debemos asegurarnos de especificar que estamos discutiendo una cantidad estimada. Recuerde que <span class="math inline">\(\hat{y}\)</span> es la media estimada de <span class="math inline">\(Y\)</span>, por lo que <span class="math inline">\(\hat{\beta}_1\)</span> nos dice cómo la media estimada de <span class="math inline">\(Y\)</span> se ve afectada al cambiar <span class="math inline">\(x\)</span>.</p>
+<p>El <em>parámetro</em> de intercepción <span class="math inline">\(\beta_0\)</span> nos dice la distancia <strong>media</strong> de frenado para un automóvil que viaja a cero millas por hora. (No se mueve). La <em>estimación</em> <span class="math inline">\(\hat{\beta}_0 = -17.58\)</span> nos dice que la <strong>distancia de frenado media estimada</strong> para un automóvil que viaja a cero millas por hora es <span class="math inline">\(-17.58\)</span> pies. Entonces, cuando aplica los frenos a un automóvil que no se está moviendo, ¿se mueve hacia atrás? Esto no parece correcto. (Extrapolación, es la cuestión aquí que veremos más adelante.).</p>
+<div id="haciendo-predicciones" class="section level3" number="7.2.1">
+<h3><span class="header-section-number">7.2.1</span> Haciendo predicciones</h3>
+<p>Ahora podemos escribir la línea <strong>ajustada</strong> o estimada,</p>
+<p><span class="math display">\[
+\hat{y} = \hat{\beta}_0 + \hat{\beta}_1 x.
+\]</span></p>
+<p>En este caso,</p>
+<p><span class="math display">\[
+\hat{y} = -17.58 + 3.93 x.
+\]</span></p>
+<p>Ahora podemos usar esta línea para hacer predicciones. Primero, veamos los posibles valores <span class="math inline">\(x\)</span> en el conjunto de datos <code>cars</code>. Dado que algunos valores <span class="math inline">\(x\)</span> pueden aparecer más de una vez, usamos <code>unique()</code> para devolver cada valor único solo una vez.</p>
+<div class="sourceCode" id="cb428"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb428-1"><a href="regresión-lineal-simple.html#cb428-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(cars<span class="sc">$</span>speed)</span></code></pre></div>
+<pre><code>##  [1]  4  7  8  9 10 11 12 13 14 15 16 17 18 19 20 22 23 24 25</code></pre>
+<p>Hagamos una predicción de la distancia de frenado de un automóvil que viaja a 8 millas por hora.</p>
+<p><span class="math display">\[
+\hat{y} = -17.58 + 3.93 \times 8 % = 13.88
+\]</span></p>
+<div class="sourceCode" id="cb430"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb430-1"><a href="regresión-lineal-simple.html#cb430-1" aria-hidden="true" tabindex="-1"></a>beta_0_hat <span class="sc">+</span> beta_1_hat <span class="sc">*</span> <span class="dv">8</span></span></code></pre></div>
+<pre><code>## [1] 13.88018</code></pre>
+<p>Esto nos dice que la distancia media estimada de frenado de un automóvil que viaja a 8 millas por hora es <span class="math inline">\(13.88\)</span>.</p>
+<p>Ahora hagamos una predicción de la distancia de frenado de un automóvil que viaja a 21 millas por hora. Esto se considera <strong>interpolación</strong> ya que 21 no es un valor observado de <span class="math inline">\(x\)</span>. (Pero está en el rango de datos). Podemos usar el operador especial <code>%in%</code> para verificar rápidamente en <code>R</code>.</p>
+<div class="sourceCode" id="cb432"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb432-1"><a href="regresión-lineal-simple.html#cb432-1" aria-hidden="true" tabindex="-1"></a><span class="dv">8</span> <span class="sc">%in%</span> <span class="fu">unique</span>(cars<span class="sc">$</span>speed)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb434"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb434-1"><a href="regresión-lineal-simple.html#cb434-1" aria-hidden="true" tabindex="-1"></a><span class="dv">21</span> <span class="sc">%in%</span> <span class="fu">unique</span>(cars<span class="sc">$</span>speed)</span></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+<div class="sourceCode" id="cb436"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb436-1"><a href="regresión-lineal-simple.html#cb436-1" aria-hidden="true" tabindex="-1"></a><span class="fu">min</span>(cars<span class="sc">$</span>speed) <span class="sc">&lt;</span> <span class="dv">21</span> <span class="sc">&amp;</span> <span class="dv">21</span> <span class="sc">&lt;</span> <span class="fu">max</span>(cars<span class="sc">$</span>speed)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<p><span class="math display">\[
+\hat{y} = -17.58 + 3.93 \times 21 % = 65
+\]</span></p>
+<div class="sourceCode" id="cb438"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb438-1"><a href="regresión-lineal-simple.html#cb438-1" aria-hidden="true" tabindex="-1"></a>beta_0_hat <span class="sc">+</span> beta_1_hat <span class="sc">*</span> <span class="dv">21</span></span></code></pre></div>
+<pre><code>## [1] 65.00149</code></pre>
+<p>Por último, podemos hacer una predicción de la distancia de frenado de un automóvil que viaja a 50 millas por hora. Esto se considera <a href="https://xkcd.com/605/" target="_blank"><strong>extrapolación</strong></a> ya que 50 no es un valor observado de <span class="math inline">\(x\)</span> y está fuera del rango de datos. Deberíamos tener menos confianza en predicciones de este tipo.</p>
+<div class="sourceCode" id="cb440"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb440-1"><a href="regresión-lineal-simple.html#cb440-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(cars<span class="sc">$</span>speed)</span></code></pre></div>
+<pre><code>## [1]  4 25</code></pre>
+<div class="sourceCode" id="cb442"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb442-1"><a href="regresión-lineal-simple.html#cb442-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(cars<span class="sc">$</span>speed)[<span class="dv">1</span>] <span class="sc">&lt;</span> <span class="dv">50</span> <span class="sc">&amp;</span> <span class="dv">50</span> <span class="sc">&lt;</span> <span class="fu">range</span>(cars<span class="sc">$</span>speed)[<span class="dv">2</span>] </span></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+<p><span class="math display">\[
+\hat{y} = -17.58 + 3.93 \times 50 % = 179.04
+\]</span></p>
+<div class="sourceCode" id="cb444"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb444-1"><a href="regresión-lineal-simple.html#cb444-1" aria-hidden="true" tabindex="-1"></a>beta_0_hat <span class="sc">+</span> beta_1_hat <span class="sc">*</span> <span class="dv">50</span></span></code></pre></div>
+<pre><code>## [1] 179.0413</code></pre>
+<p>Los automóviles viajan a 50 millas por hora con bastante facilidad hoy en día, ¡pero no en la década de 1920!</p>
+<p>Este también es un problema que vimos al interpretar <span class="math inline">\(\hat{\beta}_0 = -17.58\)</span>, que es equivalente a hacer una predicción en <span class="math inline">\(x = 0\)</span>. No debemos confiar en la relación lineal estimada fuera del rango de datos que hemos observado.</p>
+</div>
+<div id="residuales" class="section level3" number="7.2.2">
+<h3><span class="header-section-number">7.2.2</span> Residuales</h3>
+<p>Si pensamos en nuestro modelo como “Respuesta = Predicción + Error”, podemos escribirlo como</p>
+<p><span class="math display">\[
+y = \hat{y} + e.
+\]</span></p>
+<p>Luego definimos un <strong>residual</strong> como el valor observado menos el valor predicho.</p>
+<p><span class="math display">\[
+e_i = y_i - \hat{y}_i
+\]</span></p>
+<p>Calculemos el residuo de la predicción que hicimos para un automóvil que viaja a 8 millas por hora. Primero, necesitamos obtener el valor observado de <span class="math inline">\(y\)</span> para este valor de <span class="math inline">\(x\)</span>.</p>
+<div class="sourceCode" id="cb446"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb446-1"><a href="regresión-lineal-simple.html#cb446-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(cars<span class="sc">$</span>speed <span class="sc">==</span> <span class="dv">8</span>)</span></code></pre></div>
+<pre><code>## [1] 5</code></pre>
+<div class="sourceCode" id="cb448"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb448-1"><a href="regresión-lineal-simple.html#cb448-1" aria-hidden="true" tabindex="-1"></a>cars[<span class="dv">5</span>, ]</span></code></pre></div>
+<pre><code>##   speed dist
+## 5     8   16</code></pre>
+<div class="sourceCode" id="cb450"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb450-1"><a href="regresión-lineal-simple.html#cb450-1" aria-hidden="true" tabindex="-1"></a>cars[<span class="fu">which</span>(cars<span class="sc">$</span>speed <span class="sc">==</span> <span class="dv">8</span>), ]</span></code></pre></div>
+<pre><code>##   speed dist
+## 5     8   16</code></pre>
+<p>Entonces podemos calcular el residual.</p>
+<p><span class="math display">\[
+e = 16 - 13.88 = 2.12
+\]</span></p>
+<div class="sourceCode" id="cb452"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb452-1"><a href="regresión-lineal-simple.html#cb452-1" aria-hidden="true" tabindex="-1"></a><span class="dv">16</span> <span class="sc">-</span> (beta_0_hat <span class="sc">+</span> beta_1_hat <span class="sc">*</span> <span class="dv">8</span>)</span></code></pre></div>
+<pre><code>## [1] 2.119825</code></pre>
+<p>El valor residual positivo indica que la distancia de frenado observada es en realidad 2.12 pies más de lo que se predijo.</p>
+</div>
+<div id="estimación-de-la-varianza" class="section level3" number="7.2.3">
+<h3><span class="header-section-number">7.2.3</span> Estimación de la varianza</h3>
+<p>Ahora usaremos los residuos de cada uno de los puntos para crear una estimación de la varianza, <span class="math inline">\(\sigma^2\)</span>.</p>
+<p>Recordemos que,</p>
+<p><span class="math display">\[
+\text{E}[Y_i \mid X_i = x_i] = \beta_0 + \beta_1 x_i.
+\]</span></p>
+<p>Entonces,</p>
+<p><span class="math display">\[
+\hat{y}_i = \hat{\beta}_0 + \hat{\beta}_1 x_i
+\]</span></p>
+<p>es una estimación natural de la media de <span class="math inline">\(Y_i\)</span> para un valor dado de <span class="math inline">\(x_i\)</span>.</p>
+<p>Además, recuerde que cuando especificamos el modelo, teníamos tres parámetros desconocidos; <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span>, y <span class="math inline">\(\sigma^2\)</span>. El método de mínimos cuadrados nos dio estimaciones de <span class="math inline">\(\beta_0\)</span> y <span class="math inline">\(\beta_1\)</span>, sin embargo, todavía tenemos que ver una estimación de <span class="math inline">\(\sigma^2\)</span>. Ahora definiremos <span class="math inline">\(s_e^2\)</span> que será una estimación de <span class="math inline">\(\sigma^2\)</span>.</p>
+<p><span class="math display">\[
+\begin{aligned}
+s_e^2 &amp;= \frac{1}{n - 2} \sum_{i = 1}^{n}(y_i - (\hat{\beta}_0 + \hat{\beta}_1 x_i))^2 \\
+      &amp;= \frac{1}{n - 2} \sum_{i = 1}^{n}(y_i - \hat{y}_i)^2 \\
+      &amp;= \frac{1}{n - 2} \sum_{i = 1}^{n} e_i^2
+\end{aligned}
+\]</span></p>
+<p>Esto probablemente parece una estimación natural, aparte del uso de <span class="math inline">\(n - 2\)</span>, que pospondremos para explicar hasta el próximo capítulo. En realidad, debería verse bastante similar a algo que hemos visto antes.</p>
+<p><span class="math display">\[
+s^2 = \frac{1}{n - 1}\sum_{i=1}^{n}(x_i - \bar{x})^2
+\]</span></p>
+<p>Aquí, <span class="math inline">\(s^2\)</span> es la estimación de <span class="math inline">\(\sigma^2\)</span> cuando tenemos una sola variable aleatoria <span class="math inline">\(X\)</span>. En este caso, <span class="math inline">\(\bar{x}\)</span> es una estimación de <span class="math inline">\(\mu\)</span> que se supone que es la misma para cada <span class="math inline">\(x\)</span>.</p>
+<p>Ahora, en el caso de regresión, con <span class="math inline">\(s_e^2\)</span> cada <span class="math inline">\(y\)</span> tiene una media diferente debido a la relación con <span class="math inline">\(x\)</span>. Por lo tanto, para cada <span class="math inline">\(y_i\)</span>, usamos una estimación diferente de la media, que es <span class="math inline">\(\hat{y}_i\)</span>.</p>
+<div class="sourceCode" id="cb454"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb454-1"><a href="regresión-lineal-simple.html#cb454-1" aria-hidden="true" tabindex="-1"></a>y_hat <span class="ot">=</span> beta_0_hat <span class="sc">+</span> beta_1_hat <span class="sc">*</span> x</span>
+<span id="cb454-2"><a href="regresión-lineal-simple.html#cb454-2" aria-hidden="true" tabindex="-1"></a>e     <span class="ot">=</span> y <span class="sc">-</span> y_hat</span>
+<span id="cb454-3"><a href="regresión-lineal-simple.html#cb454-3" aria-hidden="true" tabindex="-1"></a>n     <span class="ot">=</span> <span class="fu">length</span>(e)</span>
+<span id="cb454-4"><a href="regresión-lineal-simple.html#cb454-4" aria-hidden="true" tabindex="-1"></a>s2_e  <span class="ot">=</span> <span class="fu">sum</span>(e<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (n <span class="sc">-</span> <span class="dv">2</span>)</span>
+<span id="cb454-5"><a href="regresión-lineal-simple.html#cb454-5" aria-hidden="true" tabindex="-1"></a>s2_e</span></code></pre></div>
+<pre><code>## [1] 236.5317</code></pre>
+<p>Al igual que con la medida univariada de varianza, este valor de 236.53 no tiene una interpretación práctica en términos de distancia de frenado. Sin embargo, al tomar la raíz cuadrada se calcula la desviación estándar de los residuos, también conocida como <em>error residual estándar</em>.</p>
+<div class="sourceCode" id="cb456"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb456-1"><a href="regresión-lineal-simple.html#cb456-1" aria-hidden="true" tabindex="-1"></a>s_e <span class="ot">=</span> <span class="fu">sqrt</span>(s2_e)</span>
+<span id="cb456-2"><a href="regresión-lineal-simple.html#cb456-2" aria-hidden="true" tabindex="-1"></a>s_e</span></code></pre></div>
+<pre><code>## [1] 15.37959</code></pre>
+<p>Esto nos dice que nuestras estimaciones de la distancia media de frenado están “típicamente” desviadas en 15.38 pies.</p>
+</div>
+</div>
+<div id="descomposición-de-variación" class="section level2" number="7.3">
+<h2><span class="header-section-number">7.3</span> Descomposición de variación</h2>
+<p>Podemos volver a expresar <span class="math inline">\(y_i - \bar{y}\)</span>, que mide la desviación de una observación de la media muestral, de la siguiente manera,</p>
+<p><span class="math display">\[
+y_i - \bar{y} = (y_i - \hat{y}_i) + (\hat{y}_i - \bar{y}).
+\]</span></p>
+<p>Este es el truco matemático común de “sumar cero”. En este caso sumamos y restamos <span class="math inline">\(\hat{y}_i\)</span>.</p>
+<p>Aquí, <span class="math inline">\(y_i - \hat{y}_i\)</span> mide la desviación de una observación de la línea de regresión ajustada y <span class="math inline">\(\hat{y}_i - \bar{y}\)</span> mide la desviación de la línea de regresión ajustada de la media muestral .</p>
+<p>Si elevamos al cuadrado y luego sumamos ambos lados de la ecuación anterior, podemos obtener lo siguiente,</p>
+<p><span class="math display">\[
+\sum_{i=1}^{n}(y_i - \bar{y})^2 = \sum_{i=1}^{n}(y_i - \hat{y}_i)^2 + \sum_{i=1}^{n}(\hat{y}_i - \bar{y})^2.
+\]</span></p>
+<p>Esto debería ser algo alarmante o sorprendente. ¿Cómo es esto cierto? Por ahora dejaremos estas preguntas sin respuesta. (Piense en esto, y tal vez intente demostrarlo). Ahora definiremos tres de las cantidades que se ven en esta ecuación.</p>
+<div id="suma-de-cuadrados-del-total" class="section level4 unnumbered">
+<h4>Suma de cuadrados del total</h4>
+<p><span class="math display">\[
+\text{SST} = \sum_{i=1}^{n}(y_i - \bar{y})^2
+\]</span></p>
+<p>La cantidad “Suma de cuadrados del total”, o <span class="math inline">\(\text{SST}\)</span>, representa la <strong>variación total</strong> de los valores de <span class="math inline">\(y\)</span> observados. Esta debería ser una expresión familiar. Tenga en cuenta que,</p>
+<p><span class="math display">\[
+s ^ 2 = \frac{1}{n - 1}\sum_{i=1}^{n}(y_i - \bar{y})^2 = \frac{1}{n - 1} \text{SST}.
+\]</span></p>
+</div>
+<div id="suma-de-cuadrados-de-la-regresión" class="section level4 unnumbered">
+<h4>Suma de cuadrados de la regresión</h4>
+<p><span class="math display">\[
+\text{SSReg} = \sum_{i=1}^{n}(\hat{y}_i - \bar{y})^2
+\]</span></p>
+<p>La magnitud “Suma de cuadrados de la regresión,” <span class="math inline">\(\text{SSReg}\)</span>, representa la <strong>variación explicada</strong> de los valores observados <span class="math inline">\(y\)</span>.</p>
+</div>
+<div id="suma-de-cuadrados-del-error" class="section level4 unnumbered">
+<h4>Suma de cuadrados del error</h4>
+<p><span class="math display">\[
+\text{SSE} = \text{RSS} = \sum_{i=1}^{n}(y_i - \hat{y}_i)^2
+\]</span></p>
+<p>La magnitud “Suma de cuadrados del error,” <span class="math inline">\(\text{SSE}\)</span>, representa la <strong>variación no explicada</strong> de los valores observados <span class="math inline">\(y\)</span>. A menudo verá <span class="math inline">\(\text{SSE}\)</span> escrito como <span class="math inline">\(\text{RSS}\)</span>, o “Suma de cuadrados residual”.</p>
+<div class="sourceCode" id="cb458"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb458-1"><a href="regresión-lineal-simple.html#cb458-1" aria-hidden="true" tabindex="-1"></a>SST   <span class="ot">=</span> <span class="fu">sum</span>((y <span class="sc">-</span> <span class="fu">mean</span>(y)) <span class="sc">^</span> <span class="dv">2</span>)</span>
+<span id="cb458-2"><a href="regresión-lineal-simple.html#cb458-2" aria-hidden="true" tabindex="-1"></a>SSReg <span class="ot">=</span> <span class="fu">sum</span>((y_hat <span class="sc">-</span> <span class="fu">mean</span>(y)) <span class="sc">^</span> <span class="dv">2</span>)</span>
+<span id="cb458-3"><a href="regresión-lineal-simple.html#cb458-3" aria-hidden="true" tabindex="-1"></a>SSE   <span class="ot">=</span> <span class="fu">sum</span>((y <span class="sc">-</span> y_hat) <span class="sc">^</span> <span class="dv">2</span>)</span>
+<span id="cb458-4"><a href="regresión-lineal-simple.html#cb458-4" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">SST =</span> SST, <span class="at">SSReg =</span> SSReg, <span class="at">SSE =</span> SSE)</span></code></pre></div>
+<pre><code>##      SST    SSReg      SSE 
+## 32538.98 21185.46 11353.52</code></pre>
+<p>Tenga en cuenta que,</p>
+<p><span class="math display">\[
+s_e^2 = \frac{\text{SSE}}{n - 2}.
+\]</span></p>
+<div class="sourceCode" id="cb460"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb460-1"><a href="regresión-lineal-simple.html#cb460-1" aria-hidden="true" tabindex="-1"></a>SSE <span class="sc">/</span> (n <span class="sc">-</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 236.5317</code></pre>
+<p>Podemos usar <code>R</code> para verificar que esto coincide con nuestro cálculo anterior de <span class="math inline">\(s_e^2\)</span>.</p>
+<div class="sourceCode" id="cb462"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb462-1"><a href="regresión-lineal-simple.html#cb462-1" aria-hidden="true" tabindex="-1"></a>s2_e <span class="sc">==</span> SSE <span class="sc">/</span> (n <span class="sc">-</span> <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<p>Estas tres medidas tampoco tienen una interpretación práctica importante individualmente. Pero juntas, están a punto de revelar una nueva estadística para ayudar a medir la solidez de un modelo SLR.</p>
+</div>
+<div id="coeficiente-de-determinación" class="section level3" number="7.3.1">
+<h3><span class="header-section-number">7.3.1</span> Coeficiente de determinación</h3>
+<p>El <strong>coeficiente de determinación</strong>, <span class="math inline">\(R^2\)</span>, se define como</p>
+<p><span class="math display">\[
+\begin{aligned}
+R^2 &amp;= \frac{\text{SSReg}}{\text{SST}} = \frac{\sum_{i=1}^{n}(\hat{y}_i - \bar{y})^2}{\sum_{i=1}^{n}(y_i - \bar{y})^2} \\[2.5ex]
+    &amp;= \frac{\text{SST} - \text{SSE}}{\text{SST}} = 1 - \frac{\text{SSE}}{\text{SST}} \\[2.5ex]
+    &amp;= 1 - \frac{\sum_{i=1}^{n}(y_i - \hat{y}_i)^2}{\sum_{i=1}^{n}(y_i - \bar{y})^2} = 
+1 - \frac{\sum_{i = 1}^{n}e_i^2}{\sum_{i=1}^{n}(y_i - \bar{y})^2}
+\end{aligned}
+\]</span></p>
+<p>El coeficiente de determinación se interpreta como la proporción de variación observada en <span class="math inline">\(y\)</span> que puede explicarse mediante el modelo de regresión lineal simple.</p>
+<div class="sourceCode" id="cb464"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb464-1"><a href="regresión-lineal-simple.html#cb464-1" aria-hidden="true" tabindex="-1"></a>R2 <span class="ot">=</span> SSReg <span class="sc">/</span> SST</span>
+<span id="cb464-2"><a href="regresión-lineal-simple.html#cb464-2" aria-hidden="true" tabindex="-1"></a>R2</span></code></pre></div>
+<pre><code>## [1] 0.6510794</code></pre>
+<p>Para el ejemplo de <code>cars</code>, calculamos <span class="math inline">\(R^2 = 0.65\)</span>. Luego decimos que <span class="math inline">\(65\%\)</span> de la variabilidad observada en la distancia de frenado se explica por la relación lineal con la velocidad.</p>
+<p>Las siguientes gráficas demuestran visualmente las tres “sumas de cuadrados” para un conjunto de datos simulado que tiene <span class="math inline">\(R^2 = 0.92\)</span> que es un valor algo alto. Observe en el gráfico final que las flechas naranjas representan una proporción mayor de la flecha total.</p>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-181-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p>Las siguientes gráficas nuevamente demuestran visualmente las tres “sumas de cuadrados”, esta vez para un conjunto de datos simulado que tiene <span class="math inline">\(R^2 = 0.19\)</span>. Observe en el gráfico final, que ahora las flechas azules representan una proporción mayor de la flecha total.</p>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-183-1.png" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="la-función-lm" class="section level2" number="7.4">
+<h2><span class="header-section-number">7.4</span> La función <code>lm</code></h2>
+<p>Hasta ahora hemos hecho la regresión derivando las estimaciones de mínimos cuadrados y luego escribiendo comandos simples en <code>R</code> para realizar los cálculos necesarios. Dado que esta es una tarea tan común, esta es una funcionalidad que se construye directamente en <code>R</code> a través del comando <code>lm()</code>.</p>
+<p>El comando <code>lm()</code> se usa para ajustar <strong>modelos lineales</strong> que en realidad representan una clase más amplia de modelos que la regresión lineal simple, pero usaremos SLR como nuestra primera demostración de <code>lm()</code>. La función <code>lm()</code> será una de nuestras herramientas más utilizadas, por lo que es posible que desee echar un vistazo a la documentación usando <code>?lm</code>. Notará que hay mucha información allí, pero comenzaremos con lo más básico. Esta es la documentación a la que querrá volver a menudo.</p>
+<p>Continuaremos usando los datos <code>cars</code>, y esencialmente usaremos la función <code>lm()</code> para verificar el trabajo que habíamos hecho anteriormente.</p>
+<div class="sourceCode" id="cb466"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb466-1"><a href="regresión-lineal-simple.html#cb466-1" aria-hidden="true" tabindex="-1"></a>stop_dist_model <span class="ot">=</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span></code></pre></div>
+<p>Esta línea de código se ajusta a nuestro primer modelo lineal. La sintaxis debería resultar familiar. Usamos la sintaxis <code>dist ~ speed</code> para decirle a <code>R</code> que nos gustaría modelar la variable de respuesta <code>dist</code> como una función lineal de la variable predictora <code>speed</code>. En general, debería pensar en la sintaxis como “respuesta ~ predictor”. El argumento <code>data = cars</code> le dice a <code>R</code> que las variables <code>dist</code> y <code>speed</code> son del conjunto de datos <code>cars</code>. Luego almacenamos este resultado en la variable <code>stop_dist_model</code>.</p>
+<p>La variable <code>stop_dist_model</code> ahora contiene una gran cantidad de información, y ahora veremos cómo extraer y usar esa información. Lo primero que haremos es simplemente generar lo que esté almacenado inmediatamente en la variable <code>stop_dist_model</code>.</p>
+<div class="sourceCode" id="cb467"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb467-1"><a href="regresión-lineal-simple.html#cb467-1" aria-hidden="true" tabindex="-1"></a>stop_dist_model</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = dist ~ speed, data = cars)
+## 
+## Coefficients:
+## (Intercept)        speed  
+##     -17.579        3.932</code></pre>
+<p>Vemos que primero nos dice la fórmula que ingresamos en <code>R</code>, que es <code>lm(formula = dist ~ speed, data = cars)</code>. También vemos los coeficientes del modelo. Podemos comprobar que estos son los que habíamos calculado previamente. (Menos algunos redondeos que realiza <code>R</code> al mostrar los resultados. Se almacenan con total precisión).</p>
+<div class="sourceCode" id="cb469"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb469-1"><a href="regresión-lineal-simple.html#cb469-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(beta_0_hat, beta_1_hat)</span></code></pre></div>
+<pre><code>## [1] -17.579095   3.932409</code></pre>
+<p>A continuación, sería bueno agregar la línea ajustada al diagrama de dispersión. Para hacerlo usaremos la función <code>abline()</code>.</p>
+<div class="sourceCode" id="cb471"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb471-1"><a href="regresión-lineal-simple.html#cb471-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars,</span>
+<span id="cb471-2"><a href="regresión-lineal-simple.html#cb471-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Velocidad (en millas por hora)&quot;</span>,</span>
+<span id="cb471-3"><a href="regresión-lineal-simple.html#cb471-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Distancia de frenado (en pies)&quot;</span>,</span>
+<span id="cb471-4"><a href="regresión-lineal-simple.html#cb471-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Distancia de frenado vs velocidad&quot;</span>,</span>
+<span id="cb471-5"><a href="regresión-lineal-simple.html#cb471-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch  =</span> <span class="dv">20</span>,</span>
+<span id="cb471-6"><a href="regresión-lineal-simple.html#cb471-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex  =</span> <span class="dv">2</span>,</span>
+<span id="cb471-7"><a href="regresión-lineal-simple.html#cb471-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">col  =</span> <span class="st">&quot;grey&quot;</span>)</span>
+<span id="cb471-8"><a href="regresión-lineal-simple.html#cb471-8" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(stop_dist_model, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-187-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>La función <code>abline()</code> se usa para agregar líneas de la forma <span class="math inline">\(a+bx\)</span> a un gráfico. (De ahí <strong><code>ab</code></strong><code>line</code>.) Cuando le damos <code>stop_dist_model</code> como argumento, automáticamente extrae las estimaciones del coeficiente de regresión (<span class="math inline">\(\hat{\beta}_0\)</span> and <span class="math inline">\(\hat{\beta}_1\)</span>) y los usa como la pendiente e intersección de la línea. También usamos <code>lwd</code> para modificar el ancho de la línea, así como <code>col</code> para modificar el color de la línea.</p>
+<p>La “cosa” que devuelve la función <code>lm()</code> es en realidad un objeto de la clase <code>lm</code> que es una lista. Los detalles exactos de esto no son importantes a menos que esté seriamente interesado en el funcionamiento interno de <code>R</code>, pero sepa que podemos determinar los nombres de los elementos de la lista usando el comando <code>names()</code>.</p>
+<div class="sourceCode" id="cb472"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb472-1"><a href="regresión-lineal-simple.html#cb472-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(stop_dist_model)</span></code></pre></div>
+<pre><code>##  [1] &quot;coefficients&quot;  &quot;residuals&quot;     &quot;effects&quot;       &quot;rank&quot;         
+##  [5] &quot;fitted.values&quot; &quot;assign&quot;        &quot;qr&quot;            &quot;df.residual&quot;  
+##  [9] &quot;xlevels&quot;       &quot;call&quot;          &quot;terms&quot;         &quot;model&quot;</code></pre>
+<p>Luego podemos usar esta información para, por ejemplo, acceder a los residuales usando el operador <code>$</code>.</p>
+<div class="sourceCode" id="cb474"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb474-1"><a href="regresión-lineal-simple.html#cb474-1" aria-hidden="true" tabindex="-1"></a>stop_dist_model<span class="sc">$</span>residuals</span></code></pre></div>
+<pre><code>##          1          2          3          4          5          6          7 
+##   3.849460  11.849460  -5.947766  12.052234   2.119825  -7.812584  -3.744993 
+##          8          9         10         11         12         13         14 
+##   4.255007  12.255007  -8.677401   2.322599 -15.609810  -9.609810  -5.609810 
+##         15         16         17         18         19         20         21 
+##  -1.609810  -7.542219   0.457781   0.457781  12.457781 -11.474628  -1.474628 
+##         22         23         24         25         26         27         28 
+##  22.525372  42.525372 -21.407036 -15.407036  12.592964 -13.339445  -5.339445 
+##         29         30         31         32         33         34         35 
+## -17.271854  -9.271854   0.728146 -11.204263   2.795737  22.795737  30.795737 
+##         36         37         38         39         40         41         42 
+## -21.136672 -11.136672  10.863328 -29.069080 -13.069080  -9.069080  -5.069080 
+##         43         44         45         46         47         48         49 
+##   2.930920  -2.933898 -18.866307  -6.798715  15.201285  16.201285  43.201285 
+##         50 
+##   4.268876</code></pre>
+<p>Otra forma de acceder a la información almacenada en <code>stop_dist_model</code> son las funciones <code>coef()</code>, <code>resid()</code> y <code>fit()</code>. Estas devuelven los coeficientes, los residuos y los valores ajustados, respectivamente.</p>
+<div class="sourceCode" id="cb476"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb476-1"><a href="regresión-lineal-simple.html#cb476-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(stop_dist_model)</span></code></pre></div>
+<pre><code>## (Intercept)       speed 
+##  -17.579095    3.932409</code></pre>
+<div class="sourceCode" id="cb478"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb478-1"><a href="regresión-lineal-simple.html#cb478-1" aria-hidden="true" tabindex="-1"></a><span class="fu">resid</span>(stop_dist_model)</span></code></pre></div>
+<pre><code>##          1          2          3          4          5          6          7 
+##   3.849460  11.849460  -5.947766  12.052234   2.119825  -7.812584  -3.744993 
+##          8          9         10         11         12         13         14 
+##   4.255007  12.255007  -8.677401   2.322599 -15.609810  -9.609810  -5.609810 
+##         15         16         17         18         19         20         21 
+##  -1.609810  -7.542219   0.457781   0.457781  12.457781 -11.474628  -1.474628 
+##         22         23         24         25         26         27         28 
+##  22.525372  42.525372 -21.407036 -15.407036  12.592964 -13.339445  -5.339445 
+##         29         30         31         32         33         34         35 
+## -17.271854  -9.271854   0.728146 -11.204263   2.795737  22.795737  30.795737 
+##         36         37         38         39         40         41         42 
+## -21.136672 -11.136672  10.863328 -29.069080 -13.069080  -9.069080  -5.069080 
+##         43         44         45         46         47         48         49 
+##   2.930920  -2.933898 -18.866307  -6.798715  15.201285  16.201285  43.201285 
+##         50 
+##   4.268876</code></pre>
+<div class="sourceCode" id="cb480"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb480-1"><a href="regresión-lineal-simple.html#cb480-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitted</span>(stop_dist_model)</span></code></pre></div>
+<pre><code>##         1         2         3         4         5         6         7         8 
+## -1.849460 -1.849460  9.947766  9.947766 13.880175 17.812584 21.744993 21.744993 
+##         9        10        11        12        13        14        15        16 
+## 21.744993 25.677401 25.677401 29.609810 29.609810 29.609810 29.609810 33.542219 
+##        17        18        19        20        21        22        23        24 
+## 33.542219 33.542219 33.542219 37.474628 37.474628 37.474628 37.474628 41.407036 
+##        25        26        27        28        29        30        31        32 
+## 41.407036 41.407036 45.339445 45.339445 49.271854 49.271854 49.271854 53.204263 
+##        33        34        35        36        37        38        39        40 
+## 53.204263 53.204263 53.204263 57.136672 57.136672 57.136672 61.069080 61.069080 
+##        41        42        43        44        45        46        47        48 
+## 61.069080 61.069080 61.069080 68.933898 72.866307 76.798715 76.798715 76.798715 
+##        49        50 
+## 76.798715 80.731124</code></pre>
+<p>Una función de <code>R</code> que es útil en muchas situaciones es <code>summary()</code>. Vemos que cuando se llama en nuestro modelo, devuelve una gran cantidad de información. Al final del curso, sabrá para qué se utiliza cada valor aquí. Por ahora, debería notar inmediatamente las estimaciones de los coeficientes y puede reconocer el valor del <span class="math inline">\(R^2\)</span> que vimos antes.</p>
+<div class="sourceCode" id="cb482"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb482-1"><a href="regresión-lineal-simple.html#cb482-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stop_dist_model)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = dist ~ speed, data = cars)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -29.069  -9.525  -2.272   9.215  43.201 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -17.5791     6.7584  -2.601   0.0123 *  
+## speed         3.9324     0.4155   9.464 1.49e-12 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 15.38 on 48 degrees of freedom
+## Multiple R-squared:  0.6511, Adjusted R-squared:  0.6438 
+## F-statistic: 89.57 on 1 and 48 DF,  p-value: 1.49e-12</code></pre>
+<p>El comando <code>summary()</code> también devuelve una lista, y podemos usar nuevamente <code>names()</code> para saber qué hay sobre los elementos de esta lista.</p>
+<div class="sourceCode" id="cb484"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb484-1"><a href="regresión-lineal-simple.html#cb484-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(<span class="fu">summary</span>(stop_dist_model))</span></code></pre></div>
+<pre><code>##  [1] &quot;call&quot;          &quot;terms&quot;         &quot;residuals&quot;     &quot;coefficients&quot; 
+##  [5] &quot;aliased&quot;       &quot;sigma&quot;         &quot;df&quot;            &quot;r.squared&quot;    
+##  [9] &quot;adj.r.squared&quot; &quot;fstatistic&quot;    &quot;cov.unscaled&quot;</code></pre>
+<p>Entonces, por ejemplo, si quisiéramos acceder directamente al valor de <span class="math inline">\(R^2\)</span>, en lugar de copiarlo y pegarlo fuera de la declaración impresa de <code>summary()</code>, podríamos hacerlo.</p>
+<div class="sourceCode" id="cb486"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb486-1"><a href="regresión-lineal-simple.html#cb486-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stop_dist_model)<span class="sc">$</span>r.squared</span></code></pre></div>
+<pre><code>## [1] 0.6510794</code></pre>
+<p>Otro valor al que podemos querer acceder es <span class="math inline">\(s_e\)</span>, que <code>R</code> llama <code>sigma</code>.</p>
+<div class="sourceCode" id="cb488"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb488-1"><a href="regresión-lineal-simple.html#cb488-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stop_dist_model)<span class="sc">$</span>sigma</span></code></pre></div>
+<pre><code>## [1] 15.37959</code></pre>
+<p>Tenga en cuenta que este es el mismo resultado visto anteriormente como <code>s_e</code>. También puede notar que este valor se mostró arriba como resultado del comando <code>summary()</code>, que <code>R</code> etiquetó como “Residual Standard Error”.
+<span class="math display">\[
+s_e = \text{RSE} = \sqrt{\frac{1}{n - 2}\sum_{i = 1}^n e_i^2}
+\]</span></p>
+<p>A menudo es útil hablar de <span class="math inline">\(s_e\)</span> (o RSE) en lugar de <span class="math inline">\(s_e^2\)</span> debido a sus unidades. Las unidades de <span class="math inline">\(s_e\)</span> en el ejemplo de <code>cars</code> son pies, mientras que las unidades de <span class="math inline">\(s_e^2\)</span> son pies al cuadrado.</p>
+<p>Otra función útil, que usaremos casi tan a menudo como <code>lm()</code> es la función <code>predict()</code>.</p>
+<div class="sourceCode" id="cb490"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb490-1"><a href="regresión-lineal-simple.html#cb490-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(stop_dist_model, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">speed =</span> <span class="dv">8</span>))</span></code></pre></div>
+<pre><code>##        1 
+## 13.88018</code></pre>
+<p>El código anterior dice “predice la distancia de frenado de un automóvil que viaja a 8 millas por hora usando el <code>stop_dist_model</code>”. Es importante destacar que el segundo argumento para <code>predecir()</code> es un marco de datos que creamos en su lugar. Hacemos esto para que podamos especificar que <code>8</code> es un valor de <code>speed</code>, para que predict sepa cómo usarlo con el modelo almacenado en <code>stop_dist_model</code>. Vemos que este resultado es el que habíamos calculado “a mano” anteriormente.</p>
+<p>También podríamos predecir varios valores a la vez.</p>
+<div class="sourceCode" id="cb492"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb492-1"><a href="regresión-lineal-simple.html#cb492-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(stop_dist_model, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">speed =</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">21</span>, <span class="dv">50</span>)))</span></code></pre></div>
+<pre><code>##         1         2         3 
+##  13.88018  65.00149 179.04134</code></pre>
+<p><span class="math display">\[
+\begin{aligned}
+\hat{y} &amp;= -17.58 + 3.93 \times 8 = 13.88 \\
+\hat{y} &amp;= -17.58 + 3.93 \times 21 = 65 \\
+\hat{y} &amp;= -17.58 + 3.93 \times 50 = 179.04
+\end{aligned}
+\]</span></p>
+<p>O podríamos calcular el valor ajustado para cada uno de los puntos de datos originales. Simplemente podemos suministrar el marco de datos original, <code>cars</code>, ya que contiene una variable llamada <code>speed</code> que tiene los valores que nos gustaría predecir.</p>
+<div class="sourceCode" id="cb494"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb494-1"><a href="regresión-lineal-simple.html#cb494-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(stop_dist_model, <span class="at">newdata =</span> cars)</span></code></pre></div>
+<pre><code>##         1         2         3         4         5         6         7         8 
+## -1.849460 -1.849460  9.947766  9.947766 13.880175 17.812584 21.744993 21.744993 
+##         9        10        11        12        13        14        15        16 
+## 21.744993 25.677401 25.677401 29.609810 29.609810 29.609810 29.609810 33.542219 
+##        17        18        19        20        21        22        23        24 
+## 33.542219 33.542219 33.542219 37.474628 37.474628 37.474628 37.474628 41.407036 
+##        25        26        27        28        29        30        31        32 
+## 41.407036 41.407036 45.339445 45.339445 49.271854 49.271854 49.271854 53.204263 
+##        33        34        35        36        37        38        39        40 
+## 53.204263 53.204263 53.204263 57.136672 57.136672 57.136672 61.069080 61.069080 
+##        41        42        43        44        45        46        47        48 
+## 61.069080 61.069080 61.069080 68.933898 72.866307 76.798715 76.798715 76.798715 
+##        49        50 
+## 76.798715 80.731124</code></pre>
+<div class="sourceCode" id="cb496"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb496-1"><a href="regresión-lineal-simple.html#cb496-1" aria-hidden="true" tabindex="-1"></a><span class="co"># predict(stop_dist_model, newdata = data.frame(speed = cars$speed))</span></span></code></pre></div>
+<p>En realidad, esto es equivalente a simplemente llamar a <code>predict()</code> en <code>stop_dist_model</code> sin un segundo argumento.</p>
+<div class="sourceCode" id="cb497"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb497-1"><a href="regresión-lineal-simple.html#cb497-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(stop_dist_model)</span></code></pre></div>
+<pre><code>##         1         2         3         4         5         6         7         8 
+## -1.849460 -1.849460  9.947766  9.947766 13.880175 17.812584 21.744993 21.744993 
+##         9        10        11        12        13        14        15        16 
+## 21.744993 25.677401 25.677401 29.609810 29.609810 29.609810 29.609810 33.542219 
+##        17        18        19        20        21        22        23        24 
+## 33.542219 33.542219 33.542219 37.474628 37.474628 37.474628 37.474628 41.407036 
+##        25        26        27        28        29        30        31        32 
+## 41.407036 41.407036 45.339445 45.339445 49.271854 49.271854 49.271854 53.204263 
+##        33        34        35        36        37        38        39        40 
+## 53.204263 53.204263 53.204263 57.136672 57.136672 57.136672 61.069080 61.069080 
+##        41        42        43        44        45        46        47        48 
+## 61.069080 61.069080 61.069080 68.933898 72.866307 76.798715 76.798715 76.798715 
+##        49        50 
+## 76.798715 80.731124</code></pre>
+<p>Tenga en cuenta que, en este caso, esto es lo mismo que usar <code>fitted()</code>.</p>
+<div class="sourceCode" id="cb499"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb499-1"><a href="regresión-lineal-simple.html#cb499-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitted</span>(stop_dist_model)</span></code></pre></div>
+<pre><code>##         1         2         3         4         5         6         7         8 
+## -1.849460 -1.849460  9.947766  9.947766 13.880175 17.812584 21.744993 21.744993 
+##         9        10        11        12        13        14        15        16 
+## 21.744993 25.677401 25.677401 29.609810 29.609810 29.609810 29.609810 33.542219 
+##        17        18        19        20        21        22        23        24 
+## 33.542219 33.542219 33.542219 37.474628 37.474628 37.474628 37.474628 41.407036 
+##        25        26        27        28        29        30        31        32 
+## 41.407036 41.407036 45.339445 45.339445 49.271854 49.271854 49.271854 53.204263 
+##        33        34        35        36        37        38        39        40 
+## 53.204263 53.204263 53.204263 57.136672 57.136672 57.136672 61.069080 61.069080 
+##        41        42        43        44        45        46        47        48 
+## 61.069080 61.069080 61.069080 68.933898 72.866307 76.798715 76.798715 76.798715 
+##        49        50 
+## 76.798715 80.731124</code></pre>
+</div>
+<div id="enfoque-de-estimación-de-máxima-verosimilitud-mle" class="section level2" number="7.5">
+<h2><span class="header-section-number">7.5</span> Enfoque de estimación de máxima verosimilitud (MLE)</h2>
+<p>Recuerde el modelo,</p>
+<p><span class="math display">\[
+Y_i = \beta_0 + \beta_1 x_i + \epsilon_i
+\]</span></p>
+<p>donde <span class="math inline">\(\epsilon_i \sim N(0, \sigma^2)\)</span>.</p>
+<p>Entonces podemos encontrar la media y la varianza de cada <span class="math inline">\(Y_i\)</span>.</p>
+<p><span class="math display">\[
+\text{E}[Y_i \mid X_i = x_i] = \beta_0 + \beta_1 x_i
+\]</span></p>
+<p>y</p>
+<p><span class="math display">\[
+\text{Var}[Y_i \mid X_i = x_i] = \sigma^2.
+\]</span></p>
+<p>Además, el <span class="math inline">\(Y_i\)</span> sigue una distribución normal condicionada al <span class="math inline">\(x_i\)</span>.</p>
+<p><span class="math display">\[
+Y_i \mid X_i \sim N(\beta_0 + \beta_1 x_i, \sigma^2)
+\]</span></p>
+<p>Recuerde que la pdf de una variable aleatoria <span class="math inline">\(X \sim N(\mu, \sigma^2)\)</span> viene dado por</p>
+<p><span class="math display">\[
+f_{X}(x; \mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp{\left[-\frac{1}{2}\left(\frac{x - \mu}{\sigma}\right)^2\right]}.
+\]</span></p>
+<p>Entonces podemos escribir la pdf de cada uno de los <span class="math inline">\(Y_i\)</span> como</p>
+<p><span class="math display">\[
+f_{Y_i}(y_i; x_i, \beta_0, \beta_1, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp{\left[-\frac{1}{2}\left(\frac{y_i - (\beta_0 + \beta_1 x_i)}{\sigma}\right)^2\right]}.
+\]</span></p>
+<p>Dados <span class="math inline">\(n\)</span> puntos de datos <span class="math inline">\((x_i, y_i)\)</span> podemos escribir la probabilidad, que es una función de los tres parámetros <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span>, y <span class="math inline">\(\sigma^2\)</span>. Dado que se han observado los datos, usamos <span class="math inline">\(y_i\)</span> minúsculas para indicar que estos valores ya no son aleatorios.</p>
+<p><span class="math display">\[
+L(\beta_0, \beta_1, \sigma^2) = \prod_{i = 1}^{n} \frac{1}{\sqrt{2\pi\sigma^2}} \exp{\left[-\frac{1}{2}\left(\frac{y_i - \beta_0 - \beta_1 x_i}{\sigma}\right)^2\right]}
+\]</span></p>
+<p>Nuestro objetivo es encontrar valores de <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span>, y <span class="math inline">\(\sigma^2\)</span> que maximicen esta función, que es un sencillo problema de cálculo multivariante.</p>
+<p>Comenzaremos haciendo un poco de reorganización para facilitar nuestra tarea.</p>
+<p><span class="math display">\[
+L(\beta_0, \beta_1, \sigma^2) = \left(\frac{1}{\sqrt{2 \pi \sigma^2}}\right)^n \exp{\left[-\frac{1}{2 \sigma^2} \sum_{i = 1}^{n} (y_i - \beta_0 - \beta_1 x_i)^2\right]}
+\]</span></p>
+<p>Entonces, como suele ser el caso al encontrar MLE, por conveniencia matemática tomaremos el logaritmo natural de la función de verosimilitud, ya que log es una función que aumenta monótonamente. Luego procederemos a maximizar la probabilidad logarítmica, y las estimaciones resultantes serán las mismas que si no hubiéramos tomado el logaritmo.</p>
+<p><span class="math display">\[
+\log L(\beta_0, \beta_1, \sigma^2) = -\frac{n}{2}\log(2 \pi) - \frac{n}{2}\log(\sigma^2) - \frac{1}{2 \sigma^2} \sum_{i = 1}^{n} (y_i - \beta_0 - \beta_1 x_i)^2
+\]</span></p>
+<p>Tenga en cuenta que usamos <span class="math inline">\(\log\)</span> para referirnos al logaritmo natural. Ahora tomamos una derivada parcial con respecto a cada uno de los parámetros.</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{\partial \log L(\beta_0, \beta_1, \sigma^2)}{\partial \beta_0} &amp;= \frac{1}{\sigma^2} \sum_{i = 1}^{n} (y_i - \beta_0 - \beta_1 x_i)\\
+\frac{\partial \log L(\beta_0, \beta_1, \sigma^2)}{\partial \beta_1} &amp;= \frac{1}{\sigma^2} \sum_{i = 1}^{n}(x_i)(y_i - \beta_0 - \beta_1 x_i) \\
+\frac{\partial \log L(\beta_0, \beta_1, \sigma^2)}{\partial \sigma^2} &amp;= -\frac{n}{2 \sigma^2} + \frac{1}{2(\sigma^2)^2} \sum_{i = 1}^{n} (y_i - \beta_0 - \beta_1 x_i)^2
+\end{aligned}
+\]</span></p>
+<p>Luego igualamos a cero cada una de las derivadas parciales y resolvemos el sistema de ecuaciones resultante.</p>
+<p><span class="math display">\[
+\begin{aligned}
+\sum_{i = 1}^{n} (y_i - \beta_0 - \beta_1 x_i) &amp;= 0\\
+\sum_{i = 1}^{n}(x_i)(y_i - \beta_0 - \beta_1 x_i) &amp;= 0\\
+-\frac{n}{2 \sigma^2} + \frac{1}{2(\sigma^2)^2} \sum_{i = 1}^{n} (y_i - \beta_0 - \beta_1 x_i)^2 &amp;= 0
+\end{aligned}
+\]</span></p>
+<p>Puede notar que las dos primeras ecuaciones también aparecen en el método de mínimos cuadrados. Luego, omitiendo la cuestión de verificar realmente si hemos encontrado un máximo, llegamos a nuestras estimaciones. A estas estimaciones las denominamos estimaciones de máxima verosimilitud.</p>
+<p><span class="math display">\[
+\begin{aligned}
+\hat{\beta}_1 &amp;= \frac{\sum_{i = 1}^{n} x_i y_i - \frac{(\sum_{i = 1}^{n} x_i)(\sum_{i = 1}^{n} y_i)}{n}}{\sum_{i = 1}^{n} x_i^2 - \frac{(\sum_{i = 1}^{n} x_i)^2}{n}} = \frac{S_{xy}}{S_{xx}}\\
+\hat{\beta}_0 &amp;= \bar{y} - \hat{\beta}_1 \bar{x}\\
+\hat{\sigma}^2 &amp;= \frac{1}{n} \sum_{i = 1}^{n}(y_i - \hat{y}_i)^2
+\end{aligned}
+\]</span></p>
+<p>Tenga en cuenta que <span class="math inline">\(\hat{\beta}_0\)</span> y <span class="math inline">\(\hat{\beta}_1\)</span> son las mismas que las estimaciones de mínimos cuadrados. Sin embargo, ahora tenemos una nueva estimación de <span class="math inline">\(\sigma^2\)</span>, que es <span class="math inline">\(\hat{\sigma}^2\)</span>. Entonces ahora tenemos dos estimaciones diferentes de <span class="math inline">\(\sigma^2\)</span>.</p>
+<p><span class="math display">\[
+\begin{aligned}
+s_e^2 &amp;= \frac{1}{n - 2} \sum_{i = 1}^{n}(y_i - \hat{y}_i)^2 = \frac{1}{n - 2} \sum_{i = 1}^{n}e_i^2 &amp; \text{Least Squares}\\
+\hat{\sigma}^2 &amp;= \frac{1}{n} \sum_{i = 1}^{n}(y_i - \hat{y}_i)^2 = \frac{1}{n} \sum_{i = 1}^{n}e_i^2 &amp; \text{MLE}
+\end{aligned}
+\]</span></p>
+<p>En el próximo capítulo, discutiremos en detalle la diferencia entre estas dos estimaciones, lo que implica sesgo.</p>
+</div>
+<div id="simulando-slr" class="section level2" number="7.6">
+<h2><span class="header-section-number">7.6</span> Simulando SLR</h2>
+<p>Volvemos de nuevo a más ejemplos de simulación. ¡Este será un tema común!</p>
+<p>En la práctica, casi nunca tendrá un modelo verdadero y utilizará datos para intentar recuperar información sobre el modelo verdadero desconocido. Con la simulación, decidimos el modelo real y simulamos datos a partir de él. Luego, aplicamos un método a los datos, en este caso mínimos cuadrados. Ahora, dado que conocemos el modelo real, podemos evaluar qué tan bien funcionó.</p>
+<p>Para este ejemplo, simularemos <span class="math inline">\(n=21\)</span> observaciones del modelo</p>
+<p><span class="math display">\[
+Y = 5 - 2 x + \epsilon.
+\]</span></p>
+<p>Eso es <span class="math inline">\(\beta_0 = 5\)</span>, <span class="math inline">\(\beta_1 = -2\)</span>, y sea <span class="math inline">\(\epsilon \sim N(\mu = 0, \sigma^2 = 9)\)</span>. O, aún más resumido, podríamos escribir</p>
+<p><span class="math display">\[
+Y \mid X \sim N(\mu = 5 - 2 x, \sigma^ 2 = 9).
+\]</span></p>
+<p>Primero establecemos los verdaderos parámetros del modelo a simular.</p>
+<div class="sourceCode" id="cb501"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb501-1"><a href="regresión-lineal-simple.html#cb501-1" aria-hidden="true" tabindex="-1"></a>num_obs <span class="ot">=</span> <span class="dv">21</span></span>
+<span id="cb501-2"><a href="regresión-lineal-simple.html#cb501-2" aria-hidden="true" tabindex="-1"></a>beta_0  <span class="ot">=</span> <span class="dv">5</span></span>
+<span id="cb501-3"><a href="regresión-lineal-simple.html#cb501-3" aria-hidden="true" tabindex="-1"></a>beta_1  <span class="ot">=</span> <span class="sc">-</span><span class="dv">2</span></span>
+<span id="cb501-4"><a href="regresión-lineal-simple.html#cb501-4" aria-hidden="true" tabindex="-1"></a>sigma   <span class="ot">=</span> <span class="dv">3</span></span></code></pre></div>
+<p>A continuación, obtenemos valores simulados de <span class="math inline">\(\epsilon_i\)</span> después de establecer una semilla para la reproducibilidad.</p>
+<div class="sourceCode" id="cb502"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb502-1"><a href="regresión-lineal-simple.html#cb502-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb502-2"><a href="regresión-lineal-simple.html#cb502-2" aria-hidden="true" tabindex="-1"></a>epsilon <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="at">n =</span> num_obs, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma)</span></code></pre></div>
+<p>Ahora, dado que los valores <span class="math inline">\(x_i\)</span> en SLR se consideran fijos y conocidos, simplemente especificamos los valores 21. Otra práctica común es generarlos a partir de una distribución uniforme y luego usarlos para el resto del análisis.</p>
+<div class="sourceCode" id="cb503"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb503-1"><a href="regresión-lineal-simple.html#cb503-1" aria-hidden="true" tabindex="-1"></a>x_vals <span class="ot">=</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">0</span>, <span class="at">to =</span> <span class="dv">10</span>, <span class="at">length.out =</span> num_obs)</span>
+<span id="cb503-2"><a href="regresión-lineal-simple.html#cb503-2" aria-hidden="true" tabindex="-1"></a><span class="co"># set.seed(1)</span></span>
+<span id="cb503-3"><a href="regresión-lineal-simple.html#cb503-3" aria-hidden="true" tabindex="-1"></a><span class="co"># x_vals = runif(num_obs, 0, 10)</span></span></code></pre></div>
+<p>Luego generamos los valores <span class="math inline">\(y\)</span> de acuerdo con la relación funcional especificada.</p>
+<div class="sourceCode" id="cb504"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb504-1"><a href="regresión-lineal-simple.html#cb504-1" aria-hidden="true" tabindex="-1"></a>y_vals <span class="ot">=</span> beta_0 <span class="sc">+</span> beta_1 <span class="sc">*</span> x_vals <span class="sc">+</span> epsilon</span></code></pre></div>
+<p>Los datos, <span class="math inline">\((x_i, y_i)\)</span>, representan una posible muestra de la distribución verdadera. Ahora, para comprobar qué tan bien funciona el método de mínimos cuadrados, usamos <code>lm()</code> para ajustar el modelo a nuestros datos simulados, luego echemos un vistazo a los coeficientes estimados.</p>
+<div class="sourceCode" id="cb505"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb505-1"><a href="regresión-lineal-simple.html#cb505-1" aria-hidden="true" tabindex="-1"></a>sim_fit <span class="ot">=</span> <span class="fu">lm</span>(y_vals <span class="sc">~</span> x_vals)</span>
+<span id="cb505-2"><a href="regresión-lineal-simple.html#cb505-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(sim_fit)</span></code></pre></div>
+<pre><code>## (Intercept)      x_vals 
+##    4.832639   -1.831401</code></pre>
+<p>Y observe esto, ¡no están muy lejos de los verdaderos parámetros que especificamos!</p>
+<div class="sourceCode" id="cb507"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb507-1"><a href="regresión-lineal-simple.html#cb507-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y_vals <span class="sc">~</span> x_vals)</span>
+<span id="cb507-2"><a href="regresión-lineal-simple.html#cb507-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(sim_fit)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-205-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Deberíamos decir que estamos siendo un poco perezosos, y no el buen tipo de perezosos que podrían considerarse eficientes. Cada vez que simule datos, debe considerar hacer dos cosas: escribir una función y almacenar los datos en un marco de datos.</p>
+<p>La función de abajo, <code>sim_slr()</code>, puede usarse para la misma tarea que la anterior, pero es mucho más flexible. Observe que proporcionamos <code>x</code> a la función, en lugar de generar <code>x</code> dentro de la función. En el modelo SLR, los <span class="math inline">\(x_i\)</span> se consideran valores conocidos. Es decir, no son aleatorios, por lo que no asumimos una distribución para <span class="math inline">\(x_i\)</span>. Debido a esto, usaremos repetidamente los mismos valores de <code>x</code> en todas las simulaciones.</p>
+<div class="sourceCode" id="cb508"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb508-1"><a href="regresión-lineal-simple.html#cb508-1" aria-hidden="true" tabindex="-1"></a>sim_slr <span class="ot">=</span> <span class="cf">function</span>(x, <span class="at">beta_0 =</span> <span class="dv">10</span>, <span class="at">beta_1 =</span> <span class="dv">5</span>, <span class="at">sigma =</span> <span class="dv">1</span>) {</span>
+<span id="cb508-2"><a href="regresión-lineal-simple.html#cb508-2" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">=</span> <span class="fu">length</span>(x)</span>
+<span id="cb508-3"><a href="regresión-lineal-simple.html#cb508-3" aria-hidden="true" tabindex="-1"></a>  epsilon <span class="ot">=</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma)</span>
+<span id="cb508-4"><a href="regresión-lineal-simple.html#cb508-4" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">=</span> beta_0 <span class="sc">+</span> beta_1 <span class="sc">*</span> x <span class="sc">+</span> epsilon</span>
+<span id="cb508-5"><a href="regresión-lineal-simple.html#cb508-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">predictor =</span> x, <span class="at">response =</span> y)</span>
+<span id="cb508-6"><a href="regresión-lineal-simple.html#cb508-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Aquí, usamos la función para repetir el análisis anterior.</p>
+<div class="sourceCode" id="cb509"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb509-1"><a href="regresión-lineal-simple.html#cb509-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb509-2"><a href="regresión-lineal-simple.html#cb509-2" aria-hidden="true" tabindex="-1"></a>sim_data <span class="ot">=</span> <span class="fu">sim_slr</span>(<span class="at">x =</span> x_vals, <span class="at">beta_0 =</span> <span class="dv">5</span>, <span class="at">beta_1 =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="at">sigma =</span> <span class="dv">3</span>)</span></code></pre></div>
+<p>Esta vez, las observaciones simuladas se almacenan en un marco de datos.</p>
+<div class="sourceCode" id="cb510"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb510-1"><a href="regresión-lineal-simple.html#cb510-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sim_data)</span></code></pre></div>
+<pre><code>##   predictor   response
+## 1       0.0  3.1206386
+## 2       0.5  4.5509300
+## 3       1.0  0.4931142
+## 4       1.5  6.7858424
+## 5       2.0  1.9885233
+## 6       2.5 -2.4614052</code></pre>
+<p>Ahora, cuando ajustamos el modelo con <code>lm()</code> podemos usar el argumento <code>data</code>, una muy buena práctica.</p>
+<div class="sourceCode" id="cb512"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb512-1"><a href="regresión-lineal-simple.html#cb512-1" aria-hidden="true" tabindex="-1"></a>sim_fit <span class="ot">=</span> <span class="fu">lm</span>(response <span class="sc">~</span> predictor, <span class="at">data =</span> sim_data)</span>
+<span id="cb512-2"><a href="regresión-lineal-simple.html#cb512-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(sim_fit)</span></code></pre></div>
+<pre><code>## (Intercept)   predictor 
+##    4.832639   -1.831401</code></pre>
+<p>Y esta vez, haremos que la gráfica se vea mucho mejor.</p>
+<div class="sourceCode" id="cb514"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb514-1"><a href="regresión-lineal-simple.html#cb514-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(response <span class="sc">~</span> predictor, <span class="at">data =</span> sim_data,</span>
+<span id="cb514-2"><a href="regresión-lineal-simple.html#cb514-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Variable predictora simulada&quot;</span>,</span>
+<span id="cb514-3"><a href="regresión-lineal-simple.html#cb514-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Variable respuesta simulada&quot;</span>,</span>
+<span id="cb514-4"><a href="regresión-lineal-simple.html#cb514-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Datos de regresión simulados&quot;</span>,</span>
+<span id="cb514-5"><a href="regresión-lineal-simple.html#cb514-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch  =</span> <span class="dv">20</span>,</span>
+<span id="cb514-6"><a href="regresión-lineal-simple.html#cb514-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex  =</span> <span class="dv">2</span>,</span>
+<span id="cb514-7"><a href="regresión-lineal-simple.html#cb514-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">col  =</span> <span class="st">&quot;grey&quot;</span>)</span>
+<span id="cb514-8"><a href="regresión-lineal-simple.html#cb514-8" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(sim_fit, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>)</span>
+<span id="cb514-9"><a href="regresión-lineal-simple.html#cb514-9" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(beta_0, beta_1, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;dodgerblue&quot;</span>)</span>
+<span id="cb514-10"><a href="regresión-lineal-simple.html#cb514-10" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;Estimate&quot;</span>, <span class="st">&quot;Truth&quot;</span>), <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb514-11"><a href="regresión-lineal-simple.html#cb514-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;darkorange&quot;</span>, <span class="st">&quot;dodgerblue&quot;</span>))</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-210-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="historia" class="section level2" number="7.7">
+<h2><span class="header-section-number">7.7</span> Historia</h2>
+<p>Para obtener algunos antecedentes sobre la historia de la regresión lineal, consulte <a href="http://www.amstat.org/publications/jse/v9n3/stanton.html" target="_blank">“Galton, Pearson, and the Peas: A Brief History of Linear Regression for Statistics Instructors”</a> del <a href="http://www.amstat.org/publications/jse/" target="_blank">Journal of Statistics Education</a>, así como la <a href="https://en.wikipedia.org/wiki/Regression_analysis#History" target="_blank">Wikipedia page on the history of regression analysis</a> y, por último, el artículo de <a href="https://en.wikipedia.org/wiki/Regression_toward_the_mean" target="_blank">regression to the mean</a> que detalla los orígenes del término “regresión”.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="recursos-r.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="inferencia-para-regresión-lineal-simple.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

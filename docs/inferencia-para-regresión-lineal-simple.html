@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 8 Inferencia para regresión lineal simple | Estadística aplicada con R</title>
+  <meta name="description" content="Capítulo 8 Inferencia para regresión lineal simple | Estadística aplicada con R" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 8 Inferencia para regresión lineal simple | Estadística aplicada con R" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 8 Inferencia para regresión lineal simple | Estadística aplicada con R" />
+  
+  
+  
+
+
+
+<meta name="date" content="2021-05-24" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  <link rel="shortcut icon" href="favicon.gif" type="image/x-icon" />
+<link rel="prev" href="regresión-lineal-simple.html"/>
+<link rel="next" href="regresión-lineal-múltiple.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Estadística aplicada con R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introducción</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#convenciones"><i class="fa fa-check"></i><b>1.1</b> Convenciones</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="introducción-a-r.html"><a href="introducción-a-r.html"><i class="fa fa-check"></i><b>2</b> Introducción a <code>R</code></a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introducción-a-r.html"><a href="introducción-a-r.html#primeros-pasos"><i class="fa fa-check"></i><b>2.1</b> Primeros pasos</a></li>
+<li class="chapter" data-level="2.2" data-path="introducción-a-r.html"><a href="introducción-a-r.html#cálculos-básicos"><i class="fa fa-check"></i><b>2.2</b> Cálculos básicos</a></li>
+<li class="chapter" data-level="2.3" data-path="introducción-a-r.html"><a href="introducción-a-r.html#obteniendo-ayuda"><i class="fa fa-check"></i><b>2.3</b> Obteniendo ayuda</a></li>
+<li class="chapter" data-level="2.4" data-path="introducción-a-r.html"><a href="introducción-a-r.html#instalación-de-paquetes"><i class="fa fa-check"></i><b>2.4</b> Instalación de paquetes</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="datos-y-programación.html"><a href="datos-y-programación.html"><i class="fa fa-check"></i><b>3</b> Datos y programación</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="datos-y-programación.html"><a href="datos-y-programación.html#tipos-de-datos"><i class="fa fa-check"></i><b>3.1</b> Tipos de datos</a></li>
+<li class="chapter" data-level="3.2" data-path="datos-y-programación.html"><a href="datos-y-programación.html#estructuras-de-datos"><i class="fa fa-check"></i><b>3.2</b> Estructuras de datos</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="datos-y-programación.html"><a href="datos-y-programación.html#vectores"><i class="fa fa-check"></i><b>3.2.1</b> Vectores</a></li>
+<li class="chapter" data-level="3.2.2" data-path="datos-y-programación.html"><a href="datos-y-programación.html#vectorización"><i class="fa fa-check"></i><b>3.2.2</b> Vectorización</a></li>
+<li class="chapter" data-level="3.2.3" data-path="datos-y-programación.html"><a href="datos-y-programación.html#operadores-logicos"><i class="fa fa-check"></i><b>3.2.3</b> Operadores logicos</a></li>
+<li class="chapter" data-level="3.2.4" data-path="datos-y-programación.html"><a href="datos-y-programación.html#más-vectorización"><i class="fa fa-check"></i><b>3.2.4</b> Más vectorización</a></li>
+<li class="chapter" data-level="3.2.5" data-path="datos-y-programación.html"><a href="datos-y-programación.html#matrices"><i class="fa fa-check"></i><b>3.2.5</b> Matrices</a></li>
+<li class="chapter" data-level="3.2.6" data-path="datos-y-programación.html"><a href="datos-y-programación.html#listas"><i class="fa fa-check"></i><b>3.2.6</b> Listas</a></li>
+<li class="chapter" data-level="3.2.7" data-path="datos-y-programación.html"><a href="datos-y-programación.html#marcos-de-datos"><i class="fa fa-check"></i><b>3.2.7</b> Marcos de datos</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="datos-y-programación.html"><a href="datos-y-programación.html#conceptos-básicos-de-programación"><i class="fa fa-check"></i><b>3.3</b> Conceptos básicos de programación</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="datos-y-programación.html"><a href="datos-y-programación.html#flujo-de-control"><i class="fa fa-check"></i><b>3.3.1</b> Flujo de control</a></li>
+<li class="chapter" data-level="3.3.2" data-path="datos-y-programación.html"><a href="datos-y-programación.html#funciones"><i class="fa fa-check"></i><b>3.3.2</b> Funciones</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html"><i class="fa fa-check"></i><b>4</b> Resumen de datos</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#resumen-estadístico"><i class="fa fa-check"></i><b>4.1</b> Resumen estadístico</a>
+<ul>
+<li class="chapter" data-level="" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#tendencia-central"><i class="fa fa-check"></i>Tendencia central</a></li>
+<li class="chapter" data-level="" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#dispersión"><i class="fa fa-check"></i>Dispersión</a></li>
+<li class="chapter" data-level="" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#categórica"><i class="fa fa-check"></i>Categórica</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#graficas"><i class="fa fa-check"></i><b>4.2</b> Graficas</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#histogramas"><i class="fa fa-check"></i><b>4.2.1</b> Histogramas</a></li>
+<li class="chapter" data-level="4.2.2" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#gráfico-de-barras"><i class="fa fa-check"></i><b>4.2.2</b> Gráfico de barras</a></li>
+<li class="chapter" data-level="4.2.3" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#diagramas-de-cajas"><i class="fa fa-check"></i><b>4.2.3</b> Diagramas de cajas</a></li>
+<li class="chapter" data-level="4.2.4" data-path="resumen-de-datos.html"><a href="resumen-de-datos.html#gráfico-de-dispersión"><i class="fa fa-check"></i><b>4.2.4</b> Gráfico de dispersión</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html"><i class="fa fa-check"></i><b>5</b> Probabilidad y estadística en <code>R</code></a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#probabilidad-en-r"><i class="fa fa-check"></i><b>5.1</b> Probabilidad en <code>R</code></a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#distribuciones"><i class="fa fa-check"></i><b>5.1.1</b> Distribuciones</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#pruebas-de-hipótesis-en-r"><i class="fa fa-check"></i><b>5.2</b> Pruebas de hipótesis en <code>R</code></a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#prueba-t-de-una-muestra-revisión"><i class="fa fa-check"></i><b>5.2.1</b> Prueba t de una muestra: revisión</a></li>
+<li class="chapter" data-level="5.2.2" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#prueba-t-de-una-muestra-ejemplo"><i class="fa fa-check"></i><b>5.2.2</b> Prueba t de una muestra: ejemplo</a></li>
+<li class="chapter" data-level="5.2.3" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#prueba-t-de-dos-muestras-revisión"><i class="fa fa-check"></i><b>5.2.3</b> Prueba t de dos muestras: revisión</a></li>
+<li class="chapter" data-level="5.2.4" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#prueba-t-de-dos-muestras-ejemplo"><i class="fa fa-check"></i><b>5.2.4</b> Prueba t de dos muestras: Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#simulación"><i class="fa fa-check"></i><b>5.3</b> Simulación</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#diferencias-emparejadas"><i class="fa fa-check"></i><b>5.3.1</b> Diferencias emparejadas</a></li>
+<li class="chapter" data-level="5.3.2" data-path="probabilidad-y-estadística-en-r.html"><a href="probabilidad-y-estadística-en-r.html#distribución-de-una-media-muestral"><i class="fa fa-check"></i><b>5.3.2</b> Distribución de una media muestral</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="recursos-r.html"><a href="recursos-r.html"><i class="fa fa-check"></i><b>6</b> Recursos <code>R</code></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="recursos-r.html"><a href="recursos-r.html#referencias-y-tutoriales-para-principiantes"><i class="fa fa-check"></i><b>6.1</b> Referencias y tutoriales para principiantes</a></li>
+<li class="chapter" data-level="6.2" data-path="recursos-r.html"><a href="recursos-r.html#referencias-intermedias"><i class="fa fa-check"></i><b>6.2</b> Referencias intermedias</a></li>
+<li class="chapter" data-level="6.3" data-path="recursos-r.html"><a href="recursos-r.html#referencias-avanzadas"><i class="fa fa-check"></i><b>6.3</b> Referencias avanzadas</a></li>
+<li class="chapter" data-level="6.4" data-path="recursos-r.html"><a href="recursos-r.html#comparaciones-rápidas-con-otros-lenguajes"><i class="fa fa-check"></i><b>6.4</b> Comparaciones rápidas con otros lenguajes</a></li>
+<li class="chapter" data-level="6.5" data-path="recursos-r.html"><a href="recursos-r.html#vídeos-de-rstudio-y-rmarkdown"><i class="fa fa-check"></i><b>6.5</b> Vídeos de RStudio y RMarkdown</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html"><i class="fa fa-check"></i><b>7</b> Regresión lineal simple</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#modelado"><i class="fa fa-check"></i><b>7.1</b> Modelado</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#modelo-de-regresión-lineal-simple"><i class="fa fa-check"></i><b>7.1.1</b> Modelo de regresión lineal simple</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#enfoque-de-mínimos-cuadrados"><i class="fa fa-check"></i><b>7.2</b> Enfoque de mínimos cuadrados</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#haciendo-predicciones"><i class="fa fa-check"></i><b>7.2.1</b> Haciendo predicciones</a></li>
+<li class="chapter" data-level="7.2.2" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#residuales"><i class="fa fa-check"></i><b>7.2.2</b> Residuales</a></li>
+<li class="chapter" data-level="7.2.3" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#estimación-de-la-varianza"><i class="fa fa-check"></i><b>7.2.3</b> Estimación de la varianza</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#descomposición-de-variación"><i class="fa fa-check"></i><b>7.3</b> Descomposición de variación</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#coeficiente-de-determinación"><i class="fa fa-check"></i><b>7.3.1</b> Coeficiente de determinación</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#la-función-lm"><i class="fa fa-check"></i><b>7.4</b> La función <code>lm</code></a></li>
+<li class="chapter" data-level="7.5" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#enfoque-de-estimación-de-máxima-verosimilitud-mle"><i class="fa fa-check"></i><b>7.5</b> Enfoque de estimación de máxima verosimilitud (MLE)</a></li>
+<li class="chapter" data-level="7.6" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#simulando-slr"><i class="fa fa-check"></i><b>7.6</b> Simulando SLR</a></li>
+<li class="chapter" data-level="7.7" data-path="regresión-lineal-simple.html"><a href="regresión-lineal-simple.html#historia"><i class="fa fa-check"></i><b>7.7</b> Historia</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html"><i class="fa fa-check"></i><b>8</b> Inferencia para regresión lineal simple</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#teorema-de-gauss-markov"><i class="fa fa-check"></i><b>8.1</b> Teorema de Gauss-Markov</a></li>
+<li class="chapter" data-level="8.2" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#distribuciones-muestrales"><i class="fa fa-check"></i><b>8.2</b> Distribuciones muestrales</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#simular-distribuciones-muestrales"><i class="fa fa-check"></i><b>8.2.1</b> Simular distribuciones muestrales</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#errores-estándar"><i class="fa fa-check"></i><b>8.3</b> Errores estándar</a></li>
+<li class="chapter" data-level="8.4" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#intervalos-de-confianza-para-pendiente-e-intercepto"><i class="fa fa-check"></i><b>8.4</b> Intervalos de confianza para pendiente e Intercepto</a></li>
+<li class="chapter" data-level="8.5" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#pruebas-de-hipótesis"><i class="fa fa-check"></i><b>8.5</b> Pruebas de hipótesis</a></li>
+<li class="chapter" data-level="8.6" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#ejemplo-cars"><i class="fa fa-check"></i><b>8.6</b> Ejemplo <code>cars</code></a>
+<ul>
+<li class="chapter" data-level="8.6.1" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#pruebas-en-r"><i class="fa fa-check"></i><b>8.6.1</b> Pruebas en <code>R</code></a></li>
+<li class="chapter" data-level="8.6.2" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#significancia-de-la-regresión-prueba-t."><i class="fa fa-check"></i><b>8.6.2</b> Significancia de la regresión, prueba t.</a></li>
+<li class="chapter" data-level="8.6.3" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#intervalos-de-confianza-en-r"><i class="fa fa-check"></i><b>8.6.3</b> Intervalos de confianza en <code>R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#intervalo-de-confianza-para-la-respuesta-promedio"><i class="fa fa-check"></i><b>8.7</b> Intervalo de confianza para la respuesta Promedio</a></li>
+<li class="chapter" data-level="8.8" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#intervalo-de-predicción-para-nuevas-observaciones"><i class="fa fa-check"></i><b>8.8</b> Intervalo de predicción para nuevas observaciones</a></li>
+<li class="chapter" data-level="8.9" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#bandas-de-confianza-y-predicción"><i class="fa fa-check"></i><b>8.9</b> Bandas de confianza y predicción</a></li>
+<li class="chapter" data-level="8.10" data-path="inferencia-para-regresión-lineal-simple.html"><a href="inferencia-para-regresión-lineal-simple.html#significancia-de-la-regresión-prueba-f"><i class="fa fa-check"></i><b>8.10</b> Significancia de la regresión, prueba F</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html"><i class="fa fa-check"></i><b>9</b> Regresión lineal múltiple</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#enfoque-matricial-para-la-regresión"><i class="fa fa-check"></i><b>9.1</b> Enfoque matricial para la regresión</a></li>
+<li class="chapter" data-level="9.2" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#distribución-muestral"><i class="fa fa-check"></i><b>9.2</b> Distribución muestral</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#pruebas-de-un-solo-parámetro"><i class="fa fa-check"></i><b>9.2.1</b> Pruebas de un solo parámetro</a></li>
+<li class="chapter" data-level="9.2.2" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#intervalos-de-confianza"><i class="fa fa-check"></i><b>9.2.2</b> Intervalos de confianza</a></li>
+<li class="chapter" data-level="9.2.3" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#intervalos-de-confianza-para-la-respuesta-media"><i class="fa fa-check"></i><b>9.2.3</b> Intervalos de confianza para la respuesta media</a></li>
+<li class="chapter" data-level="9.2.4" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#intervalos-de-predicción"><i class="fa fa-check"></i><b>9.2.4</b> Intervalos de predicción</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#significancia-de-la-regresión"><i class="fa fa-check"></i><b>9.3</b> Significancia de la regresión</a></li>
+<li class="chapter" data-level="9.4" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#modelos-anidados"><i class="fa fa-check"></i><b>9.4</b> Modelos anidados</a></li>
+<li class="chapter" data-level="9.5" data-path="regresión-lineal-múltiple.html"><a href="regresión-lineal-múltiple.html#simulación-1"><i class="fa fa-check"></i><b>9.5</b> Simulación</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html"><i class="fa fa-check"></i><b>10</b> Construcción del modelo</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#familia-forma-y-ajuste."><i class="fa fa-check"></i><b>10.1</b> Familia, forma, y ajuste.</a>
+<ul>
+<li class="chapter" data-level="10.1.1" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#ajuste."><i class="fa fa-check"></i><b>10.1.1</b> Ajuste.</a></li>
+<li class="chapter" data-level="10.1.2" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#forma"><i class="fa fa-check"></i><b>10.1.2</b> Forma</a></li>
+<li class="chapter" data-level="10.1.3" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#familia"><i class="fa fa-check"></i><b>10.1.3</b> Familia</a></li>
+<li class="chapter" data-level="10.1.4" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#modelo-asumido-modelo-ajustado"><i class="fa fa-check"></i><b>10.1.4</b> Modelo asumido, modelo ajustado</a></li>
+</ul></li>
+<li class="chapter" data-level="10.2" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#explicación-versus-predicción"><i class="fa fa-check"></i><b>10.2</b> Explicación versus predicción</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#explicación"><i class="fa fa-check"></i><b>10.2.1</b> Explicación</a></li>
+<li class="chapter" data-level="10.2.2" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#predicción"><i class="fa fa-check"></i><b>10.2.2</b> Predicción</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="construcción-del-modelo.html"><a href="construcción-del-modelo.html#resumen"><i class="fa fa-check"></i><b>10.3</b> Resumen</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html"><i class="fa fa-check"></i><b>11</b> Interacciones y predictores categóricos</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#variables-ficticias-dummy"><i class="fa fa-check"></i><b>11.1</b> Variables ficticias (Dummy)</a></li>
+<li class="chapter" data-level="11.2" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#interacciones"><i class="fa fa-check"></i><b>11.2</b> Interacciones</a></li>
+<li class="chapter" data-level="11.3" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#variables-factor"><i class="fa fa-check"></i><b>11.3</b> Variables factor</a>
+<ul>
+<li class="chapter" data-level="11.3.1" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#factores-con-más-de-dos-niveles"><i class="fa fa-check"></i><b>11.3.1</b> Factores con más de dos niveles</a></li>
+</ul></li>
+<li class="chapter" data-level="11.4" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#parametrización"><i class="fa fa-check"></i><b>11.4</b> Parametrización</a></li>
+<li class="chapter" data-level="11.5" data-path="interacciones-y-predictores-categóricos.html"><a href="interacciones-y-predictores-categóricos.html#construcción-de-modelos-más-grandes"><i class="fa fa-check"></i><b>11.5</b> Construcción de modelos más grandes</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html"><i class="fa fa-check"></i><b>12</b> Análisis de varianza</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#experimentos"><i class="fa fa-check"></i><b>12.1</b> Experimentos</a></li>
+<li class="chapter" data-level="12.2" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#prueba-t-de-dos-muestras"><i class="fa fa-check"></i><b>12.2</b> Prueba t de dos muestras</a></li>
+<li class="chapter" data-level="12.3" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#anova-de-una-vía"><i class="fa fa-check"></i><b>12.3</b> ANOVA de una vía</a>
+<ul>
+<li class="chapter" data-level="12.3.1" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#variables-factor-1"><i class="fa fa-check"></i><b>12.3.1</b> Variables factor</a></li>
+<li class="chapter" data-level="12.3.2" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#algo-de-simulación"><i class="fa fa-check"></i><b>12.3.2</b> Algo de simulación</a></li>
+<li class="chapter" data-level="12.3.3" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#potencia"><i class="fa fa-check"></i><b>12.3.3</b> Potencia</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#pruebas-post-hoc"><i class="fa fa-check"></i><b>12.4</b> Pruebas Post Hoc</a></li>
+<li class="chapter" data-level="12.5" data-path="análisis-de-varianza.html"><a href="análisis-de-varianza.html#anova-de-dos-vías"><i class="fa fa-check"></i><b>12.5</b> ANOVA de dos vías</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html"><i class="fa fa-check"></i><b>13</b> Diagnóstico de modelos</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#supuestos-del-modelo"><i class="fa fa-check"></i><b>13.1</b> Supuestos del modelo</a></li>
+<li class="chapter" data-level="13.2" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#comprobación-de-supuestos"><i class="fa fa-check"></i><b>13.2</b> Comprobación de supuestos</a>
+<ul>
+<li class="chapter" data-level="13.2.1" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#gráfica-de-ajustados-versus-residuos"><i class="fa fa-check"></i><b>13.2.1</b> Gráfica de ajustados versus residuos</a></li>
+<li class="chapter" data-level="13.2.2" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#prueba-de-breusch-pagan"><i class="fa fa-check"></i><b>13.2.2</b> Prueba de Breusch-Pagan</a></li>
+<li class="chapter" data-level="13.2.3" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#histogramas-1"><i class="fa fa-check"></i><b>13.2.3</b> Histogramas</a></li>
+<li class="chapter" data-level="13.2.4" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#gráficos-q-q"><i class="fa fa-check"></i><b>13.2.4</b> Gráficos Q-Q</a></li>
+<li class="chapter" data-level="13.2.5" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#prueba-de-shapiro-wilk"><i class="fa fa-check"></i><b>13.2.5</b> Prueba de Shapiro-Wilk</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#observaciones-inusuales"><i class="fa fa-check"></i><b>13.3</b> Observaciones inusuales</a>
+<ul>
+<li class="chapter" data-level="13.3.1" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#apalancamiento"><i class="fa fa-check"></i><b>13.3.1</b> Apalancamiento</a></li>
+<li class="chapter" data-level="13.3.2" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#valores-atípicos"><i class="fa fa-check"></i><b>13.3.2</b> Valores atípicos</a></li>
+<li class="chapter" data-level="13.3.3" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#influencia"><i class="fa fa-check"></i><b>13.3.3</b> Influencia</a></li>
+</ul></li>
+<li class="chapter" data-level="13.4" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#ejemplos-de-análisis-de-datos"><i class="fa fa-check"></i><b>13.4</b> Ejemplos de análisis de datos</a>
+<ul>
+<li class="chapter" data-level="13.4.1" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#buenos-diagnósticos"><i class="fa fa-check"></i><b>13.4.1</b> Buenos diagnósticos</a></li>
+<li class="chapter" data-level="13.4.2" data-path="diagnóstico-de-modelos.html"><a href="diagnóstico-de-modelos.html#diagnóstico-sospechoso"><i class="fa fa-check"></i><b>13.4.2</b> Diagnóstico sospechoso</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="transformaciones.html"><a href="transformaciones.html"><i class="fa fa-check"></i><b>14</b> Transformaciones</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="transformaciones.html"><a href="transformaciones.html#transformación-de-respuesta"><i class="fa fa-check"></i><b>14.1</b> Transformación de respuesta</a>
+<ul>
+<li class="chapter" data-level="14.1.1" data-path="transformaciones.html"><a href="transformaciones.html#transformaciones-estabilizadoras-de-varianza"><i class="fa fa-check"></i><b>14.1.1</b> Transformaciones estabilizadoras de varianza</a></li>
+<li class="chapter" data-level="14.1.2" data-path="transformaciones.html"><a href="transformaciones.html#transformaciones-de-box-cox"><i class="fa fa-check"></i><b>14.1.2</b> Transformaciones de Box-Cox</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="transformaciones.html"><a href="transformaciones.html#transformación-del-predictor"><i class="fa fa-check"></i><b>14.2</b> Transformación del predictor</a>
+<ul>
+<li class="chapter" data-level="14.2.1" data-path="transformaciones.html"><a href="transformaciones.html#polinomios"><i class="fa fa-check"></i><b>14.2.1</b> Polinomios</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="transformaciones.html"><a href="transformaciones.html#transformaciones-de-respuesta"><i class="fa fa-check"></i>Transformaciones de respuesta</a></li>
+<li class="chapter" data-level="" data-path="transformaciones.html"><a href="transformaciones.html#transformaciones-de-predictores"><i class="fa fa-check"></i>Transformaciones de predictores</a>
+<ul>
+<li class="chapter" data-level="14.2.2" data-path="transformaciones.html"><a href="transformaciones.html#un-modelo-cuadrático"><i class="fa fa-check"></i><b>14.2.2</b> Un modelo cuadrático</a></li>
+<li class="chapter" data-level="14.2.3" data-path="transformaciones.html"><a href="transformaciones.html#sobreajuste-y-extrapolación"><i class="fa fa-check"></i><b>14.2.3</b> Sobreajuste y extrapolación</a></li>
+<li class="chapter" data-level="14.2.4" data-path="transformaciones.html"><a href="transformaciones.html#comparación-de-modelos-polinomiales"><i class="fa fa-check"></i><b>14.2.4</b> Comparación de modelos polinomiales</a></li>
+<li class="chapter" data-level="14.2.5" data-path="transformaciones.html"><a href="transformaciones.html#poly-función-y-polinomios-ortogonales"><i class="fa fa-check"></i><b>14.2.5</b> <code>poly()</code> Función y polinomios ortogonales</a></li>
+<li class="chapter" data-level="14.2.6" data-path="transformaciones.html"><a href="transformaciones.html#función-de-inhibición"><i class="fa fa-check"></i><b>14.2.6</b> Función de inhibición</a></li>
+<li class="chapter" data-level="14.2.7" data-path="transformaciones.html"><a href="transformaciones.html#ejemplo-con-datos"><i class="fa fa-check"></i><b>14.2.7</b> Ejemplo con datos</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="colinealidad.html"><a href="colinealidad.html"><i class="fa fa-check"></i><b>15</b> Colinealidad</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="colinealidad.html"><a href="colinealidad.html#colinealidad-exacta"><i class="fa fa-check"></i><b>15.1</b> Colinealidad exacta</a></li>
+<li class="chapter" data-level="15.2" data-path="colinealidad.html"><a href="colinealidad.html#colinealidad-1"><i class="fa fa-check"></i><b>15.2</b> Colinealidad</a>
+<ul>
+<li class="chapter" data-level="15.2.1" data-path="colinealidad.html"><a href="colinealidad.html#factor-de-inflación-de-la-varianza."><i class="fa fa-check"></i><b>15.2.1</b> Factor de inflación de la varianza.</a></li>
+</ul></li>
+<li class="chapter" data-level="15.3" data-path="colinealidad.html"><a href="colinealidad.html#simulación-2"><i class="fa fa-check"></i><b>15.3</b> Simulación</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html"><i class="fa fa-check"></i><b>16</b> Selección de variables y construcción de modelos</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#criterio-de-calidad"><i class="fa fa-check"></i><b>16.1</b> Criterio de calidad</a>
+<ul>
+<li class="chapter" data-level="16.1.1" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#criterio-de-información-de-akaike"><i class="fa fa-check"></i><b>16.1.1</b> Criterio de información de Akaike</a></li>
+<li class="chapter" data-level="16.1.2" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#criterio-de-información-bayesiano"><i class="fa fa-check"></i><b>16.1.2</b> Criterio de información Bayesiano</a></li>
+<li class="chapter" data-level="16.1.3" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#r-cuadrado-ajustado"><i class="fa fa-check"></i><b>16.1.3</b> R cuadrado ajustado</a></li>
+<li class="chapter" data-level="16.1.4" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#rmse-con-validación-cruzada"><i class="fa fa-check"></i><b>16.1.4</b> RMSE con validación cruzada</a></li>
+</ul></li>
+<li class="chapter" data-level="16.2" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#procedimientos-de-selección"><i class="fa fa-check"></i><b>16.2</b> Procedimientos de selección</a>
+<ul>
+<li class="chapter" data-level="16.2.1" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#búsqueda-hacia-atrás-backward"><i class="fa fa-check"></i><b>16.2.1</b> Búsqueda hacia atrás (Backward)</a></li>
+<li class="chapter" data-level="16.2.2" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#búsqueda-hacia-adelante-forward"><i class="fa fa-check"></i><b>16.2.2</b> Búsqueda hacia adelante (Forward)</a></li>
+<li class="chapter" data-level="16.2.3" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#búsqueda-por-pasos-stepwise"><i class="fa fa-check"></i><b>16.2.3</b> Búsqueda por pasos (Stepwise)</a></li>
+<li class="chapter" data-level="16.2.4" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#búsqueda-exhaustiva"><i class="fa fa-check"></i><b>16.2.4</b> Búsqueda exhaustiva</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#términos-de-orden-superior"><i class="fa fa-check"></i><b>16.3</b> Términos de orden superior</a></li>
+<li class="chapter" data-level="16.4" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#explicación-versus-predicción-1"><i class="fa fa-check"></i><b>16.4</b> Explicación versus predicción</a>
+<ul>
+<li class="chapter" data-level="16.4.1" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#explicación-1"><i class="fa fa-check"></i><b>16.4.1</b> Explicación</a></li>
+<li class="chapter" data-level="16.4.2" data-path="selección-de-variables-y-construcción-de-modelos.html"><a href="selección-de-variables-y-construcción-de-modelos.html#predicción-1"><i class="fa fa-check"></i><b>16.4.2</b> Predicción</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="regresión-logística.html"><a href="regresión-logística.html"><i class="fa fa-check"></i><b>17</b> Regresión logística</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="regresión-logística.html"><a href="regresión-logística.html#modelos-lineales-generalizados"><i class="fa fa-check"></i><b>17.1</b> Modelos lineales generalizados</a></li>
+<li class="chapter" data-level="17.2" data-path="regresión-logística.html"><a href="regresión-logística.html#respuesta-binaria"><i class="fa fa-check"></i><b>17.2</b> Respuesta binaria</a>
+<ul>
+<li class="chapter" data-level="17.2.1" data-path="regresión-logística.html"><a href="regresión-logística.html#ajuste-de-la-regresión-logística"><i class="fa fa-check"></i><b>17.2.1</b> Ajuste de la regresión logística</a></li>
+<li class="chapter" data-level="17.2.2" data-path="regresión-logística.html"><a href="regresión-logística.html#problemas-de-ajuste"><i class="fa fa-check"></i><b>17.2.2</b> Problemas de ajuste</a></li>
+<li class="chapter" data-level="17.2.3" data-path="regresión-logística.html"><a href="regresión-logística.html#ejemplos-de-simulación"><i class="fa fa-check"></i><b>17.2.3</b> Ejemplos de simulación</a></li>
+</ul></li>
+<li class="chapter" data-level="17.3" data-path="regresión-logística.html"><a href="regresión-logística.html#trabajar-con-regresión-logística"><i class="fa fa-check"></i><b>17.3</b> Trabajar con regresión logística</a>
+<ul>
+<li class="chapter" data-level="17.3.1" data-path="regresión-logística.html"><a href="regresión-logística.html#pruebas-con-glms"><i class="fa fa-check"></i><b>17.3.1</b> Pruebas con GLMs</a></li>
+<li class="chapter" data-level="17.3.2" data-path="regresión-logística.html"><a href="regresión-logística.html#prueba-de-wald"><i class="fa fa-check"></i><b>17.3.2</b> Prueba de Wald</a></li>
+<li class="chapter" data-level="17.3.3" data-path="regresión-logística.html"><a href="regresión-logística.html#prueba-de-razón-de-verosimilitud"><i class="fa fa-check"></i><b>17.3.3</b> Prueba de razón de verosimilitud</a></li>
+<li class="chapter" data-level="17.3.4" data-path="regresión-logística.html"><a href="regresión-logística.html#ejemplo-saheart"><i class="fa fa-check"></i><b>17.3.4</b> Ejemplo <code>SAheart</code></a></li>
+<li class="chapter" data-level="17.3.5" data-path="regresión-logística.html"><a href="regresión-logística.html#intervalos-de-confianza-1"><i class="fa fa-check"></i><b>17.3.5</b> Intervalos de confianza</a></li>
+<li class="chapter" data-level="17.3.6" data-path="regresión-logística.html"><a href="regresión-logística.html#intervalos-de-confianza-para-la-respuesta-promedio"><i class="fa fa-check"></i><b>17.3.6</b> Intervalos de confianza para la respuesta promedio</a></li>
+<li class="chapter" data-level="17.3.7" data-path="regresión-logística.html"><a href="regresión-logística.html#sintaxis-de-la-fórmula"><i class="fa fa-check"></i><b>17.3.7</b> Sintaxis de la fórmula</a></li>
+<li class="chapter" data-level="17.3.8" data-path="regresión-logística.html"><a href="regresión-logística.html#desviación"><i class="fa fa-check"></i><b>17.3.8</b> Desviación</a></li>
+</ul></li>
+<li class="chapter" data-level="17.4" data-path="regresión-logística.html"><a href="regresión-logística.html#clasificación"><i class="fa fa-check"></i><b>17.4</b> Clasificación</a>
+<ul>
+<li class="chapter" data-level="17.4.1" data-path="regresión-logística.html"><a href="regresión-logística.html#ejemplo-spam"><i class="fa fa-check"></i><b>17.4.1</b> Ejemplo <code>spam</code></a></li>
+<li class="chapter" data-level="17.4.2" data-path="regresión-logística.html"><a href="regresión-logística.html#evaluar-clasificadores"><i class="fa fa-check"></i><b>17.4.2</b> Evaluar clasificadores</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="más-allá.html"><a href="más-allá.html"><i class="fa fa-check"></i><b>18</b> Más allá</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="más-allá.html"><a href="más-allá.html#rstudio"><i class="fa fa-check"></i><b>18.1</b> RStudio</a></li>
+<li class="chapter" data-level="18.2" data-path="más-allá.html"><a href="más-allá.html#tidy-data"><i class="fa fa-check"></i><b>18.2</b> Tidy Data</a></li>
+<li class="chapter" data-level="18.3" data-path="más-allá.html"><a href="más-allá.html#visualización"><i class="fa fa-check"></i><b>18.3</b> Visualización</a></li>
+<li class="chapter" data-level="18.4" data-path="más-allá.html"><a href="más-allá.html#aplicaciones-web"><i class="fa fa-check"></i><b>18.4</b> Aplicaciones web</a></li>
+<li class="chapter" data-level="18.5" data-path="más-allá.html"><a href="más-allá.html#diseño-experimental"><i class="fa fa-check"></i><b>18.5</b> Diseño experimental</a></li>
+<li class="chapter" data-level="18.6" data-path="más-allá.html"><a href="más-allá.html#aprendizaje-automático-machine-learning"><i class="fa fa-check"></i><b>18.6</b> Aprendizaje automático (Machine Learning)</a>
+<ul>
+<li class="chapter" data-level="18.6.1" data-path="más-allá.html"><a href="más-allá.html#aprendizaje-profundo-deep-learning"><i class="fa fa-check"></i><b>18.6.1</b> Aprendizaje profundo (Deep Learning)</a></li>
+</ul></li>
+<li class="chapter" data-level="18.7" data-path="más-allá.html"><a href="más-allá.html#series-de-tiempo"><i class="fa fa-check"></i><b>18.7</b> Series de tiempo</a></li>
+<li class="chapter" data-level="18.8" data-path="más-allá.html"><a href="más-allá.html#bayesiana"><i class="fa fa-check"></i><b>18.8</b> Bayesiana</a></li>
+<li class="chapter" data-level="18.9" data-path="más-allá.html"><a href="más-allá.html#computación-de-alto-rendimiento."><i class="fa fa-check"></i><b>18.9</b> Computación de alto rendimiento.</a></li>
+<li class="chapter" data-level="18.10" data-path="más-allá.html"><a href="más-allá.html#recursos-adicionales-de-r"><i class="fa fa-check"></i><b>18.10</b> Recursos adicionales de <code>R</code></a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/daviddalpiaz/appliedstats" target="blank">&copy; 2020 Adapatado de David Dalpiaz</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Estadística aplicada con R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="inferencia-para-regresión-lineal-simple" class="section level1" number="8">
+<h1><span class="header-section-number">Capítulo 8</span> Inferencia para regresión lineal simple</h1>
+<blockquote>
+<p>“Hay tres tipos de mentiras: mentiras, malditas mentiras y estadísticas.”</p>
+<p>— <strong>Benjamin Disraeli</strong></p>
+</blockquote>
+<p>Después de leer este capítulo, podrá:</p>
+<ul>
+<li>Comprender las distribuciones de las estimaciones de regresión.</li>
+<li>Crear estimaciones de intervalo para parámetros de regresión, respuesta media y predicciones.</li>
+<li>Probar la significancia de la regresión.</li>
+</ul>
+<p>En el capítulo anterior definimos el modelo de regresión lineal simple,</p>
+<p><span class="math display">\[
+Y_i = \beta_0 + \beta_1 x_i + \epsilon_i
+\]</span></p>
+<p>donde <span class="math inline">\(\epsilon_i \sim N(0, \sigma^2)\)</span>. luego usamos observaciones <span class="math inline">\((x_i, y_i)\)</span>, con <span class="math inline">\(i = 1, 2, \ldots n\)</span>, para encontrar valores de <span class="math inline">\(\beta_0\)</span> y <span class="math inline">\(\beta_1\)</span> que minimizan</p>
+<p><span class="math display">\[
+f(\beta_0, \beta_1) = \sum_{i = 1}^{n}(y_i - (\beta_0 + \beta_1 x_i))^2.
+\]</span></p>
+<p>Llamamos a estos valores <span class="math inline">\(\hat{\beta}_0\)</span> y <span class="math inline">\(\hat{\beta}_1\)</span>, que encontramos</p>
+<p><span class="math display">\[
+\begin{aligned}
+\hat{\beta}_1 &amp;= \frac{S_{xy}}{S_{xx}} = \frac{\sum_{i = 1}^{n}(x_i - \bar{x})(y_i - \bar{y})}{\sum_{i = 1}^{n}(x_i - \bar{x})^2}\\
+\hat{\beta}_0 &amp;= \bar{y} - \hat{\beta}_1 \bar{x}.
+\end{aligned}
+\]</span></p>
+<p>También estimamos <span class="math inline">\(\sigma^2\)</span> usando <span class="math inline">\(s_e^2\)</span>. En otras palabras, encontramos que <span class="math inline">\(s_e\)</span> es una estimación de <span class="math inline">\(\sigma\)</span>, donde;</p>
+<p><span class="math display">\[
+s_e = \text{RSE} = \sqrt{\frac{1}{n - 2}\sum_{i = 1}^n e_i^2}
+\]</span></p>
+<p>que también llamamos <span class="math inline">\(\text{RSE}\)</span>, para “Error estándar residual”.</p>
+<p>Cuando se aplica a los datos “cars”, obtenemos los siguientes resultados:</p>
+<div class="sourceCode" id="cb515"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb515-1"><a href="inferencia-para-regresión-lineal-simple.html#cb515-1" aria-hidden="true" tabindex="-1"></a>stop_dist_model <span class="ot">=</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb515-2"><a href="inferencia-para-regresión-lineal-simple.html#cb515-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stop_dist_model)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = dist ~ speed, data = cars)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -29.069  -9.525  -2.272   9.215  43.201 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -17.5791     6.7584  -2.601   0.0123 *  
+## speed         3.9324     0.4155   9.464 1.49e-12 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 15.38 on 48 degrees of freedom
+## Multiple R-squared:  0.6511, Adjusted R-squared:  0.6438 
+## F-statistic: 89.57 on 1 and 48 DF,  p-value: 1.49e-12</code></pre>
+<p>El último capítulo, solo discutimos sobre los valores de <code>Estimación</code>, <code>Error estándar residual</code>, y <code>R cuadrado múltiple</code>. En este capítulo, discutiremos toda la información acerca de los <code>Coeficientes</code> así como también de el <code>Estadístico F</code>.</p>
+<div class="sourceCode" id="cb517"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb517-1"><a href="inferencia-para-regresión-lineal-simple.html#cb517-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars,</span>
+<span id="cb517-2"><a href="inferencia-para-regresión-lineal-simple.html#cb517-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Velocidad (en millas por hora)&quot;</span>,</span>
+<span id="cb517-3"><a href="inferencia-para-regresión-lineal-simple.html#cb517-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Distancia de frenado (en pies)&quot;</span>,</span>
+<span id="cb517-4"><a href="inferencia-para-regresión-lineal-simple.html#cb517-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Distancia de frenado vs velocidad&quot;</span>,</span>
+<span id="cb517-5"><a href="inferencia-para-regresión-lineal-simple.html#cb517-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch  =</span> <span class="dv">20</span>,</span>
+<span id="cb517-6"><a href="inferencia-para-regresión-lineal-simple.html#cb517-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex  =</span> <span class="dv">2</span>,</span>
+<span id="cb517-7"><a href="inferencia-para-regresión-lineal-simple.html#cb517-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">col  =</span> <span class="st">&quot;grey&quot;</span>)</span>
+<span id="cb517-8"><a href="inferencia-para-regresión-lineal-simple.html#cb517-8" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(stop_dist_model, <span class="at">lwd =</span> <span class="dv">5</span>, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-213-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Para comenzar, notaremos que hay otra expresión equivalente para <span class="math inline">\(S_{xy}\)</span> que no vimos en el último capítulo,</p>
+<p><span class="math display">\[
+S_{xy}= \sum_{i = 1}^{n}(x_i - \bar{x})(y_i - \bar{y}) = \sum_{i = 1}^{n}(x_i - \bar{x}) y_i.
+\]</span></p>
+<p>Ésta puede ser una equivalencia sorprendente. (Tal vez intente probarlo). Sin embargo, será útil para ilustrar conceptos en este capítulo.</p>
+<p>Tenga en cuenta que <span class="math inline">\(\hat{\beta}_1\)</span> es una <strong>estadística muestral</strong> cuando se calcula con los datos observados como está escrito anteriormente, al igual que <span class="math inline">\(\hat{\beta}_0\)</span>.</p>
+<p>Sin embargo, en este capítulo a menudo será conveniente utilizar tanto <span class="math inline">\(\hat{\beta}_1\)</span> como <span class="math inline">\(\hat{\beta}_0\)</span> como <strong>variables aleatorias</strong>, es decir, aún no hemos observado los valores por cada <span class="math inline">\(Y_i\)</span>. Cuando este sea el caso, usaremos una notación ligeramente diferente, sustituyendo en mayúsculas <span class="math inline">\(Y_i\)</span> por minúsculas <span class="math inline">\(y_i\)</span>.</p>
+<p><span class="math display">\[
+\begin{aligned}
+\hat{\beta}_1 &amp;= \frac{\sum_{i = 1}^{n}(x_i - \bar{x}) Y_i}{\sum_{i = 1}^{n}(x_i - \bar{x})^2} \\
+\hat{\beta}_0 &amp;= \bar{Y} - \hat{\beta}_1 \bar{x}
+\end{aligned}
+\]</span></p>
+<p>En el último capítulo argumentamos que estas estimaciones de parámetros de modelo desconocidos <span class="math inline">\(\beta_0\)</span> y <span class="math inline">\(\beta_1\)</span> eran buenas porque las obtuvimos minimizando los errores. Ahora discutiremos el teorema de Gauss-Markov que lleva esta idea más allá, mostrando que estas estimaciones son en realidad las “mejores” estimaciones, desde cierto punto de vista.</p>
+<div id="teorema-de-gauss-markov" class="section level2" number="8.1">
+<h2><span class="header-section-number">8.1</span> Teorema de Gauss-Markov</h2>
+<p>El <strong>teorema de Gauss-Markov</strong> nos dice que al estimar los parámetros del modelo de regresión lineal simple <span class="math inline">\(\beta_0\)</span> y <span class="math inline">\(\beta_1\)</span>, los <span class="math inline">\(\hat{\beta}_0\)</span> and <span class="math inline">\(\hat{\beta}_1\)</span> que se obtienen son las <strong>mejores estimaciones lineales insesgadas</strong>, o <em>BLUE</em> para abreviar. (Las condiciones reales del teorema de Gauss-Markov son más flexibles que las del modelo SLR).</p>
+<p>Ahora discutiremos <em>lineal</em>, <em>insesgado</em> y <em>mejor</em> en lo que se refiere a estas estimaciones.</p>
+<div id="lineal" class="section level4 unnumbered">
+<h4>Lineal</h4>
+<p>Recuerde, en la definición de SLR que los valores <span class="math inline">\(x_i\)</span> se consideran cantidades fijas y conocidas. Entonces, una estimación <strong>lineal</strong> es aquella que se puede escribir como una combinación lineal de <span class="math inline">\(Y_i\)</span>. En el caso de <span class="math inline">\(\hat{\beta}_1\)</span> vemos</p>
+<p><span class="math display">\[
+\hat{\beta}_1 = \frac{\sum_{i = 1}^{n}(x_i - \bar{x}) Y_i}{\sum_{i = 1}^{n}(x_i - \bar{x})^2} = \sum_{i = 1}^n k_i Y_i = k_1 Y_1 + k_2 Y_2 + \cdots k_n Y_n
+\]</span></p>
+<p>donde <span class="math inline">\(k_i = \displaystyle\frac{(x_i - \bar{x})}{\sum_{i = 1}^{n}(x_i - \bar{x})^2}\)</span>.</p>
+<p>De manera similar, podríamos mostrar que $_0 $ se puede escribir como una combinación lineal de <span class="math inline">\(Y_i\)</span>. Luego, tanto <span class="math inline">\(\hat{\beta}_0\)</span> como <span class="math inline">\(\hat{\beta}_1\)</span> son estimadores lineales.</p>
+</div>
+<div id="insesgado" class="section level4 unnumbered">
+<h4>Insesgado</h4>
+<p>Ahora que sabemos que nuestras estimaciones son <em>lineales</em>, ¿qué tan buenas son estas estimaciones? Una medida de la “bondad” de una estimación es su <strong>sesgo</strong>. Específicamente, preferimos estimaciones que sean <strong>insesgadas</strong>, lo que significa que su valor esperado es el parámetro que se estima.</p>
+<p>En el caso de las estimaciones de regresión, tenemos,
+<span class="math display">\[
+\begin{aligned}
+\text{E}[\hat{\beta}_0] &amp;= \beta_0 \\
+\text{E}[\hat{\beta}_1] &amp;= \beta_1.
+\end{aligned}
+\]</span></p>
+<p>Esto nos dice que, cuando se cumplen las condiciones del modelo SLR, en promedio nuestras estimaciones serán correctas. Sin embargo, como vimos en el último capítulo al simular desde el modelo SLR, eso no significa que cada estimación individual sea correcta. Solo que, si repitiéramos el proceso un número infinito de veces, en promedio la estimación sería correcta.</p>
+</div>
+<div id="mejor" class="section level4 unnumbered">
+<h4>Mejor</h4>
+<p>Ahora bien, si nos limitamos a estimaciones tanto <em>lineales</em> como <em>insesgadas</em>, ¿cómo definimos la <em>mejor</em> estimación? La estimación con la <strong>varianza mínima</strong>.</p>
+<p>En primer lugar, tenga en cuenta que es muy fácil crear una estimación de <span class="math inline">\(\beta_1\)</span> que tenga una varianza muy baja, pero que no sea imparcial. Por ejemplo, defina:</p>
+<p><span class="math display">\[
+\hat{\theta}_{BAD} = 5.
+\]</span></p>
+<p>Entonces, dado que <span class="math inline">\(\hat{\theta}_{BAD}\)</span> es un valor constante,</p>
+<p><span class="math display">\[
+\text{Var}[\hat{\theta}_{BAD}] = 0.
+\]</span></p>
+<p>Sin embargo, desde,</p>
+<p><span class="math display">\[
+\text{E}[\hat{\theta}_{BAD}] = 5
+\]</span></p>
+<p>decimos que <span class="math inline">\(\hat{\theta}_{BAD}\)</span> es un estimador sesgado a menos que <span class="math inline">\(\beta_1 = 5\)</span>, lo cual no sabríamos de antemano. Por esta razón, es una mala estimación (a menos que por casualidad <span class="math inline">\(\beta_1 = 5\)</span>) aunque tenga la menor variación posible. Esta es parte de la razón por la que nos limitamos a estimaciones <em>insesgadas</em>. ¿De qué sirve una estimación, si estima la cantidad incorrecta?</p>
+<p>Entonces, ahora, la pregunta natural es, ¿cuáles son las varianzas de <span class="math inline">\(\hat{\beta}_0\)</span> y <span class="math inline">\(\hat{\beta}_1\)</span>? Estas son,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{Var}[\hat{\beta}_0] &amp;= \sigma^2 \left(\frac{1}{n} + \frac{\bar{x}^2}{S_{xx}}\right) \\
+\text{Var}[\hat{\beta}_1] &amp;= \frac{\sigma^2}{S_{xx}}.
+\end{aligned}
+\]</span></p>
+<p>cuantifican la variabilidad de las estimaciones debido a la aleatoridad durante el muestreo. ¿Son estas “las mejores”? ¿Son estas variaciones pequeñas tanto como es posible obtenerlas? Solo tendrá que confiar en nuestra palabra de que lo son porque demostrar que esto es cierto está más allá del alcance de este curso.</p>
+</div>
+</div>
+<div id="distribuciones-muestrales" class="section level2" number="8.2">
+<h2><span class="header-section-number">8.2</span> Distribuciones muestrales</h2>
+<p>Ahora que hemos “redefinido” las estimaciones para <span class="math inline">\(\hat{\beta}_0\)</span> y <span class="math inline">\(\hat{\beta}_1\)</span> como variables aleatorias, podemos discutir su <strong>distribución muestral</strong>, que es la distribución cuando una estadística se considera una variable aleatoria..</p>
+<p>Dado que tanto <span class="math inline">\(\hat{\beta}_0\)</span> como <span class="math inline">\(\hat{\beta}_1\)</span> son una combinación lineal de <span class="math inline">\(Y_i\)</span> y cada <span class="math inline">\(Y_i\)</span> se distribuye normalmente, entonces ambos <span class="math inline">\(\hat{\beta}_0\)</span> y <span class="math inline">\(\hat{\beta}_1\)</span> también siguen una distribución normal.</p>
+<p>Luego, juntando todo lo anterior, llegamos a las distribuciones de <span class="math inline">\(\hat{\beta}_0\)</span> y <span class="math inline">\(\hat{\beta}_1\)</span>.</p>
+<p>Para <span class="math inline">\(\hat{\beta}_1\)</span> decimos,</p>
+<p><span class="math display">\[
+\hat{\beta}_1 = \frac{S_{xy}}{S_{xx}} 
+= \frac{\sum_{i = 1}^{n}(x_i - \bar{x}) Y_i}{\sum_{i = 1}^{n}(x_i - \bar{x})^2}
+\sim N\left(  \beta_1, \ \frac{\sigma^2}{\sum_{i = 1}^{n}(x_i - \bar{x})^2} \right).
+\]</span></p>
+<p>O más resumido,</p>
+<p><span class="math display">\[
+\hat{\beta}_1 \sim N\left(  \beta_1, \frac{\sigma^2}{S_{xx}} \right).
+\]</span></p>
+<p>Y para <span class="math inline">\(\hat{\beta}_0\)</span>,</p>
+<p><span class="math display">\[
+\hat{\beta}_0 = \bar{Y} - \hat{\beta}_1 \bar{x} 
+\sim N\left(  \beta_0, \ \frac{\sigma^2 \sum_{i = 1}^{n}x_i^2}{n \sum_{i = 1}^{n}(x_i - \bar{x})^2} \right).
+\]</span></p>
+<p>O más resumido,</p>
+<p><span class="math display">\[
+\hat{\beta}_0 \sim N\left(  \beta_0, \sigma^2 \left(\frac{1}{n} + \frac{\bar{x}^2}{S_{xx}}\right) \right)
+\]</span></p>
+<p>En este punto nos hemos olvidado de probar algunos de estos resultados. En lugar de trabajar con las tediosas demostraciones de estas distribuciones muestrales, justificaremos estos resultados mediante la simulación.</p>
+<p>Una nota para los lectores actuales: estas demostraciones y pruebas se pueden agregar a un apéndice en un momento posterior. También puede encontrar estos resultados en casi cualquier libro de texto de regresión lineal estándar.</p>
+<div id="simular-distribuciones-muestrales" class="section level3" number="8.2.1">
+<h3><span class="header-section-number">8.2.1</span> Simular distribuciones muestrales</h3>
+<p>Para verificar los resultados anteriores, simularemos muestras de tamaño <span class="math inline">\(n=100\)</span> del modelo</p>
+<p><span class="math display">\[
+Y_i = \beta_0 + \beta_1 x_i + \epsilon_i
+\]</span></p>
+<p>donde <span class="math inline">\(\epsilon_i \sim N(0, \sigma^2).\)</span> En este caso, se sabe que los parámetros son:</p>
+<ul>
+<li><span class="math inline">\(\beta_0 = 3\)</span></li>
+<li><span class="math inline">\(\beta_1 = 6\)</span></li>
+<li><span class="math inline">\(\sigma^2 = 4\)</span></li>
+</ul>
+<p>Entonces, basándonos en lo anterior, deberíamos encontrar que</p>
+<p><span class="math display">\[
+\hat{\beta}_1 \sim N\left(  \beta_1, \frac{\sigma^2}{S_{xx}} \right)
+\]</span></p>
+<p>y</p>
+<p><span class="math display">\[
+\hat{\beta}_0 \sim N\left(  \beta_0, \sigma^2 \left(\frac{1}{n} + \frac{\bar{x}^2}{S_{xx}}\right) \right).
+\]</span></p>
+<p>Primero, debemos decidir con anticipación cuáles serán nuestros valores de <span class="math inline">\(x\)</span> para esta simulación, ya que los valores de <span class="math inline">\(x\)</span> en SLR también se consideran cantidades conocidas. La elección de valores <span class="math inline">\(x\)</span> es arbitraria. Aquí también establecemos una semilla para la aleatorización y calculamos <span class="math inline">\(S_{xx}\)</span> que necesitaremos en el futuro.</p>
+<div class="sourceCode" id="cb518"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb518-1"><a href="inferencia-para-regresión-lineal-simple.html#cb518-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb518-2"><a href="inferencia-para-regresión-lineal-simple.html#cb518-2" aria-hidden="true" tabindex="-1"></a>sample_size <span class="ot">=</span> <span class="dv">100</span> <span class="co"># esto es n</span></span>
+<span id="cb518-3"><a href="inferencia-para-regresión-lineal-simple.html#cb518-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="at">length =</span> sample_size)</span>
+<span id="cb518-4"><a href="inferencia-para-regresión-lineal-simple.html#cb518-4" aria-hidden="true" tabindex="-1"></a>Sxx <span class="ot">=</span> <span class="fu">sum</span>((x <span class="sc">-</span> <span class="fu">mean</span>(x)) <span class="sc">^</span> <span class="dv">2</span>)</span></code></pre></div>
+<p>También arreglamos los valores de nuestros parámetros.</p>
+<div class="sourceCode" id="cb519"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb519-1"><a href="inferencia-para-regresión-lineal-simple.html#cb519-1" aria-hidden="true" tabindex="-1"></a>beta_0 <span class="ot">=</span> <span class="dv">3</span></span>
+<span id="cb519-2"><a href="inferencia-para-regresión-lineal-simple.html#cb519-2" aria-hidden="true" tabindex="-1"></a>beta_1 <span class="ot">=</span> <span class="dv">6</span></span>
+<span id="cb519-3"><a href="inferencia-para-regresión-lineal-simple.html#cb519-3" aria-hidden="true" tabindex="-1"></a>sigma  <span class="ot">=</span> <span class="dv">2</span></span></code></pre></div>
+<p>Con esta información, sabemos que las distribuciones muestrales deben ser:</p>
+<div class="sourceCode" id="cb520"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb520-1"><a href="inferencia-para-regresión-lineal-simple.html#cb520-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">var_beta_1_hat =</span> sigma <span class="sc">^</span> <span class="dv">2</span> <span class="sc">/</span> Sxx)</span></code></pre></div>
+<pre><code>## [1] 0.1176238</code></pre>
+<div class="sourceCode" id="cb522"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb522-1"><a href="inferencia-para-regresión-lineal-simple.html#cb522-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">var_beta_0_hat =</span> sigma <span class="sc">^</span> <span class="dv">2</span> <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">/</span> sample_size <span class="sc">+</span> <span class="fu">mean</span>(x) <span class="sc">^</span> <span class="dv">2</span> <span class="sc">/</span> Sxx))</span></code></pre></div>
+<pre><code>## [1] 0.04</code></pre>
+<p><span class="math display">\[
+\hat{\beta}_1 \sim N(  6, 0.1176238)
+\]</span></p>
+<p>y</p>
+<p><span class="math display">\[
+\hat{\beta}_0 \sim N(  3, 0.04).
+\]</span></p>
+<p>Es decir,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{E}[\hat{\beta}_1] &amp;= 6 \\
+\text{Var}[\hat{\beta}_1] &amp;= 0.1176238
+\end{aligned}
+\]</span></p>
+<p>y</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{E}[\hat{\beta}_0] &amp;= 3 \\
+\text{Var}[\hat{\beta}_0] &amp;= 0.04.
+\end{aligned}
+\]</span></p>
+<p>Ahora simulamos datos de este modelo 10,000 veces. Tenga en cuenta que esta puede no ser la mejor forma de realizar la simulación en <code>R</code>. Realizamos la simulación de esta manera en un intento de claridad. Por ejemplo, podríamos haber usado la función <code>sim_slr()</code> del capítulo anterior. Ahora, simplemente almacenamos variables en el entorno global en lugar de crear un marco de datos para cada nuevo conjunto de datos simulado.</p>
+<div class="sourceCode" id="cb524"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb524-1"><a href="inferencia-para-regresión-lineal-simple.html#cb524-1" aria-hidden="true" tabindex="-1"></a>num_samples <span class="ot">=</span> <span class="dv">10000</span></span>
+<span id="cb524-2"><a href="inferencia-para-regresión-lineal-simple.html#cb524-2" aria-hidden="true" tabindex="-1"></a>beta_0_hats <span class="ot">=</span> <span class="fu">rep</span>(<span class="dv">0</span>, num_samples)</span>
+<span id="cb524-3"><a href="inferencia-para-regresión-lineal-simple.html#cb524-3" aria-hidden="true" tabindex="-1"></a>beta_1_hats <span class="ot">=</span> <span class="fu">rep</span>(<span class="dv">0</span>, num_samples)</span>
+<span id="cb524-4"><a href="inferencia-para-regresión-lineal-simple.html#cb524-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb524-5"><a href="inferencia-para-regresión-lineal-simple.html#cb524-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>num_samples) {</span>
+<span id="cb524-6"><a href="inferencia-para-regresión-lineal-simple.html#cb524-6" aria-hidden="true" tabindex="-1"></a>  eps <span class="ot">=</span> <span class="fu">rnorm</span>(sample_size, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma)</span>
+<span id="cb524-7"><a href="inferencia-para-regresión-lineal-simple.html#cb524-7" aria-hidden="true" tabindex="-1"></a>  y   <span class="ot">=</span> beta_0 <span class="sc">+</span> beta_1 <span class="sc">*</span> x <span class="sc">+</span> eps</span>
+<span id="cb524-8"><a href="inferencia-para-regresión-lineal-simple.html#cb524-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb524-9"><a href="inferencia-para-regresión-lineal-simple.html#cb524-9" aria-hidden="true" tabindex="-1"></a>  sim_model <span class="ot">=</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="cb524-10"><a href="inferencia-para-regresión-lineal-simple.html#cb524-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb524-11"><a href="inferencia-para-regresión-lineal-simple.html#cb524-11" aria-hidden="true" tabindex="-1"></a>  beta_0_hats[i] <span class="ot">=</span> <span class="fu">coef</span>(sim_model)[<span class="dv">1</span>]</span>
+<span id="cb524-12"><a href="inferencia-para-regresión-lineal-simple.html#cb524-12" aria-hidden="true" tabindex="-1"></a>  beta_1_hats[i] <span class="ot">=</span> <span class="fu">coef</span>(sim_model)[<span class="dv">2</span>]</span>
+<span id="cb524-13"><a href="inferencia-para-regresión-lineal-simple.html#cb524-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Cada vez que simulamos los datos, obtuvimos valores de los coeficientes estimados. Las variables <code>beta_0_hats</code> y <code>beta_1_hats</code> ahora almacenan 10,000 valores simulados de <span class="math inline">\(\hat{\beta}_0\)</span> y <span class="math inline">\(\hat{\beta}_1\)</span> respectivamente.</p>
+<p>Primero verificamos la distribución de <span class="math inline">\(\hat{\beta}_1\)</span>.</p>
+<div class="sourceCode" id="cb525"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb525-1"><a href="inferencia-para-regresión-lineal-simple.html#cb525-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(beta_1_hats) <span class="co"># media empírica</span></span></code></pre></div>
+<pre><code>## [1] 6.001998</code></pre>
+<div class="sourceCode" id="cb527"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb527-1"><a href="inferencia-para-regresión-lineal-simple.html#cb527-1" aria-hidden="true" tabindex="-1"></a>beta_1            <span class="co"># media verdadera </span></span></code></pre></div>
+<pre><code>## [1] 6</code></pre>
+<div class="sourceCode" id="cb529"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb529-1"><a href="inferencia-para-regresión-lineal-simple.html#cb529-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(beta_1_hats)  <span class="co"># varianza empírica</span></span></code></pre></div>
+<pre><code>## [1] 0.11899</code></pre>
+<div class="sourceCode" id="cb531"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb531-1"><a href="inferencia-para-regresión-lineal-simple.html#cb531-1" aria-hidden="true" tabindex="-1"></a>var_beta_1_hat    <span class="co"># varianza verdadera </span></span></code></pre></div>
+<pre><code>## [1] 0.1176238</code></pre>
+<p>Vemos que las medias y varianzas empíricas y verdaderas son <em>muy</em> similares. También verificamos que la distribución empírica es normal. Para hacerlo, trazamos un histograma de <code>beta_1_hats</code> y agregamos la curva para la verdadera distribución de $_1 $. Usamos <code>prob = TRUE</code> para poner el histograma en la misma escala que la curva normal.</p>
+<div class="sourceCode" id="cb533"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb533-1"><a href="inferencia-para-regresión-lineal-simple.html#cb533-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tenga en cuenta que es necesario utilizar prob = TRUE</span></span>
+<span id="cb533-2"><a href="inferencia-para-regresión-lineal-simple.html#cb533-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(beta_1_hats, <span class="at">prob =</span> <span class="cn">TRUE</span>, <span class="at">breaks =</span> <span class="dv">20</span>, </span>
+<span id="cb533-3"><a href="inferencia-para-regresión-lineal-simple.html#cb533-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(<span class="fu">hat</span>(beta)[<span class="dv">1</span>]), <span class="at">main =</span> <span class="st">&quot;&quot;</span>, <span class="at">border =</span> <span class="st">&quot;dodgerblue&quot;</span>)</span>
+<span id="cb533-4"><a href="inferencia-para-regresión-lineal-simple.html#cb533-4" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dnorm</span>(x, <span class="at">mean =</span> beta_1, <span class="at">sd =</span> <span class="fu">sqrt</span>(var_beta_1_hat)), </span>
+<span id="cb533-5"><a href="inferencia-para-regresión-lineal-simple.html#cb533-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>, <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">lwd =</span> <span class="dv">3</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-219-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Luego repetimos el proceso para <span class="math inline">\(\hat{\beta}_0\)</span>.</p>
+<div class="sourceCode" id="cb534"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb534-1"><a href="inferencia-para-regresión-lineal-simple.html#cb534-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(beta_0_hats) <span class="co"># media empírica</span></span></code></pre></div>
+<pre><code>## [1] 3.001147</code></pre>
+<div class="sourceCode" id="cb536"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb536-1"><a href="inferencia-para-regresión-lineal-simple.html#cb536-1" aria-hidden="true" tabindex="-1"></a>beta_0            <span class="co"># media verdadera </span></span></code></pre></div>
+<pre><code>## [1] 3</code></pre>
+<div class="sourceCode" id="cb538"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb538-1"><a href="inferencia-para-regresión-lineal-simple.html#cb538-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(beta_0_hats)  <span class="co"># varianza empírica</span></span></code></pre></div>
+<pre><code>## [1] 0.04017924</code></pre>
+<div class="sourceCode" id="cb540"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb540-1"><a href="inferencia-para-regresión-lineal-simple.html#cb540-1" aria-hidden="true" tabindex="-1"></a>var_beta_0_hat    <span class="co"># varianza verdadera </span></span></code></pre></div>
+<pre><code>## [1] 0.04</code></pre>
+<div class="sourceCode" id="cb542"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb542-1"><a href="inferencia-para-regresión-lineal-simple.html#cb542-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(beta_0_hats, <span class="at">prob =</span> <span class="cn">TRUE</span>, <span class="at">breaks =</span> <span class="dv">25</span>, </span>
+<span id="cb542-2"><a href="inferencia-para-regresión-lineal-simple.html#cb542-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(<span class="fu">hat</span>(beta)[<span class="dv">0</span>]), <span class="at">main =</span> <span class="st">&quot;&quot;</span>, <span class="at">border =</span> <span class="st">&quot;dodgerblue&quot;</span>)</span>
+<span id="cb542-3"><a href="inferencia-para-regresión-lineal-simple.html#cb542-3" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dnorm</span>(x, <span class="at">mean =</span> beta_0, <span class="at">sd =</span> <span class="fu">sqrt</span>(var_beta_0_hat)),</span>
+<span id="cb542-4"><a href="inferencia-para-regresión-lineal-simple.html#cb542-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>, <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">lwd =</span> <span class="dv">3</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-221-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>En este estudio de simulación, solo hemos simulado un número finito de muestras. Para verificar verdaderamente los resultados de la distribución, necesitaríamos observar un número infinito de muestras. Sin embargo, la siguiente gráfica debería dejar en claro que si continuamos simulando, los resultados empíricos se acercarían cada vez más a lo que deberíamos esperar.</p>
+<div class="sourceCode" id="cb543"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb543-1"><a href="inferencia-para-regresión-lineal-simple.html#cb543-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">1</span>, <span class="dv">1</span>)) </span>
+<span id="cb543-2"><a href="inferencia-para-regresión-lineal-simple.html#cb543-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cumsum</span>(beta_1_hats) <span class="sc">/</span> (<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(beta_1_hats)), <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">5.95</span>, <span class="fl">6.05</span>),</span>
+<span id="cb543-3"><a href="inferencia-para-regresión-lineal-simple.html#cb543-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Numero de simulaciones&quot;</span>,</span>
+<span id="cb543-4"><a href="inferencia-para-regresión-lineal-simple.html#cb543-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="st">&quot;Media empírica de &quot;</span> <span class="sc">~</span> <span class="fu">hat</span>(beta)[<span class="dv">1</span>]),</span>
+<span id="cb543-5"><a href="inferencia-para-regresión-lineal-simple.html#cb543-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">col  =</span> <span class="st">&quot;dodgerblue&quot;</span>)</span>
+<span id="cb543-6"><a href="inferencia-para-regresión-lineal-simple.html#cb543-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">6</span>, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-222-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb544"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb544-1"><a href="inferencia-para-regresión-lineal-simple.html#cb544-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">1</span>, <span class="dv">1</span>)) </span>
+<span id="cb544-2"><a href="inferencia-para-regresión-lineal-simple.html#cb544-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cumsum</span>(beta_0_hats) <span class="sc">/</span> (<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(beta_0_hats)), <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">2.95</span>, <span class="fl">3.05</span>),</span>
+<span id="cb544-3"><a href="inferencia-para-regresión-lineal-simple.html#cb544-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Numero de simulaciones&quot;</span>,</span>
+<span id="cb544-4"><a href="inferencia-para-regresión-lineal-simple.html#cb544-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="st">&quot;Media empírica de &quot;</span> <span class="sc">~</span> <span class="fu">hat</span>(beta)[<span class="dv">0</span>]),</span>
+<span id="cb544-5"><a href="inferencia-para-regresión-lineal-simple.html#cb544-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">col  =</span> <span class="st">&quot;dodgerblue&quot;</span>)</span>
+<span id="cb544-6"><a href="inferencia-para-regresión-lineal-simple.html#cb544-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-222-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="errores-estándar" class="section level2" number="8.3">
+<h2><span class="header-section-number">8.3</span> Errores estándar</h2>
+<p>Así que ahora creemos en los dos resultados de las distribuciones</p>
+<p><span class="math display">\[
+\begin{aligned}
+\hat{\beta}_0 &amp;\sim N\left(  \beta_0, \sigma^2 \left(\frac{1}{n} + \frac{\bar{x}^2}{S_{xx}}\right) \right) \\
+\hat{\beta}_1 &amp;\sim N\left(  \beta_1, \frac{\sigma^2}{S_{xx}} \right).
+\end{aligned}
+\]</span></p>
+<p>Luego, al estandarizar estos resultados, encontramos que</p>
+<p><span class="math display">\[
+\frac{\hat{\beta}_0 - \beta_0}{\text{SD}[\hat{\beta}_0]} \sim N(0, 1)
+\]</span></p>
+<p>y</p>
+<p><span class="math display">\[
+\frac{\hat{\beta}_1 - \beta_1}{\text{SD}[\hat{\beta}_1]} \sim N(0, 1)
+\]</span></p>
+<p>donde</p>
+<p><span class="math display">\[
+\text{SD}[\hat{\beta}_0] = \sigma\sqrt{\frac{1}{n} + \frac{\bar{x}^2}{S_{xx}}}
+\]</span></p>
+<p>y</p>
+<p><span class="math display">\[
+\text{SD}[\hat{\beta}_1] = \frac{\sigma}{\sqrt{S_{xx}}}.
+\]</span></p>
+<p>Como no conocemos <span class="math inline">\(\sigma\)</span> en la práctica, tendremos que estimarlo usando <span class="math inline">\(s_e\)</span>, que enlazamos a nuestra expresión existente para las desviaciones estándar de nuestras estimaciones.</p>
+<p>Estas dos nuevas expresiones se denominan <strong>errores estándar</strong> que son las desviaciones estándar <em>estimadas</em> de las distribuciones muestrales.</p>
+<p><span class="math display">\[
+\text{SE}[\hat{\beta}_0] = s_e\sqrt{\frac{1}{n} + \frac{\bar{x}^2}{S_{xx}}}
+\]</span></p>
+<p><span class="math display">\[
+\text{SE}[\hat{\beta}_1] = \frac{s_e}{\sqrt{S_{xx}}}
+\]</span></p>
+<p>Ahora bien, si dividimos por el error estándar, en lugar de la desviación estándar, obtenemos los siguientes resultados que nos permitirán hacer intervalos de confianza y realizar pruebas de hipótesis.</p>
+<p><span class="math display">\[
+\frac{\hat{\beta}_0 - \beta_0}{\text{SE}[\hat{\beta}_0]} \sim t_{n-2}
+\]</span></p>
+<p><span class="math display">\[
+\frac{\hat{\beta}_1 - \beta_1}{\text{SE}[\hat{\beta}_1]} \sim t_{n-2}
+\]</span></p>
+<p>Para ver esto, primero tenga en cuenta que,</p>
+<p><span class="math display">\[
+\frac{\text{RSS}}{\sigma^2} = \frac{(n-2)s_e^2}{\sigma^2} \sim \chi_{n-2}^2.
+\]</span></p>
+<p>Recuerde también que una variable aleatoria <span class="math inline">\(T\)</span> esta definida como,</p>
+<p><span class="math display">\[
+T = \frac{Z}{\sqrt{\frac{\chi_{d}^2}{d}}}
+\]</span></p>
+<p>sigue una distribución <span class="math inline">\(t\)</span> con <span class="math inline">\(d\)</span> grados de libertad, donde <span class="math inline">\(\chi_{d}^2\)</span> es una variable aleatoria <span class="math inline">\(\chi^2\)</span> con <span class="math inline">\(d\)</span> grados de libertad.</p>
+<p>escribimos,</p>
+<p><span class="math display">\[
+T \sim t_d
+\]</span></p>
+<p>es decir que la variable aleatoria <span class="math inline">\(T\)</span> sigue una distribución <span class="math inline">\(t\)</span> con <span class="math inline">\(d\)</span> grados de libertad.</p>
+<p>Luego usamos el truco clásico de “multiplicar por 1” y algunos reordenamientos para llegar a</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{\hat{\beta}_1 - \beta_1}{\text{SE}[\hat{\beta}_1]} 
+&amp;= \frac{\hat{\beta}_1 - \beta_1}{s_e / \sqrt{S_{xx}}} \\
+&amp;= \frac{\hat{\beta}_1 - \beta_1}{s_e / \sqrt{S_{xx}}} \cdot \frac{\sigma / \sqrt{S_{xx}}}{\sigma / \sqrt{S_{xx}}} \\
+&amp;= \frac{\hat{\beta}_1 - \beta_1}{\sigma / \sqrt{S_{xx}}} \cdot \frac{\sigma / \sqrt{S_{xx}}}{s_e / \sqrt{S_{xx}}} \\
+&amp;= \frac{\hat{\beta}_1 - \beta_1}{\sigma / \sqrt{S_{xx}}} \bigg/ \sqrt{\frac{s_e^2}{\sigma^2}} \\
+&amp;= \frac{\hat{\beta}_1 - \beta_1}{\text{SD}[\hat{\beta}_1]} \bigg/ \sqrt{\frac{\frac{(n - 2)s_e^2}{\sigma^2}}{n - 2}}
+\sim \frac{Z}{\sqrt{\frac{\chi_{n-2}^2}{n-2}}}
+\sim t_{n-2}
+\end{aligned}
+\]</span></p>
+<p>donde <span class="math inline">\(Z \sim N(0,1)\)</span>.</p>
+<p>Recuerde que una distribución <span class="math inline">\(t\)</span> es similar a una normal estándar, pero con colas más pesadas. A medida que aumentan los grados de libertad, la distribución <span class="math inline">\(t\)</span> se parece cada vez más a una normal estándar. A continuación, trazamos una distribución normal estándar, así como dos ejemplos de una distribución <span class="math inline">\(t\)</span> con diferentes grados de libertad. Observe cómo la distribución <span class="math inline">\(t\)</span> con los mayores grados de libertad es más similar a la curva normal estándar.</p>
+<div class="sourceCode" id="cb545"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb545-1"><a href="inferencia-para-regresión-lineal-simple.html#cb545-1" aria-hidden="true" tabindex="-1"></a><span class="co"># definir cuadrícula de valores x</span></span>
+<span id="cb545-2"><a href="inferencia-para-regresión-lineal-simple.html#cb545-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">4</span>, <span class="at">length =</span> <span class="dv">100</span>)</span>
+<span id="cb545-3"><a href="inferencia-para-regresión-lineal-simple.html#cb545-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb545-4"><a href="inferencia-para-regresión-lineal-simple.html#cb545-4" aria-hidden="true" tabindex="-1"></a><span class="co"># graficar curva para normal estándar</span></span>
+<span id="cb545-5"><a href="inferencia-para-regresión-lineal-simple.html#cb545-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, <span class="fu">dnorm</span>(x), <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb545-6"><a href="inferencia-para-regresión-lineal-simple.html#cb545-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;x&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Densidad&quot;</span>, <span class="at">main =</span> <span class="st">&quot;Distribucion normal vs t&quot;</span>)</span>
+<span id="cb545-7"><a href="inferencia-para-regresión-lineal-simple.html#cb545-7" aria-hidden="true" tabindex="-1"></a><span class="co"># agregar curvas para distribuciones t</span></span>
+<span id="cb545-8"><a href="inferencia-para-regresión-lineal-simple.html#cb545-8" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, <span class="fu">dt</span>(x, <span class="at">df =</span> <span class="dv">1</span>), <span class="at">lty =</span> <span class="dv">3</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>)</span>
+<span id="cb545-9"><a href="inferencia-para-regresión-lineal-simple.html#cb545-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, <span class="fu">dt</span>(x, <span class="at">df =</span> <span class="dv">10</span>), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;dodgerblue&quot;</span>)</span>
+<span id="cb545-10"><a href="inferencia-para-regresión-lineal-simple.html#cb545-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb545-11"><a href="inferencia-para-regresión-lineal-simple.html#cb545-11" aria-hidden="true" tabindex="-1"></a><span class="co"># agregar leyenda</span></span>
+<span id="cb545-12"><a href="inferencia-para-regresión-lineal-simple.html#cb545-12" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="at">title =</span> <span class="st">&quot;Distribuciones&quot;</span>,</span>
+<span id="cb545-13"><a href="inferencia-para-regresión-lineal-simple.html#cb545-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;t, df = 1&quot;</span>, <span class="st">&quot;t, df = 10&quot;</span>, <span class="st">&quot;Normal estándar&quot;</span>), </span>
+<span id="cb545-14"><a href="inferencia-para-regresión-lineal-simple.html#cb545-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;darkorange&quot;</span>, <span class="st">&quot;dodgerblue&quot;</span>, <span class="st">&quot;black&quot;</span>))</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-223-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="intervalos-de-confianza-para-pendiente-e-intercepto" class="section level2" number="8.4">
+<h2><span class="header-section-number">8.4</span> Intervalos de confianza para pendiente e Intercepto</h2>
+<p>Recuerde que los intervalos de confianza para los promedios a menudo adoptan la forma:</p>
+<p><span class="math display">\[
+\text{EST} \pm \text{CRIT} \cdot \text{SE}
+\]</span></p>
+<p>o</p>
+<p><span class="math display">\[
+\text{EST} \pm \text{MARGIN}
+\]</span></p>
+<p>donde <span class="math inline">\(\text{EST}\)</span> es una estimación del parámetro de interés, <span class="math inline">\(\text{SE}\)</span> es el error estándar de la estimación y <span class="math inline">\(\text{MARGIN} = \text{CRIT} \cdot \text{SE}\)</span>.</p>
+<p>Luego, para <span class="math inline">\(\beta_0\)</span> y <span class="math inline">\(\beta_1\)</span> podemos crear intervalos de confianza usando</p>
+<p><span class="math display">\[
+\hat{\beta}_0 \pm t_{\alpha/2, n - 2} \cdot \text{SE}[\hat{\beta}_0] \quad \quad \quad \hat{\beta}_0 \pm t_{\alpha/2, n - 2} \cdot s_e\sqrt{\frac{1}{n}+\frac{\bar{x}^2}{S_{xx}}}
+\]</span></p>
+<p>y</p>
+<p><span class="math display">\[
+\hat{\beta}_1 \pm t_{\alpha/2, n - 2} \cdot \text{SE}[\hat{\beta}_1]  \quad \quad \quad \hat{\beta}_1 \pm t_{\alpha/2, n - 2} \cdot \frac{s_e}{\sqrt{S_{xx}}}
+\]</span></p>
+<p>donde <span class="math inline">\(t_{\alpha/2, n - 2}\)</span> es el valor crítico tal que <span class="math inline">\(P(t_{n-2} &gt; t_{\alpha/2, n - 2}) = \alpha/2\)</span>.</p>
+</div>
+<div id="pruebas-de-hipótesis" class="section level2" number="8.5">
+<h2><span class="header-section-number">8.5</span> Pruebas de hipótesis</h2>
+<blockquote>
+<p>“Podemos hablar de esta hipótesis como la ‘<a href="https://xkcd.com/892/" target="_blank">hipótesis nula</a>’, y debe tenerse en cuenta que la hipótesis nula nunca se prueba ni se establece, pero posiblemente sea refutada, en el curso de la experimentación”</p>
+<p>— <strong>Ronald Aylmer Fisher</strong></p>
+</blockquote>
+<p>Recuerde que una estadística de prueba (<span class="math inline">\(\text{TS}\)</span>) para las medias de prueba a menudo toma la forma:</p>
+<p><span class="math display">\[
+\text{TS} = \frac{\text{EST} - \text{HYP}}{\text{SE}}
+\]</span></p>
+<p>donde <span class="math inline">\(\text{EST}\)</span> es una estimación del parámetro de interés, <span class="math inline">\(\text{HYP}\)</span> es un valor hipotético del parámetro y <span class="math inline">\(\text{SE}\)</span> es el error estándar de la estimación.</p>
+<p>Entonces, para probar</p>
+<p><span class="math display">\[
+H_0: \beta_0 = \beta_{00} \quad \text{vs} \quad H_1: \beta_0 \neq \beta_{00}
+\]</span></p>
+<p>usamos el estadístico de prueba</p>
+<p><span class="math display">\[
+t = \frac{\hat{\beta}_0 - \beta_{00}}{\text{SE}[\hat{\beta}_0]} = \frac{\hat{\beta}_0-\beta_{00}}{s_e\sqrt{\frac{1}{n} + \frac{\bar{x}^2}{S_{xx}}}}
+\]</span></p>
+<p>que, bajo la hipótesis nula, sigue una distribución <span class="math inline">\(t\)</span> con <span class="math inline">\(n-2\)</span> grados de libertad. Usamos $_{00} $ para denotar el valor hipotético de <span class="math inline">\(\beta_0\)</span>.</p>
+<p>Del mismo modo, para probar</p>
+<p><span class="math display">\[
+H_0: \beta_1 = \beta_{10} \quad \text{vs} \quad H_1: \beta_1 \neq \beta_{10}
+\]</span></p>
+<p>usamos el estadístico de prueba</p>
+<p><span class="math display">\[
+t = \frac{\hat{\beta}_1-\beta_{10}}{\text{SE}[\hat{\beta}_1]} = \frac{\hat{\beta}_1-\beta_{10}}{s_e / \sqrt{S_{xx}}}
+\]</span></p>
+<p>que de nuevo, bajo la hipótesis nula, sigue una distribución <span class="math inline">\(t\)</span> con <span class="math inline">\(n-2\)</span> grados de libertad. Ahora usamos <span class="math inline">\(\beta_{10}\)</span> para denotar el valor hipotético de <span class="math inline">\(\beta_1\)</span>.</p>
+</div>
+<div id="ejemplo-cars" class="section level2" number="8.6">
+<h2><span class="header-section-number">8.6</span> Ejemplo <code>cars</code></h2>
+<p>Ahora volvemos al ejemplo de “cars” del último capítulo para ilustrar estos conceptos. Primero ajustamos el modelo usando <code>lm()</code> y luego usamos <code>summary()</code> para ver los resultados con mayor detalle.</p>
+<div class="sourceCode" id="cb546"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb546-1"><a href="inferencia-para-regresión-lineal-simple.html#cb546-1" aria-hidden="true" tabindex="-1"></a>stop_dist_model <span class="ot">=</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars)</span>
+<span id="cb546-2"><a href="inferencia-para-regresión-lineal-simple.html#cb546-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stop_dist_model)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = dist ~ speed, data = cars)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -29.069  -9.525  -2.272   9.215  43.201 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -17.5791     6.7584  -2.601   0.0123 *  
+## speed         3.9324     0.4155   9.464 1.49e-12 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 15.38 on 48 degrees of freedom
+## Multiple R-squared:  0.6511, Adjusted R-squared:  0.6438 
+## F-statistic: 89.57 on 1 and 48 DF,  p-value: 1.49e-12</code></pre>
+<div id="pruebas-en-r" class="section level3" number="8.6.1">
+<h3><span class="header-section-number">8.6.1</span> Pruebas en <code>R</code></h3>
+<p>Ahora discutiremos los resultados llamados <code>Coefficients</code>. Primero recuerde que podemos extraer esta información directamente.</p>
+<div class="sourceCode" id="cb548"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb548-1"><a href="inferencia-para-regresión-lineal-simple.html#cb548-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(<span class="fu">summary</span>(stop_dist_model))</span></code></pre></div>
+<pre><code>##  [1] &quot;call&quot;          &quot;terms&quot;         &quot;residuals&quot;     &quot;coefficients&quot; 
+##  [5] &quot;aliased&quot;       &quot;sigma&quot;         &quot;df&quot;            &quot;r.squared&quot;    
+##  [9] &quot;adj.r.squared&quot; &quot;fstatistic&quot;    &quot;cov.unscaled&quot;</code></pre>
+<div class="sourceCode" id="cb550"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb550-1"><a href="inferencia-para-regresión-lineal-simple.html#cb550-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stop_dist_model)<span class="sc">$</span>coefficients</span></code></pre></div>
+<pre><code>##               Estimate Std. Error   t value     Pr(&gt;|t|)
+## (Intercept) -17.579095  6.7584402 -2.601058 1.231882e-02
+## speed         3.932409  0.4155128  9.463990 1.489836e-12</code></pre>
+<p>La función <code>names()</code> nos dice qué información está disponible, y luego usamos el operador <code>$</code> y <code>Coefficients</code> para extraer la información que nos interesa. Dos valores que deberían resultar familiares de inmediato.</p>
+<p><span class="math display">\[
+\hat{\beta}_0 = -17.5790949
+\]</span></p>
+<p>y</p>
+<p><span class="math display">\[
+\hat{\beta}_1 = 3.9324088
+\]</span></p>
+<p>que son nuestras estimaciones para los parámetros del modelo <span class="math inline">\(\beta_0\)</span> y <span class="math inline">\(\beta_1\)</span>.</p>
+<p>Centrémonos ahora en la segunda fila de resultados, que es relevante para <span class="math inline">\(\beta_1\)</span>.</p>
+<div class="sourceCode" id="cb552"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb552-1"><a href="inferencia-para-regresión-lineal-simple.html#cb552-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stop_dist_model)<span class="sc">$</span>coefficients[<span class="dv">2</span>,]</span></code></pre></div>
+<pre><code>##     Estimate   Std. Error      t value     Pr(&gt;|t|) 
+## 3.932409e+00 4.155128e-01 9.463990e+00 1.489836e-12</code></pre>
+<p>Nuevamente, el primer valor, <code>Estimate</code> es</p>
+<p><span class="math display">\[
+\hat{\beta}_1 = 3.9324088.
+\]</span></p>
+<p>El segundo valor, <code>Std. Error</code>, es el error estándar de <span class="math inline">\(\hat{\beta}_1\)</span>,</p>
+<p><span class="math display">\[
+\text{SE}[\hat{\beta}_1] = \frac{s_e}{\sqrt{S_{xx}}} = 0.4155128.
+\]</span></p>
+<p>El tercer valor, <code>t value</code>, es el valor de la estadística de prueba para probar <span class="math inline">\(H_0: \beta_1 = 0\)</span> vs <span class="math inline">\(H_1: \beta_1 \neq 0\)</span>,</p>
+<p><span class="math display">\[
+t = \frac{\hat{\beta}_1-0}{\text{SE}[\hat{\beta}_1]} = \frac{\hat{\beta}_1-0}{s_e / \sqrt{S_{xx}}} = 9.46399.
+\]</span></p>
+<p>Por último, <code>Pr(&gt;|t|)</code>, nos da el valor p de esa prueba.</p>
+<p><span class="math display">\[
+\text{p-value} = 1.4898365\times 10^{-12}
+\]</span></p>
+<p>Tenga en cuenta que aquí estamos probando específicamente si <span class="math inline">\(\beta_1 = 0\)</span>.</p>
+<p>La primera fila de salida informa los mismos valores, pero para <span class="math inline">\(\beta_0\)</span>.</p>
+<div class="sourceCode" id="cb554"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb554-1"><a href="inferencia-para-regresión-lineal-simple.html#cb554-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stop_dist_model)<span class="sc">$</span>coefficients[<span class="dv">1</span>,]</span></code></pre></div>
+<pre><code>##     Estimate   Std. Error      t value     Pr(&gt;|t|) 
+## -17.57909489   6.75844017  -2.60105800   0.01231882</code></pre>
+<p>En resumen, el siguiente código almacena la información de <code>summary(stop_dist_model)$coefficients</code> en una nueva variable <code>stop_dist_model_test_info</code>, luego extrae cada elemento en una nueva variable que describe la información que contiene.</p>
+<div class="sourceCode" id="cb556"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb556-1"><a href="inferencia-para-regresión-lineal-simple.html#cb556-1" aria-hidden="true" tabindex="-1"></a>stop_dist_model_test_info <span class="ot">=</span> <span class="fu">summary</span>(stop_dist_model)<span class="sc">$</span>coefficients</span>
+<span id="cb556-2"><a href="inferencia-para-regresión-lineal-simple.html#cb556-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb556-3"><a href="inferencia-para-regresión-lineal-simple.html#cb556-3" aria-hidden="true" tabindex="-1"></a>beta_0_hat      <span class="ot">=</span> stop_dist_model_test_info[<span class="dv">1</span>, <span class="dv">1</span>] <span class="co"># Estimate</span></span>
+<span id="cb556-4"><a href="inferencia-para-regresión-lineal-simple.html#cb556-4" aria-hidden="true" tabindex="-1"></a>beta_0_hat_se   <span class="ot">=</span> stop_dist_model_test_info[<span class="dv">1</span>, <span class="dv">2</span>] <span class="co"># Std. Error</span></span>
+<span id="cb556-5"><a href="inferencia-para-regresión-lineal-simple.html#cb556-5" aria-hidden="true" tabindex="-1"></a>beta_0_hat_t    <span class="ot">=</span> stop_dist_model_test_info[<span class="dv">1</span>, <span class="dv">3</span>] <span class="co"># t value</span></span>
+<span id="cb556-6"><a href="inferencia-para-regresión-lineal-simple.html#cb556-6" aria-hidden="true" tabindex="-1"></a>beta_0_hat_pval <span class="ot">=</span> stop_dist_model_test_info[<span class="dv">1</span>, <span class="dv">4</span>] <span class="co"># Pr(&gt;|t|)</span></span>
+<span id="cb556-7"><a href="inferencia-para-regresión-lineal-simple.html#cb556-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb556-8"><a href="inferencia-para-regresión-lineal-simple.html#cb556-8" aria-hidden="true" tabindex="-1"></a>beta_1_hat      <span class="ot">=</span> stop_dist_model_test_info[<span class="dv">2</span>, <span class="dv">1</span>] <span class="co"># Estimate</span></span>
+<span id="cb556-9"><a href="inferencia-para-regresión-lineal-simple.html#cb556-9" aria-hidden="true" tabindex="-1"></a>beta_1_hat_se   <span class="ot">=</span> stop_dist_model_test_info[<span class="dv">2</span>, <span class="dv">2</span>] <span class="co"># Std. Error</span></span>
+<span id="cb556-10"><a href="inferencia-para-regresión-lineal-simple.html#cb556-10" aria-hidden="true" tabindex="-1"></a>beta_1_hat_t    <span class="ot">=</span> stop_dist_model_test_info[<span class="dv">2</span>, <span class="dv">3</span>] <span class="co"># t value</span></span>
+<span id="cb556-11"><a href="inferencia-para-regresión-lineal-simple.html#cb556-11" aria-hidden="true" tabindex="-1"></a>beta_1_hat_pval <span class="ot">=</span> stop_dist_model_test_info[<span class="dv">2</span>, <span class="dv">4</span>] <span class="co"># Pr(&gt;|t|)</span></span></code></pre></div>
+<p>Luego podemos verificar algunas expresiones equivalentes: la estadística de prueba <span class="math inline">\(t\)</span> para <span class="math inline">\(\hat{\beta}_1\)</span> y el valor p bilateral asociado con ese estadístico de prueba.</p>
+<div class="sourceCode" id="cb557"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb557-1"><a href="inferencia-para-regresión-lineal-simple.html#cb557-1" aria-hidden="true" tabindex="-1"></a>(beta_1_hat <span class="sc">-</span> <span class="dv">0</span>) <span class="sc">/</span> beta_1_hat_se</span></code></pre></div>
+<pre><code>## [1] 9.46399</code></pre>
+<div class="sourceCode" id="cb559"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb559-1"><a href="inferencia-para-regresión-lineal-simple.html#cb559-1" aria-hidden="true" tabindex="-1"></a>beta_1_hat_t</span></code></pre></div>
+<pre><code>## [1] 9.46399</code></pre>
+<div class="sourceCode" id="cb561"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb561-1"><a href="inferencia-para-regresión-lineal-simple.html#cb561-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="fu">abs</span>(beta_1_hat_t), <span class="at">df =</span> <span class="fu">length</span>(<span class="fu">resid</span>(stop_dist_model)) <span class="sc">-</span> <span class="dv">2</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>## [1] 1.489836e-12</code></pre>
+<div class="sourceCode" id="cb563"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb563-1"><a href="inferencia-para-regresión-lineal-simple.html#cb563-1" aria-hidden="true" tabindex="-1"></a>beta_1_hat_pval</span></code></pre></div>
+<pre><code>## [1] 1.489836e-12</code></pre>
+</div>
+<div id="significancia-de-la-regresión-prueba-t." class="section level3" number="8.6.2">
+<h3><span class="header-section-number">8.6.2</span> Significancia de la regresión, prueba t.</h3>
+<p>Hacemos una pausa para discutir la prueba de <strong>significancia de la regresión</strong>. Primero, tenga en cuenta que, con base a los resultados de distribución anteriores, podríamos probar <span class="math inline">\(\beta_0\)</span> y <span class="math inline">\(\beta_1\)</span> contra cualquier valor en particular, y realizar pruebas de una y dos colas.</p>
+<p>Sin embargo, una prueba muy específica,</p>
+<p><span class="math display">\[
+H_0: \beta_1 = 0 \quad \text{vs} \quad H_1: \beta_1 \neq 0
+\]</span></p>
+<p>se utiliza con mayor frecuencia. Pensemos en esta prueba en términos del modelo de regresión lineal simple,</p>
+<p><span class="math display">\[
+Y_i = \beta_0 + \beta_1 x_i + \epsilon_i.
+\]</span></p>
+<p>Si asumimos que la hipótesis nula es cierta, entonces <span class="math inline">\(\beta_1=0\)</span> y tenemos el modelo,</p>
+<p><span class="math display">\[
+Y_i = \beta_0 + \epsilon_i.
+\]</span></p>
+<p>En este modelo, la respuesta <strong>no</strong> depende del predictor. Entonces, podríamos pensar en esta prueba de la siguiente manera,</p>
+<ul>
+<li>bajo <span class="math inline">\(H_0\)</span> no existe una relación lineal significativa entre <span class="math inline">\(x\)</span> y <span class="math inline">\(y\)</span>.</li>
+<li>bajo <span class="math inline">\(H_1\)</span> existe una relación <strong>lineal</strong> significativa entre <span class="math inline">\(x\)</span> y <span class="math inline">\(y\)</span>.</li>
+</ul>
+<p>Para el ejemplo de <code>cars</code>,</p>
+<ul>
+<li>bajo <span class="math inline">\(H_0\)</span> no existe una relación lineal significativa entre la velocidad y la distancia de frenado.</li>
+<li>bajo <span class="math inline">\(H_1\)</span> Existe una relación <strong>lineal</strong> significativa entre la velocidad y la distancia de frenado.</li>
+</ul>
+<p>Nuevamente, esa prueba se ve en la salida de <code>summary()</code>,</p>
+<p><span class="math display">\[
+\text{p-value} = 1.4898365\times 10^{-12}.
+\]</span></p>
+<p>Con este valor p extremadamente bajo, rechazaríamos la hipótesis nula en cualquier nivel <span class="math inline">\(\alpha\)</span> razonable, digamos, por ejemplo, <span class="math inline">\(\alpha=0.01\)</span>. Por tanto, decimos que existe una relación <strong>lineal</strong> significativa entre la velocidad y la distancia de frenado. Observe que enfatizamos <strong>lineal</strong>.</p>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-231-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>En este gráfico de datos simulados, vemos una relación clara entre <span class="math inline">\(x\)</span> y <span class="math inline">\(y\)</span>, sin embargo, no es una relación lineal. Si ajustamos una línea a estos datos, es muy plana. La prueba resultante para <span class="math inline">\(H_0: \beta_1 = 0\)</span> vs <span class="math inline">\(H_1: \beta_1 \neq 0\)</span> da un valor p grande, en este caso <span class="math inline">\(0.7564548\)</span>, por lo que no podríamos rechazar y decir que no existe una relación lineal significativa entre <span class="math inline">\(x\)</span> y <span class="math inline">\(y\)</span>. Más adelante veremos cómo ajustar una curva a estos datos usando un modelo “lineal”, pero por ahora, tenga en cuenta que probar <span class="math inline">\(H_0: \beta_1 = 0\)</span> vs <span class="math inline">\(H_1: \beta_1 \neq 0\)</span> solo puede detectar relaciones linéales .</p>
+</div>
+<div id="intervalos-de-confianza-en-r" class="section level3" number="8.6.3">
+<h3><span class="header-section-number">8.6.3</span> Intervalos de confianza en <code>R</code></h3>
+<p>Usando <code>R</code> podemos obtener muy fácilmente los intervalos de confianza para <span class="math inline">\(\beta_0\)</span> y <span class="math inline">\(\beta_1\)</span>.</p>
+<div class="sourceCode" id="cb565"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb565-1"><a href="inferencia-para-regresión-lineal-simple.html#cb565-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(stop_dist_model, <span class="at">level =</span> <span class="fl">0.99</span>)</span></code></pre></div>
+<pre><code>##                  0.5 %    99.5 %
+## (Intercept) -35.706610 0.5484205
+## speed         2.817919 5.0468988</code></pre>
+<p>Esto calcula automáticamente intervalos de confianza del 99% para <span class="math inline">\(\beta_0\)</span> y <span class="math inline">\(\beta_1\)</span>, la primera fila para <span class="math inline">\(\beta_0\)</span>, la segunda fila para <span class="math inline">\(\beta_1\)</span>.</p>
+<p>Para el ejemplo de <code>cars</code>, al interpretar estos intervalos, decimos que tenemos un 99% de confianza en que para un aumento de velocidad de 1 milla por hora, el aumento medio de la distancia de frenado está entre 2.8179187 y 5.0468988 pies, que es el intervalo para <span class="math inline">\(\beta_1\)</span>.</p>
+<p>Tenga en cuenta que este intervalo de confianza del 99% <strong>no</strong> contiene el valor hipotético de 0. Dado que no contiene 0, es equivalente a rechazar la prueba de <span class="math inline">\(H_0:\beta_1=0\)</span> vs <span class="math inline">\(H_1:\beta_1\neq 0\)</span> con <span class="math inline">\(\alpha=0.01\)</span>, que habíamos visto anteriormente.</p>
+<p>Debería sospechar algo del intervalo de confianza para <span class="math inline">\(\beta_0\)</span>, ya que cubre valores negativos, que corresponden a distancias de frenado negativas. Técnicamente, la interpretación sería que tenemos un 99% de confianza en que la distancia de frenado promedio de un automóvil que viaja a 0 millas por hora está entre -35.7066103 y 0.5484205 pies, pero realmente no creemos eso, ya que estamos seguros de que no sería negativo.</p>
+<p>Tenga en cuenta que podemos extraer valores específicos de esta salida de varias formas. Este código no se ejecuta y, en su lugar, debe verificar cómo se relaciona con la salida del código anterior.</p>
+<div class="sourceCode" id="cb567"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb567-1"><a href="inferencia-para-regresión-lineal-simple.html#cb567-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(stop_dist_model, <span class="at">level =</span> <span class="fl">0.99</span>)[<span class="dv">1</span>,]</span>
+<span id="cb567-2"><a href="inferencia-para-regresión-lineal-simple.html#cb567-2" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(stop_dist_model, <span class="at">level =</span> <span class="fl">0.99</span>)[<span class="dv">1</span>, <span class="dv">1</span>]</span>
+<span id="cb567-3"><a href="inferencia-para-regresión-lineal-simple.html#cb567-3" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(stop_dist_model, <span class="at">level =</span> <span class="fl">0.99</span>)[<span class="dv">1</span>, <span class="dv">2</span>]</span>
+<span id="cb567-4"><a href="inferencia-para-regresión-lineal-simple.html#cb567-4" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(stop_dist_model, <span class="at">parm =</span> <span class="st">&quot;(Intercept)&quot;</span>, <span class="at">level =</span> <span class="fl">0.99</span>)</span>
+<span id="cb567-5"><a href="inferencia-para-regresión-lineal-simple.html#cb567-5" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(stop_dist_model, <span class="at">level =</span> <span class="fl">0.99</span>)[<span class="dv">2</span>,]</span>
+<span id="cb567-6"><a href="inferencia-para-regresión-lineal-simple.html#cb567-6" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(stop_dist_model, <span class="at">level =</span> <span class="fl">0.99</span>)[<span class="dv">2</span>, <span class="dv">1</span>]</span>
+<span id="cb567-7"><a href="inferencia-para-regresión-lineal-simple.html#cb567-7" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(stop_dist_model, <span class="at">level =</span> <span class="fl">0.99</span>)[<span class="dv">2</span>, <span class="dv">2</span>]</span>
+<span id="cb567-8"><a href="inferencia-para-regresión-lineal-simple.html#cb567-8" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(stop_dist_model, <span class="at">parm =</span> <span class="st">&quot;speed&quot;</span>, <span class="at">level =</span> <span class="fl">0.99</span>)</span></code></pre></div>
+<p>También podemos verificar los cálculos que está realizando <code>R</code> para el intervalo <span class="math inline">\(\beta_1\)</span>.</p>
+<div class="sourceCode" id="cb568"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb568-1"><a href="inferencia-para-regresión-lineal-simple.html#cb568-1" aria-hidden="true" tabindex="-1"></a>beta_1_hat <span class="ot">=</span> <span class="fu">coef</span>(stop_dist_model)[<span class="dv">2</span>]</span>
+<span id="cb568-2"><a href="inferencia-para-regresión-lineal-simple.html#cb568-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb568-3"><a href="inferencia-para-regresión-lineal-simple.html#cb568-3" aria-hidden="true" tabindex="-1"></a>beta_1_hat_se <span class="ot">=</span> <span class="fu">summary</span>(stop_dist_model)<span class="sc">$</span>coefficients[<span class="dv">2</span>, <span class="dv">2</span>]</span>
+<span id="cb568-4"><a href="inferencia-para-regresión-lineal-simple.html#cb568-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb568-5"><a href="inferencia-para-regresión-lineal-simple.html#cb568-5" aria-hidden="true" tabindex="-1"></a>crit <span class="ot">=</span> <span class="fu">qt</span>(<span class="fl">0.995</span>, <span class="at">df =</span> <span class="fu">length</span>(<span class="fu">resid</span>(stop_dist_model)) <span class="sc">-</span> <span class="dv">2</span>)</span>
+<span id="cb568-6"><a href="inferencia-para-regresión-lineal-simple.html#cb568-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb568-7"><a href="inferencia-para-regresión-lineal-simple.html#cb568-7" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(beta_1_hat <span class="sc">-</span> crit <span class="sc">*</span> beta_1_hat_se, beta_1_hat <span class="sc">+</span> crit <span class="sc">*</span> beta_1_hat_se)</span></code></pre></div>
+<pre><code>##    speed    speed 
+## 2.817919 5.046899</code></pre>
+</div>
+</div>
+<div id="intervalo-de-confianza-para-la-respuesta-promedio" class="section level2" number="8.7">
+<h2><span class="header-section-number">8.7</span> Intervalo de confianza para la respuesta Promedio</h2>
+<p>Además de los intervalos de confianza para <span class="math inline">\(\beta_0\)</span> y <span class="math inline">\(\beta_1\)</span>, existen otras dos estimaciones comunes de intervalo que se utilizan con la regresión. El primero se llama <strong>intervalo de confianza para la respuesta Promedio</strong>. A menudo, nos gustaría una estimación de intervalo para la media, <span class="math inline">\(E[Y\mid = x]\)</span> para un valor particular de <span class="math inline">\(x\)</span>.</p>
+<p>En esta situación usamos <span class="math inline">\(\hat{y}(x)\)</span> como nuestra estimación de <span class="math inline">\(E[Y \mid X = x]\)</span>. Modificamos nuestra notación ligeramente para dejar en claro que el valor predicho es una función del valor <span class="math inline">\(x\)</span>.</p>
+<p><span class="math display">\[
+\hat{y}(x) = \hat{\beta}_0 + \hat{\beta}_1 x
+\]</span></p>
+<p>Recordar que,</p>
+<p><span class="math display">\[
+\text{E}[Y \mid X = x] = \beta_0 + \beta_1 x.
+\]</span></p>
+<p>Por lo tanto, <span class="math inline">\(\hat{y}(x)\)</span> es una buena estimación ya que no tiene sesgo:</p>
+<p><span class="math display">\[
+\text{E}[\hat{y}(x)] = \beta_0 + \beta_1 x.
+\]</span></p>
+<p>podríamos obtener,</p>
+<p><span class="math display">\[
+\text{Var}[\hat{y}(x)] = \sigma^2 \left(\frac{1}{n}+\frac{(x-\bar{x})^2}{S_{xx}}\right).
+\]</span></p>
+<p>Como las otras estimaciones que hemos visto, <span class="math inline">\(\hat{y}(x)\)</span> también sigue una distribución normal. Dado que <span class="math inline">\(\hat{\beta}_0\)</span> y <span class="math inline">\(\hat{\beta}_1\)</span> son combinaciones lineales de variables aleatorias normales, <span class="math inline">\(\hat{y}(x)\)</span> también lo es.</p>
+<p><span class="math display">\[
+\hat{y}(x) \sim N \left(\beta_0 + \beta_1 x, \sigma^2 \left(\frac{1}{n}+\frac{(x-\bar{x})^2}{S_{xx}}\right) \right)
+\]</span></p>
+<p>Y por último, dado que necesitamos estimar esta varianza, llegamos al error estándar de nuestra estimación,</p>
+<p><span class="math display">\[
+\text{SE}[\hat{y}(x)] = s_e \sqrt{\frac{1}{n}+\frac{(x-\bar{x})^2}{S_{xx}}}.
+\]</span></p>
+<p>Luego podemos usar esto para encontrar el intervalo de confianza para la respuesta promedio,
+<span class="math display">\[
+\hat{y}(x) \pm t_{\alpha/2, n - 2} \cdot s_e\sqrt{\frac{1}{n}+\frac{(x-\bar{x})^2}{S_{xx}}}
+\]</span></p>
+<p>Para encontrar intervalos de confianza para la respuesta promedio mediante <code>R</code>, usamos la función <code>predict()</code>. ingresamos a la función nuestro modelo ajustado, así como los nuevos datos, almacenados como un marco de datos. (Esto es importante, para que <code>R</code> conozca el nombre de la variable predictora). Aquí, estamos encontrando el intervalo de confianza para la distancia media de frenado cuando un automóvil viaja a 5 millas por hora y cuando un automóvil viaja a 21 millas por hora.</p>
+<div class="sourceCode" id="cb570"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb570-1"><a href="inferencia-para-regresión-lineal-simple.html#cb570-1" aria-hidden="true" tabindex="-1"></a>new_speeds <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">speed =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">21</span>))</span>
+<span id="cb570-2"><a href="inferencia-para-regresión-lineal-simple.html#cb570-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(stop_dist_model, <span class="at">newdata =</span> new_speeds, </span>
+<span id="cb570-3"><a href="inferencia-para-regresión-lineal-simple.html#cb570-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">interval =</span> <span class="fu">c</span>(<span class="st">&quot;confidence&quot;</span>), <span class="at">level =</span> <span class="fl">0.99</span>)</span></code></pre></div>
+<pre><code>##         fit       lwr      upr
+## 1  2.082949 -10.89309 15.05898
+## 2 65.001489  56.45836 73.54462</code></pre>
+</div>
+<div id="intervalo-de-predicción-para-nuevas-observaciones" class="section level2" number="8.8">
+<h2><span class="header-section-number">8.8</span> Intervalo de predicción para nuevas observaciones</h2>
+<p>Algunas veces nos gustaría una estimación de intervalo para una nueva observación, <span class="math inline">\(Y\)</span>, para un valor particular de <span class="math inline">\(x\)</span>. Esto es muy similar a un intervalo para la respuesta promedio, <span class="math inline">\(\text{E}[Y \mid X = x]\)</span>, pero diferente en una forma muy importante.</p>
+<p>Nuestra suposición para una nueva observación sigue siendo <span class="math inline">\(\hat{y}(x)\)</span>. El promedio estimado sigue siendo la mejor predicción que podemos hacer. La diferencia está en la cantidad de variabilidad. Sabemos que las observaciones variarán sobre la verdadera recta de regresión de acuerdo con una distribución <span class="math inline">\(N(0,\sigma^2)\)</span>. Debido a esto, agregamos un factor adicional de <span class="math inline">\(\sigma^2\)</span> a la variabilidad de nuestra estimación para tener en cuenta en las observaciones sobre la línea de regresión.</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{Var}[\hat{y}(x) + \epsilon] &amp;= \text{Var}[\hat{y}(x)] + \text{Var}[\epsilon] \\[2ex]
+&amp;= \sigma^2 \left(\frac{1}{n}+\frac{(x-\bar{x})^2}{S_{xx}}\right) + \sigma^2 \\[2ex]
+&amp;= \sigma^2 \left(1 + \frac{1}{n}+\frac{(x-\bar{x})^2}{S_{xx}}\right)
+\end{aligned}
+\]</span></p>
+<p><span class="math display">\[
+\hat{y}(x) + \epsilon \sim N \left(\beta_0 + \beta_1 x, \ \sigma^2 \left(1 + \frac{1}{n}+\frac{(x-\bar{x})^2}{S_{xx}}\right) \right)
+\]</span></p>
+<p><span class="math display">\[
+\text{SE}[\hat{y}(x) + \epsilon] = s_e \sqrt{1 + \frac{1}{n}+\frac{(x-\bar{x})^2}{S_{xx}}}
+\]</span></p>
+<p>Luego podemos encontrar un <strong>intervalo de predicción</strong> usando,</p>
+<p><span class="math display">\[
+\hat{y}(x) \pm t_{\alpha/2, n - 2} \cdot s_e\sqrt{1 + \frac{1}{n}+\frac{(x-\bar{x})^2}{S_{xx}}}.
+\]</span></p>
+<p>Para calcular el intervalo para un conjunto de puntos en <code>R</code>, solo hay un pequeño cambio en la sintaxis que se usa para encontrar un intervalo de confianza para la respuesta promedio.</p>
+<div class="sourceCode" id="cb572"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb572-1"><a href="inferencia-para-regresión-lineal-simple.html#cb572-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(stop_dist_model, <span class="at">newdata =</span> new_speeds, </span>
+<span id="cb572-2"><a href="inferencia-para-regresión-lineal-simple.html#cb572-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">interval =</span> <span class="fu">c</span>(<span class="st">&quot;prediction&quot;</span>), <span class="at">level =</span> <span class="fl">0.99</span>)</span></code></pre></div>
+<pre><code>##         fit       lwr       upr
+## 1  2.082949 -41.16099  45.32689
+## 2 65.001489  22.87494 107.12803</code></pre>
+<p>Observe que estos dos intervalos son más amplios que los intervalos de confianza correspondientes para la respuesta promedio.</p>
+</div>
+<div id="bandas-de-confianza-y-predicción" class="section level2" number="8.9">
+<h2><span class="header-section-number">8.9</span> Bandas de confianza y predicción</h2>
+<p>A menudo nos gustaría gaficar intervalos de confianza para la respuesta promedio y los intervalos de predicción para todos los valores posibles de <span class="math inline">\(x\)</span>. A estas las llamamos bandas de confianza y predicción.</p>
+<div class="sourceCode" id="cb574"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb574-1"><a href="inferencia-para-regresión-lineal-simple.html#cb574-1" aria-hidden="true" tabindex="-1"></a>speed_grid <span class="ot">=</span> <span class="fu">seq</span>(<span class="fu">min</span>(cars<span class="sc">$</span>speed), <span class="fu">max</span>(cars<span class="sc">$</span>speed), <span class="at">by =</span> <span class="fl">0.01</span>)</span>
+<span id="cb574-2"><a href="inferencia-para-regresión-lineal-simple.html#cb574-2" aria-hidden="true" tabindex="-1"></a>dist_ci_band <span class="ot">=</span> <span class="fu">predict</span>(stop_dist_model, </span>
+<span id="cb574-3"><a href="inferencia-para-regresión-lineal-simple.html#cb574-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">speed =</span> speed_grid), </span>
+<span id="cb574-4"><a href="inferencia-para-regresión-lineal-simple.html#cb574-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">interval =</span> <span class="st">&quot;confidence&quot;</span>, <span class="at">level =</span> <span class="fl">0.99</span>)</span>
+<span id="cb574-5"><a href="inferencia-para-regresión-lineal-simple.html#cb574-5" aria-hidden="true" tabindex="-1"></a>dist_pi_band <span class="ot">=</span> <span class="fu">predict</span>(stop_dist_model, </span>
+<span id="cb574-6"><a href="inferencia-para-regresión-lineal-simple.html#cb574-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">speed =</span> speed_grid), </span>
+<span id="cb574-7"><a href="inferencia-para-regresión-lineal-simple.html#cb574-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">interval =</span> <span class="st">&quot;prediction&quot;</span>, <span class="at">level =</span> <span class="fl">0.99</span>) </span>
+<span id="cb574-8"><a href="inferencia-para-regresión-lineal-simple.html#cb574-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb574-9"><a href="inferencia-para-regresión-lineal-simple.html#cb574-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars,</span>
+<span id="cb574-10"><a href="inferencia-para-regresión-lineal-simple.html#cb574-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Velocidad (en millas por hora)&quot;</span>,</span>
+<span id="cb574-11"><a href="inferencia-para-regresión-lineal-simple.html#cb574-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Distancia de frenado (en pies)&quot;</span>,</span>
+<span id="cb574-12"><a href="inferencia-para-regresión-lineal-simple.html#cb574-12" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Distancia de frenado vs velocidad&quot;</span>,</span>
+<span id="cb574-13"><a href="inferencia-para-regresión-lineal-simple.html#cb574-13" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch  =</span> <span class="dv">20</span>,</span>
+<span id="cb574-14"><a href="inferencia-para-regresión-lineal-simple.html#cb574-14" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex  =</span> <span class="dv">2</span>,</span>
+<span id="cb574-15"><a href="inferencia-para-regresión-lineal-simple.html#cb574-15" aria-hidden="true" tabindex="-1"></a>     <span class="at">col  =</span> <span class="st">&quot;grey&quot;</span>,</span>
+<span id="cb574-16"><a href="inferencia-para-regresión-lineal-simple.html#cb574-16" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fu">min</span>(dist_pi_band), <span class="fu">max</span>(dist_pi_band)))</span>
+<span id="cb574-17"><a href="inferencia-para-regresión-lineal-simple.html#cb574-17" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(stop_dist_model, <span class="at">lwd =</span> <span class="dv">5</span>, <span class="at">col =</span> <span class="st">&quot;darkorange&quot;</span>)</span>
+<span id="cb574-18"><a href="inferencia-para-regresión-lineal-simple.html#cb574-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb574-19"><a href="inferencia-para-regresión-lineal-simple.html#cb574-19" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(speed_grid, dist_ci_band[,<span class="st">&quot;lwr&quot;</span>], <span class="at">col =</span> <span class="st">&quot;dodgerblue&quot;</span>, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb574-20"><a href="inferencia-para-regresión-lineal-simple.html#cb574-20" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(speed_grid, dist_ci_band[,<span class="st">&quot;upr&quot;</span>], <span class="at">col =</span> <span class="st">&quot;dodgerblue&quot;</span>, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb574-21"><a href="inferencia-para-regresión-lineal-simple.html#cb574-21" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(speed_grid, dist_pi_band[,<span class="st">&quot;lwr&quot;</span>], <span class="at">col =</span> <span class="st">&quot;dodgerblue&quot;</span>, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">lty =</span> <span class="dv">3</span>)</span>
+<span id="cb574-22"><a href="inferencia-para-regresión-lineal-simple.html#cb574-22" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(speed_grid, dist_pi_band[,<span class="st">&quot;upr&quot;</span>], <span class="at">col =</span> <span class="st">&quot;dodgerblue&quot;</span>, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">lty =</span> <span class="dv">3</span>)</span>
+<span id="cb574-23"><a href="inferencia-para-regresión-lineal-simple.html#cb574-23" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(<span class="fu">mean</span>(cars<span class="sc">$</span>speed), <span class="fu">mean</span>(cars<span class="sc">$</span>dist), <span class="at">pch =</span> <span class="st">&quot;+&quot;</span>, <span class="at">cex =</span> <span class="dv">3</span>)</span></code></pre></div>
+<p><img src="EstadisticaR_files/figure-html/unnamed-chunk-237-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>Algunas cosas a tener en cuenta:</p>
+<ul>
+<li>Usamos el argumento <code>ylim</code> para ajustar el eje <span class="math inline">\(y\)</span> del gráfico, ya que las bandas se extienden más allá de los puntos.</li>
+<li>Agregamos un punto en <span class="math inline">\((\bar{x},\bar{y})\)</span>.
+<ul>
+<li>Este es un punto por el que la línea de regresión <strong>siempre</strong> pasará. (Piense por qué).</li>
+<li>Este es el punto donde las bandas de confianza y predicción son más estrechas. Mire los errores estándar de ambos para entender por qué.</li>
+</ul></li>
+<li>Las bandas de predicción son menos curvas que las bandas de confianza. Este es el resultado del factor adicional de <span class="math inline">\(\sigma^2\)</span> agregado a la varianza en cualquier valor de <span class="math inline">\(x\)</span>.</li>
+</ul>
+</div>
+<div id="significancia-de-la-regresión-prueba-f" class="section level2" number="8.10">
+<h2><span class="header-section-number">8.10</span> Significancia de la regresión, prueba F</h2>
+<p>En el caso de la regresión lineal simple, la prueba <span class="math inline">\(t\)</span> para la significancia de la regresión es equivalente a otra prueba, la prueba <span class="math inline">\(F\)</span> para la significancia de la regresión. Esta equivalencia solo será cierta para la regresión lineal simple, y en el próximo capítulo solo usaremos la prueba <span class="math inline">\(F\)</span> para la significancia de la regresión.</p>
+<p>Recuerde del último capítulo la descomposición de la varianza que vimos antes de calcular el <span class="math inline">\(R^2\)</span>,</p>
+<p><span class="math display">\[
+\sum_{i=1}^{n}(y_i - \bar{y})^2 = \sum_{i=1}^{n}(y_i - \hat{y}_i)^2 + \sum_{i=1}^{n}(\hat{y}_i - \bar{y})^2,
+\]</span></p>
+<p>o, en resumen,</p>
+<p><span class="math display">\[
+\text{SST} = \text{SSE} + \text{SSReg}.
+\]</span></p>
+<p>Para desarrollar la prueba <span class="math inline">\(F\)</span>, organizaremos esta información en una tabla <strong>ANOVA</strong>,</p>
+<table>
+<colgroup>
+<col width="19%" />
+<col width="26%" />
+<col width="19%" />
+<col width="17%" />
+<col width="17%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fuente</th>
+<th>Suma de cuadrados</th>
+<th>Grados de libertad</th>
+<th>Cuadrado medio</th>
+<th><span class="math inline">\(F\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Regression</td>
+<td><span class="math inline">\(\sum_{i=1}^{n}(\hat{y}_i - \bar{y})^2\)</span></td>
+<td><span class="math inline">\(1\)</span></td>
+<td><span class="math inline">\(\text{SSReg} / 1\)</span></td>
+<td><span class="math inline">\(\text{MSReg} / \text{MSE}\)</span></td>
+</tr>
+<tr class="even">
+<td>Error</td>
+<td><span class="math inline">\(\sum_{i=1}^{n}(y_i - \hat{y}_i)^2\)</span></td>
+<td><span class="math inline">\(n - 2\)</span></td>
+<td><span class="math inline">\(\text{SSE} / (n - 2)\)</span></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Total</td>
+<td><span class="math inline">\(\sum_{i=1}^{n}(y_i - \bar{y})^2\)</span></td>
+<td><span class="math inline">\(n - 1\)</span></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>ANOVA, o Análisis de varianza, será un concepto que utilizaremos a menudo en este curso. Por ahora, nos centraremos en los resultados de la tabla, que es la estadística <span class="math inline">\(F\)</span>,</p>
+<p><span class="math display">\[
+F = \frac{\sum_{i=1}^{n}(\hat{y}_i - \bar{y})^2 / 1}{\sum_{i=1}^{n}(y_i - \hat{y}_i)^2 / (n - 2)} \sim F_{1, n - 2}
+\]</span></p>
+<p>que sigue una distribución <span class="math inline">\(F\)</span> con grados de libertad <span class="math inline">\(1\)</span> y <span class="math inline">\(n - 2\)</span> bajo la hipótesis nula. Una distribución <span class="math inline">\(F\)</span> es una distribución continua que solo toma valores positivos y tiene dos parámetros, que son los dos grados de libertad.</p>
+<p>Recuerde, en la significancia de la prueba de regresión, <span class="math inline">\(Y\)</span> <strong>no</strong> depende de <span class="math inline">\(x\)</span> en la hipótesis nula.</p>
+<p><span class="math display">\[
+H_0: \beta_1 = 0 \quad \quad Y_i = \beta_0 + \epsilon_i
+\]</span></p>
+<p>Mientras que en la hipótesis alternativa, <span class="math inline">\(Y\)</span> puede depender de <span class="math inline">\(x\)</span>.</p>
+<p><span class="math display">\[
+H_1: \beta_1 \neq 0 \quad \quad Y_i = \beta_0 + \beta_1 x_i + \epsilon_i
+\]</span></p>
+<p>Podemos usar la estadística <span class="math inline">\(F\)</span> para realizar esta prueba.</p>
+<p><span class="math display">\[
+F = \frac{\sum_{i=1}^{n}(\hat{y}_i - \bar{y})^2 / 1}{\sum_{i=1}^{n}(y_i - \hat{y}_i)^2 / (n - 2)}
+\]</span></p>
+<p>En particular, rechazaremos la hipótesis nula cuando el estadístico <span class="math inline">\(F\)</span> sea grande, es decir, cuando haya una probabilidad baja de que las observaciones pudieran provenir del modelo nulo. Dejaremos que <code>R</code> calcule el valor p por nosotros.</p>
+<p>Para realizar la prueba <span class="math inline">\(F\)</span> en <code>R</code>, puede observar la última fila de la salida de <code>summary()</code> llamada <code>F-statistic</code> que proporciona el valor de la estadística de prueba, los grados de libertad relevantes, también el valor p de la prueba.</p>
+<div class="sourceCode" id="cb575"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb575-1"><a href="inferencia-para-regresión-lineal-simple.html#cb575-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stop_dist_model)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = dist ~ speed, data = cars)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -29.069  -9.525  -2.272   9.215  43.201 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -17.5791     6.7584  -2.601   0.0123 *  
+## speed         3.9324     0.4155   9.464 1.49e-12 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 15.38 on 48 degrees of freedom
+## Multiple R-squared:  0.6511, Adjusted R-squared:  0.6438 
+## F-statistic: 89.57 on 1 and 48 DF,  p-value: 1.49e-12</code></pre>
+<p>Además, puede utilizar la función <code>anova()</code> para mostrar la información en una tabla ANOVA.</p>
+<div class="sourceCode" id="cb577"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb577-1"><a href="inferencia-para-regresión-lineal-simple.html#cb577-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(stop_dist_model)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: dist
+##           Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## speed      1  21186 21185.5  89.567 1.49e-12 ***
+## Residuals 48  11354   236.5                     
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Esto también da un valor p para la prueba. Debería notar que el valor p de la prueba <span class="math inline">\(t\)</span> era el mismo. También puede notar que el valor del estadístico de prueba para la prueba <span class="math inline">\(t\)</span>, <span class="math inline">\(9.46399\)</span>, se puede elevar al cuadrado para obtener el valor de la estadística <span class="math inline">\(F\)</span>, <span class="math inline">\(89.5671065\)</span>.</p>
+<p>Tenga en cuenta que hay otra forma equivalente de hacer esto en <code>R</code>, a la que volveremos a menudo para comparar dos modelos.</p>
+<div class="sourceCode" id="cb579"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb579-1"><a href="inferencia-para-regresión-lineal-simple.html#cb579-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(<span class="fu">lm</span>(dist <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> cars), <span class="fu">lm</span>(dist <span class="sc">~</span> speed, <span class="at">data =</span> cars))</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: dist ~ 1
+## Model 2: dist ~ speed
+##   Res.Df   RSS Df Sum of Sq      F   Pr(&gt;F)    
+## 1     49 32539                                 
+## 2     48 11354  1     21186 89.567 1.49e-12 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>La declaración del modelo <code>lm(dist ~ 1, data = cars)</code> aplica el modelo <span class="math inline">\(Y_i = \beta_0 + \epsilon_i\)</span> a los datos cars. Tenga en cuenta que <span class="math inline">\(\hat{y} = \bar{y}\)</span> cuando <span class="math inline">\(Y_i = \beta_0 + \epsilon_i\)</span>.</p>
+<p>La declaración del modelo <code>lm(dist ~ speed, data = cars)</code> aplica el modelo <span class="math inline">\(Y_i = \beta_0 + \beta_1 x_i + \epsilon_i\)</span>.</p>
+<p>Entonces podemos pensar en este uso de <code>anova()</code> como una comparación directa de los dos modelos. (Observe que obtenemos el mismo valor p nuevamente).</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="regresión-lineal-simple.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="regresión-lineal-múltiple.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -15,7 +15,7 @@ description: ""
 
 ¡Bienvenido a Estadísticas aplicadas con R!
 
-Adapatado de [David Dalpiaz, Applied Statistics](https://github.com/daviddalpiaz/appliedstats){target="_blank"}
+Adaptado de [David Dalpiaz, Applied Statistics](https://github.com/daviddalpiaz/appliedstats){target="_blank"}
 
 ## Convenciones
 
